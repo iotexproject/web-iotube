@@ -1,4 +1,6 @@
-# Razzle Nestjs Mobx graphql template
+# ioTube Web App
+
+ioTube is two way "tube", aka bridge, allowing assets transferring between ETH and IoTeX.
 
 ## How to use
 

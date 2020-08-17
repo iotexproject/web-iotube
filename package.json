@@ -1,0 +1,127 @@
+{
+  "name": "razzle-examples-with-typescript",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "dev": "razzle start",
+    "build": "razzle build",
+    "test": "razzle test",
+    "start": "NODE_ENV=production node build/server.js",
+    "gen": "generate-graphql-client -e http://localhost:3000/api-gateway -o ./generated/gql",
+    "pretty": "pretty-quick",
+    "gen:tailwind": "ts-node ./scripts/tailwind",
+    "analyzer": "ANALYZER=true razzle build",
+    "postinstall": "npm -s run gen:tailwind"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.2.1",
+    "@nestjs/common": "^7.3.2",
+    "@nestjs/config": "^0.5.0",
+    "@nestjs/core": "^7.3.2",
+    "@nestjs/graphql": "^7.5.5",
+    "@nestjs/jwt": "^7.1.0",
+    "@nestjs/passport": "^7.1.0",
+    "@nestjs/platform-express": "^7.3.2",
+    "@nestjs/testing": "^7.3.2",
+    "@prisma/client": "^2.2.2",
+    "@types/bcrypt": "^3.0.0",
+    "@types/cookie-session": "^2.0.41",
+    "@types/passport": "^1.0.4",
+    "@types/passport-jwt": "^3.0.3",
+    "@wildcard-api/client": "^0.3.2",
+    "@wildcard-api/server": "^0.3.1",
+    "antd": "^4.5.2",
+    "apollo-server-express": "^2.15.1",
+    "axios": "^0.19.2",
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
+    "cache-manager": "^3.3.0",
+    "class-validator": "^0.12.2",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.5",
+    "express-http-to-https": "^1.1.4",
+    "express-session": "^1.17.1",
+    "graphql": "^15.3.0",
+    "graphql-request": "^2.0.0",
+    "graphql-tag": "^2.10.4",
+    "graphql-type-json": "^0.3.2",
+    "graphql-typed-client": "^1.7.4",
+    "helmet": "^3.23.3",
+    "iotex-antenna": "^0.30.1",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.2.2",
+    "mobx-remotedev": "^0.3.6",
+    "nestjs": "^0.0.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "razzle-heroku": "^3.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-hook-form": "^6.0.2",
+    "react-query": "^2.4.15",
+    "react-router-dom": "^5.0.1",
+    "react-tradingview-widget": "^1.3.2",
+    "reflect-metadata": "^0.1.13",
+    "typed-emitter": "^1.2.0",
+    "websocket-as-promised": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/autoprefixer": "^9.7.2",
+    "@types/cache-manager": "^2.10.3",
+    "@types/compression": "^1.7.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/csurf": "^1.9.36",
+    "@types/jest": "^26.0.4",
+    "@types/node": "^14.0.20",
+    "@types/react": "^16.8.23",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/webpack-bundle-analyzer": "^3.8.0",
+    "@types/webpack-env": "^1.14.0",
+    "autoprefixer": "^9.8.4",
+    "husky": "^4.2.5",
+    "postcss-cli": "^7.1.1",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
+    "razzle": "^3.1.5",
+    "razzle-plugin-scss": "^3.1.5",
+    "razzle-plugin-typescript": "^3.0.0",
+    "tailwindcss": "^1.4.6",
+    "ts-jest": "^26.1.1",
+    "ts-node": "^8.10.2",
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.3.0",
+    "tslint-react": "^5.0.0",
+    "typescript": "^3.9.6",
+    "webpack-bundle-analyzer": "^3.8.0"
+  },
+  "jest": {
+    "transform": {
+      "\\.(ts|tsx)$": "ts-jest",
+      "\\.css$": "<rootDir>/node_modules/razzle/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/node_modules/razzle/config/jest/fileTransform.js"
+    },
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.(ts|js)?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).(ts|js)?(x)"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "engines": {
+    "node": "11.x"
+  }
+}

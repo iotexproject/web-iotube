@@ -1,0 +1,4 @@
+{
+  "HELLO_MESSAGE": "Hello ${message}",
+  "count": "count"
+}

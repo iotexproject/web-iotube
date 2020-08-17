@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: var(--bg) !important;
+  --bg: white;
+  --app-width: 750px;
+
+  #root {
+    max-width: var(--app-width);
+    margin: 0 auto;
+  }
+
+  .screen {
+    max-width: var(--app-width);
+    margin: 0 auto;
+  }
+
+  .ant-modal-mask {
+    background-color: var(--bg);
+  }
+  .modal-primary {
+    .ant-modal-content {
+      background-color: var(--bg);
+      box-shadow: unset;
+    }
+  }
+  .bg-primary {
+    background: var(--bg);
+  }
+}

@@ -3,29 +3,29 @@ body {
   padding: 0;
   font-family: sans-serif;
   background-color: var(--bg) !important;
-  --bg: white;
-  --app-width: 750px;
+  --bg: rgb(69, 71, 87);
+  --bg-primary: rgb(52, 55, 63);
+  --app-frame-width: 450px;
+  --app-header-width: 1200px;
 
   #root {
-    max-width: var(--app-width);
     margin: 0 auto;
   }
 
-  .screen {
-    max-width: var(--app-width);
-    margin: 0 auto;
+  .app_header_content {
+    max-width: var(--app-header-width);
+    margin: auto;
   }
 
-  .ant-modal-mask {
-    background-color: var(--bg);
+  .app_frame {
+    max-width: var(--app-frame-width);
   }
-  .modal-primary {
-    .ant-modal-content {
-      background-color: var(--bg);
-      box-shadow: unset;
-    }
-  }
+
   .bg-primary {
-    background: var(--bg);
+    background-color: var(--bg-primary);
+  }
+
+  .c-white {
+    color: white;
   }
 }

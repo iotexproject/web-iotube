@@ -1,4 +1,5 @@
 {
   "HELLO_MESSAGE": "你好 ${message}",
-  "count": "计数"
+  "count": "计数",
+  "header.connect_wallet": "Connect Wallet"
 }

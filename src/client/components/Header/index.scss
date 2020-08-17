@@ -1,0 +1,14 @@
+.component__header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  .component__header__content {
+    width: 80%;
+    .component__header__content__more {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

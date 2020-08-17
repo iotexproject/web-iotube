@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useObserver, useLocalStore } from "mobx-react-lite";
-import "./index.scss";
-import { useStore } from "../../../common/store/index";
-import { ClientOnly } from "../../components/ClientOnly/clientOnly";
-import { rpcClient } from "../../utils/rpc";
+import React, { useEffect } from 'react';
+import { useObserver, useLocalStore } from 'mobx-react-lite';
+import './index.scss';
+import { useStore } from '../../../common/store/index';
+import { ClientOnly } from '../../components';
+import { rpcClient } from '../../utils/rpc';
 
 export const Home = () => {
   const { lang } = useStore();
@@ -14,7 +14,7 @@ export const Home = () => {
     },
   }));
   useEffect(() => {
-    rpcClient.login("test", "123").then(async () => {
+    rpcClient.login('test', '123').then(async () => {
       const me = await rpcClient.me();
       console.log({ me });
       await rpcClient.logout();
@@ -26,19 +26,25 @@ export const Home = () => {
     <ClientOnly>
       <div className="home">
         <div>
-          {lang.t("HELLO_MESSAGE", { message: "React" })}: {store.count}
+          {lang.t('HELLO_MESSAGE', { message: 'React' })}: {store.count}
         </div>
-        <button className="px-2" onClick={() => store.setCount(store.count + 1)}>
+        <button
+          className="px-2"
+          onClick={() => store.setCount(store.count + 1)}
+        >
           +
         </button>
-        <button className="px-2" onClick={() => store.setCount(store.count - 1)}>
+        <button
+          className="px-2"
+          onClick={() => store.setCount(store.count - 1)}
+        >
           -
         </button>
         <div>
-          <button className="px-2" onClick={() => lang.setLang("en")}>
+          <button className="px-2" onClick={() => lang.setLang('en')}>
             en
           </button>
-          <button className="px-2" onClick={() => lang.setLang("zh")}>
+          <button className="px-2" onClick={() => lang.setLang('zh')}>
             zh
           </button>
         </div>

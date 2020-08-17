@@ -5,6 +5,11 @@
   right: 0;
   .component__header__content {
     width: 80%;
+    .component__header__content__wallet_address {
+      .component__header__content__wallet_address__ellipse {
+        text-overflow: ellipsis;
+      }
+    }
     .component__header__content__more {
       display: flex;
       justify-content: center;

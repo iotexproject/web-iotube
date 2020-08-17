@@ -1,5 +1,9 @@
 {
   "HELLO_MESSAGE": "你好 ${message}",
   "count": "计数",
-  "header.connect_wallet": "Connect Wallet"
+  "header.connect_wallet": "Connect Wallet",
+  "flip": "FLIP",
+  "token.ethereum": "Ethereum",
+  "token.iotex": "IoTex",
+  "amount": "Amount"
 }

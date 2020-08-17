@@ -1,5 +1,9 @@
 {
   "HELLO_MESSAGE": "Hello ${message}",
   "count": "count",
-  "header.connect_wallet": "Connect Wallet"
+  "header.connect_wallet": "Connect Wallet",
+  "flip": "FLIP",
+  "token.ethereum": "Ethereum",
+  "token.iotex": "IoTex",
+  "amount": "Amount"
 }

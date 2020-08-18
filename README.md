@@ -1,6 +1,6 @@
 # ioTube Web App
 
-ioTube is two way "tube", aka bridge, allowing assets transferring between ETH and IoTeX.
+ioTube is a two-way "tube", aka bridge, allowing assets transferring between blockchains, like Eth, IoTeX.
 
 ## How to use
 

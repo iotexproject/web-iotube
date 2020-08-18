@@ -4,6 +4,9 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { Button, Avatar } from 'antd';
 import { useStore } from '../../../common/store';
 import { useObserver } from 'mobx-react';
+import {useWeb3React} from "@web3-react/core";
+import useENSName from "../../hooks/useENSName";
+import {shortenAddress} from "../../utils/index";
 
 const IMG_LOGO = require('../../static/images/logo-iotex.png');
 const IMG_TOKEN = require('../../static/images/icon_wallet.png');

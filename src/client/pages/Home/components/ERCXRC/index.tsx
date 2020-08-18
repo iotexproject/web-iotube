@@ -2,11 +2,15 @@ import React, { useEffect } from 'react';
 import { useObserver, useLocalStore } from 'mobx-react-lite';
 import './index.scss';
 import { ConvertImageSection } from '../ConvertImageSection';
-import { AmountField } from '../../../../components';
+import {
+  AmountField,
+  SubmitButton,
+  TokenSelectField,
+  AddressInput,
+} from '../../../../components';
 import { useStore } from '../../../../../common/store';
-import { TokenSelectField } from '../../../../components/TokenSelectField';
-import { AddressInput } from '../../../../components/AddressInput';
-import { Button } from 'antd';
+
+const IMG_MATAMASK = require('../../../../static/images/metamask.png');
 
 export const ERCXRC = () => {
   const { lang, wallet } = useStore();
@@ -24,6 +28,7 @@ export const ERCXRC = () => {
       this.address = newAddress;
     },
   }));
+  const onConvert = () => {};
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-4">
       <ConvertImageSection isERCXRC />
@@ -49,26 +54,28 @@ export const ERCXRC = () => {
         </div>
       )}
       <div className="my-6 c-white text-left c-gray">
-        <div className="font-normal text-base mb-3">Fee</div>
+        <div className="font-normal text-base mb-3">{lang.t('fee')}</div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>Tube Fee</span>
-          <span>0(Free)</span>
+          <span>{lang.t('fee.tube')}</span>
+          <span>0 ({lang.t('free')})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>Network Fee</span>
-          <span>0(Free)</span>
+          <span>{lang.t('fee.network')}</span>
+          <span>0 ({lang.t('free')})</span>
         </div>
       </div>
       <div>
-        {wallet.walletConnected ? (
-          <Button size="large" type="primary" className="w-full">
-            Convert
-          </Button>
-        ) : (
-          <Button size="large" type="primary" className="w-full">
-            Connect Metamask
-          </Button>
-        )}
+        <SubmitButton
+          title={lang.t(
+            wallet.walletConnected ? 'convert' : 'connect_metamask'
+          )}
+          icon={
+            !wallet.walletConnected && (
+              <img src={IMG_MATAMASK} className="h-6 mr-4" />
+            )
+          }
+          onClick={wallet.walletConnected ? onConvert : wallet.connectWallet}
+        />
       </div>
     </div>
   ));

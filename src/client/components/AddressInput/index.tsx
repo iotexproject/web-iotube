@@ -15,7 +15,6 @@ export const AddressInput = (props: IComponentProps) => {
     <div className="component__address_input bg-secondary c-white rounded px-5 py-4">
       <div className="text-xl font-normal">{props.label}</div>
       <TextArea
-        placeholder="0.0"
         value={props.address}
         rows={2}
         onChange={(event) => {

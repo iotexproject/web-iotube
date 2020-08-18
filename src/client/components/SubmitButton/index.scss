@@ -1,2 +1,11 @@
 .component__submit_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem !important;
+  font-size: 1.25rem !important;
+  background-color: rgb(74, 211, 185) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }

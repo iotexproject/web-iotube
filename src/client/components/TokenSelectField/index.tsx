@@ -16,7 +16,7 @@ interface IToken {
 
 const { Option } = Select;
 
-const TOKENS: IToken[] = [
+export const TOKENS: IToken[] = [
   {
     name: 'ABC token (ERC-20)',
     id: 'ABC token (ERC-20)',

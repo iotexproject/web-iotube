@@ -5,5 +5,12 @@
   "flip": "FLIP",
   "token.ethereum": "Ethereum",
   "token.iotex": "IoTex",
-  "amount": "Amount"
+  "amount": "Amount",
+  "convert": "Convert",
+  "connect_metamask": "Connect Metamask",
+  "fee": "Fee",
+  "fee.tube": "Tube Fee",
+  "fee.network": "Network Fee",
+  "free": "Free",
+  "confirm": "Confirm"
 }

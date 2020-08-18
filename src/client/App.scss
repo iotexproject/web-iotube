@@ -76,4 +76,41 @@ body {
       }
     }
   }
+
+  // confirm modal
+  .modal__confirm_deposit {
+    width: 400px !important;
+
+    top: 150px !important;
+    .ant-modal-content {
+      border-radius: 0.5rem !important;
+      .ant-modal-close-x {
+        color: rgb(186, 192, 204);
+        font-size: 1.4rem;
+      }
+      .ant-modal-header {
+        background-color: var(--bg-primary) !important;
+        border-bottom: none !important;
+        padding-top: 1.5rem;
+        .ant-modal-title {
+          color: white;
+        }
+      }
+      .ant-modal-body {
+        padding-top: 0.5rem;
+        background-color: var(--bg-primary) !important;
+        .modal__confirm_deposit__confirm {
+          background-color: var(--c-green);
+          font-size: 1.25rem;
+          outline: none !important;
+          box-shadow: none !important;
+          border: none !important;
+          padding: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+  }
 }

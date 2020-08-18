@@ -12,5 +12,6 @@
   "fee.tube": "Tube Fee",
   "fee.network": "Network Fee",
   "free": "Free",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "connect_io_pay": "Connect ioPay"
 }

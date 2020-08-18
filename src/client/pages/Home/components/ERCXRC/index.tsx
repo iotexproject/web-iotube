@@ -7,6 +7,7 @@ import {
   SubmitButton,
   TokenSelectField,
   AddressInput,
+  ConfirmModal,
 } from '../../../../components';
 import { useStore } from '../../../../../common/store';
 
@@ -15,9 +16,10 @@ const IMG_MATAMASK = require('../../../../static/images/metamask.png');
 export const ERCXRC = () => {
   const { lang, wallet } = useStore();
   const store = useLocalStore(() => ({
-    amount: '',
-    token: '',
-    address: '',
+    amount: '10',
+    token: 'bcd token (ERC-20)',
+    address: 'iofwefwef',
+    showConfirmModal: false,
     setAmount(newAmount) {
       this.amount = newAmount;
     },
@@ -27,8 +29,20 @@ export const ERCXRC = () => {
     setAddress(newAddress) {
       this.address = newAddress;
     },
+    toggleConfirmModalVisible() {
+      this.showConfirmModal = !this.showConfirmModal;
+    },
   }));
-  const onConvert = () => {};
+  const onConvert = () => {
+    store.toggleConfirmModalVisible();
+  };
+  const onConfirm = () => {};
+  const isEnabled =
+    !wallet.walletConnected ||
+    (wallet.walletConnected &&
+      store.amount !== '' &&
+      store.address !== '' &&
+      store.token !== '');
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-4">
       <ConvertImageSection isERCXRC />
@@ -74,9 +88,23 @@ export const ERCXRC = () => {
               <img src={IMG_MATAMASK} className="h-6 mr-4" />
             )
           }
-          onClick={wallet.walletConnected ? onConvert : wallet.connectWallet}
+          onClick={wallet.walletConnected ? onConvert : wallet.init}
+          disabled={!isEnabled}
         />
       </div>
+      <ConfirmModal
+        visible={store.showConfirmModal}
+        onConfirm={onConfirm}
+        tubeFee={0}
+        networkFee={0}
+        depositAmount={10}
+        depositToken={store.token}
+        mintAmount={10}
+        mintToken={store.token}
+        mintTokenName={'IOTX'}
+        close={store.toggleConfirmModalVisible}
+        middleComment="to ioTube and mint"
+      />
     </div>
   ));
 };

@@ -1,8 +1,6 @@
 import React from 'react';
 import {useLocalStore, useObserver} from 'mobx-react-lite';
 import './index.scss';
-import {ConvertImageSection} from '../ConvertImageSection';
-import {AddressInput, AmountField, SubmitButton, TokenSelectField,} from '../../../../components';
 import {useStore} from '../../../../../common/store';
 import {SUPPORTED_WALLETS} from "../../../../constants/index";
 import {WalletConnectConnector} from "@web3-react/walletconnect-connector";
@@ -12,6 +10,14 @@ import {Web3Provider} from '@ethersproject/providers'
 import useENSName from "../../../../hooks/useENSName";
 import {shortenAddress} from "../../../../utils/index";
 import {useETHBalances} from "../../../../state/wallet/hooks";
+import { ConvertImageSection } from '../ConvertImageSection';
+import {
+  AmountField,
+  SubmitButton,
+  TokenSelectField,
+  AddressInput
+} from '../../../../components';
+import {ConfirmModal} from "../../../../components/ConfirmModal/index";
 
 const IMG_MATAMASK = require('../../../../static/images/metamask.png');
 
@@ -22,9 +28,10 @@ export const ERCXRC = () => {
   const userEthBalance = useETHBalances([account])[account]
 
   const store = useLocalStore(() => ({
-    amount: '',
-    token: '',
-    address: '',
+    amount: '10',
+    token: 'bcd token (ERC-20)',
+    address: 'iofwefwef',
+    showConfirmModal: false,
     setAmount(newAmount) {
       this.amount = newAmount;
     },
@@ -33,6 +40,9 @@ export const ERCXRC = () => {
     },
     setAddress(newAddress) {
       this.address = newAddress;
+    },
+    toggleConfirmModalVisible() {
+      this.showConfirmModal = !this.showConfirmModal;
     },
   }));
 
@@ -50,7 +60,7 @@ export const ERCXRC = () => {
     }
 
     activate(connector, undefined, true).catch(error => {
-      if (error instanceof UnsupportedChainIdError) {
+      if (error instanceof UnsupportedChainIdError || (error.code = 32002)) {
         activate(connector)
       } else {
         // setPendingError(true)
@@ -58,7 +68,17 @@ export const ERCXRC = () => {
     })
   }
 
-  const onConvert = () => {};
+  const onConvert = () => {
+    store.toggleConfirmModalVisible();
+  };
+  const onConfirm = () => {};
+  const isEnabled =
+    !account ||
+    (account &&
+      store.amount !== '' &&
+      store.address !== '' &&
+      store.token !== '');
+
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-4">
       <ConvertImageSection isERCXRC />
@@ -121,8 +141,22 @@ export const ERCXRC = () => {
           onClick={account ? onConvert : ()=>{
             tryActivation(injected).then()
           }}
+          disabled={!isEnabled}
         />
       </div>
+      <ConfirmModal
+        visible={store.showConfirmModal}
+        onConfirm={onConfirm}
+        tubeFee={0}
+        networkFee={0}
+        depositAmount={10}
+        depositToken={store.token}
+        mintAmount={10}
+        mintToken={store.token}
+        mintTokenName={'IOTX'}
+        close={store.toggleConfirmModalVisible}
+        middleComment="to ioTube and mint"
+      />
     </div>
   ));
 };

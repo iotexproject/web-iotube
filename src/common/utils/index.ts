@@ -1,7 +1,9 @@
-import { Helper } from "./helper";
+import { helper } from "./helper";
 import { Env } from "./env";
+import { eventBus } from "./eventBus";
 
 export const utils = {
-  helper: new Helper(),
+  helper,
+  eventBus,
   env: new Env(),
 };

@@ -1,16 +1,4 @@
 {
   "HELLO_MESSAGE": "你好 ${message}",
-  "count": "计数",
-  "header.connect_wallet": "Connect Wallet",
-  "flip": "FLIP",
-  "token.ethereum": "Ethereum",
-  "token.iotex": "IoTex",
-  "amount": "Amount",
-  "convert": "Convert",
-  "connect_metamask": "Connect Metamask",
-  "fee": "Fee",
-  "fee.tube": "Tube Fee",
-  "fee.network": "Network Fee",
-  "free": "Free",
-  "confirm": "Confirm"
+  "count": "计数"
 }

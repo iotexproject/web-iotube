@@ -1,16 +1,13 @@
 import React, { useEffect } from 'react';
 import { useObserver, useLocalStore } from 'mobx-react-lite';
 import './index.scss';
-import { useStore } from '../../../common/store/index';
 import { ClientOnly } from '../../components';
-import { rpcClient } from '../../utils/rpc';
 import { ERCXRC, XRCERC, FlipHeader } from './components';
 
 const CARD_ERC20_XRC20 = 'ERC20-XRC20';
 const CARD_XRC20_ERC20 = 'XRC20-ERC20';
 
 export const Home = () => {
-  const { lang } = useStore();
   const store = useLocalStore(() => ({
     mode: CARD_ERC20_XRC20,
     flipMode() {
@@ -19,15 +16,6 @@ export const Home = () => {
     },
   }));
 
-  useEffect(() => {
-    rpcClient.login('test', '123').then(async () => {
-      const me = await rpcClient.me();
-      console.log({ me });
-      await rpcClient.logout();
-      const logoutMe = await rpcClient.me();
-      console.log({ me: logoutMe });
-    });
-  }, []);
   return useObserver(() => (
     <ClientOnly>
       <div className="page__home">

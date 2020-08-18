@@ -25,9 +25,9 @@ export function getRootStore() {
 
   const rootStore = createRootStore();
   Object.keys(rootStore).forEach((key) => {
-    //@ts-ignore
     rootStore[key] = extendObservable(
       rootStore[key],
+        //@ts-ignore
       window.__ROOT__STORE__[key]
     );
   });

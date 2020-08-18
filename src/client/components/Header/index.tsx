@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
-import './index.scss';
-import { EllipsisOutlined } from '@ant-design/icons';
-import { Button, Avatar } from 'antd';
-import { useStore } from '../../../common/store';
-import { useObserver } from 'mobx-react';
+import React, { useEffect } from "react";
+import "./index.scss";
+import { EllipsisOutlined } from "@ant-design/icons";
+import { Button, Avatar } from "antd";
+import { useStore } from "../../../common/store";
+import { useObserver } from "mobx-react";
 
-const IMG_LOGO = require('../../static/images/logo-iotex.png');
-const IMG_TOKEN = require('../../static/images/icon_wallet.png');
+const IMG_LOGO = require("../../static/images/logo-iotex.png");
+const IMG_TOKEN = require("../../static/images/icon_wallet.png");
 
 export const Header = () => {
   const { wallet, lang } = useStore();
   const onConnectWallet = () => {
-    wallet.connectWallet();
+    wallet.init();
   };
-  const walletLength = String(wallet.walletAddress || '').length;
+  const walletLength = String(wallet.walletAddress || "").length;
   return useObserver(() => (
     <div className="component__header h-10 sm:h-10 md:h-12 lg:h-16">
       <div className="component__header__content app_header_content flex justify-between items-center h-full py-1">
@@ -38,7 +38,7 @@ export const Header = () => {
             </>
           ) : (
             <Button className="c-white" type="text" onClick={onConnectWallet}>
-              {lang.t('header.connect_wallet')}
+              {lang.t("header.connect_wallet")}
             </Button>
           )}
           &nbsp;&nbsp;&nbsp;

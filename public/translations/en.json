@@ -13,5 +13,8 @@
   "fee.network": "Network Fee",
   "free": "Free",
   "confirm": "Confirm",
-  "connect_io_pay": "Connect ioPay"
+  "connect_io_pay": "Connect ioPay",
+  "complete": "Complete",
+  "broadcast_transaction_successfully": "Broadcast transaction successfully",
+  "complete.check_status_comment": "You can check the status right now by clicking the following TX hash or save your TX hash and check the status later."
 }

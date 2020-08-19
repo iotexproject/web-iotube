@@ -19,9 +19,7 @@ export const CompleteFrame = () => {
         {lang.t('broadcast_transaction_successfully')}
       </div>
       <div className="c-gray font-thin mt-3">
-        Your TX has been broadcast to the network. Your XRC20 token will be
-        minted on io12345xxx after 2/3 validators confirmed. The XRC20 tokens
-        will be sent to your loTeX wallet:
+        {lang.t('complete.tx_broadcast_network')}
       </div>
       <div className="c-gray font-normal flex items-center">
         <span>{address}</span>
@@ -32,7 +30,9 @@ export const CompleteFrame = () => {
           className="page__home__component__complete_frame__btn--copy cursor-pointer"
         />
       </div>
-      <div className="c-white text-base font-normal mt-6">Your TX hash</div>
+      <div className="c-white text-base font-normal mt-6">
+        {lang.t('complete.your_tx')}
+      </div>
       <div className="text-base font-light">
         <a className="page__home__component__complete_frame__link c-green">
           <u>

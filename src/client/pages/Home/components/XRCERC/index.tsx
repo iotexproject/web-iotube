@@ -16,9 +16,9 @@ const IMG_IOPAY = require('../../../../static/images/logo_iotex.png');
 export const XRCERC = () => {
   const { lang, wallet } = useStore();
   const store = useLocalStore(() => ({
-    amount: '10',
-    token: 'bcd token (ERC-20)',
-    address: 'iofwefwef',
+    amount: '',
+    token: '',
+    address: '',
     showConfirmModal: false,
     setAmount(newAmount) {
       this.amount = newAmount;

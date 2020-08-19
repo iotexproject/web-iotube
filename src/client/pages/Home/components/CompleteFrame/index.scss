@@ -1,0 +1,17 @@
+.page__home__component__complete_frame {
+  .page__home__component__complete_frame__link {
+    overflow-wrap: break-word;
+  }
+  .page__home__component__complete_frame__btn--copy {
+    display: inline-block;
+    height: 1.5rem !important;
+  }
+  .page__home__component__complete_frame__btn--complete {
+    font-size: 1.25rem;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 0.75rem !important;
+    height: auto !important;
+  }
+}

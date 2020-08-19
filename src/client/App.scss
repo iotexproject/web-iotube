@@ -9,6 +9,7 @@ body {
   --app-frame-width: 450px;
   --app-header-width: 1200px;
   --c-green: rgb(74, 211, 185);
+  --c-green-10: rgb(1, 201, 170);
 
   #root {
     margin: 0 auto;
@@ -39,12 +40,24 @@ body {
     background-color: var(--bg-secondary);
   }
 
+  .bg-green {
+    background-color: var(--c-green) !important;
+  }
+
+  .bg-green-10 {
+    background-color: var(--c-green-10) !important;
+  }
+
   .c-white {
-    color: white;
+    color: white !important;
   }
 
   .c-green {
     color: var(--c-green);
+  }
+
+  .c-green-10 {
+    color: var(--c-green-10);
   }
 
   .c-gray {

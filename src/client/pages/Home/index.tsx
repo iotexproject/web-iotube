@@ -11,7 +11,7 @@ export const Home = () => {
   const { base } = useStore();
   const history = useHistory();
 
-  const isERCXRC = matchPath(history.location.pathname, {
+  const isERCXRC = !!matchPath(history.location.pathname, {
     path: '/eth',
     exact: true,
   });

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useObserver, useLocalStore } from 'mobx-react-lite';
 import './index.scss';
-import { ConvertImageSection } from '../ConvertImageSection';
 import { useStore } from '../../../../../common/store';
 import {
   SubmitButton,
@@ -20,6 +19,10 @@ export const XRCERC = () => {
     token: '',
     address: '',
     showConfirmModal: false,
+    approved: false,
+    setApprove() {
+      this.approved = true;
+    },
     setAmount(newAmount) {
       this.amount = newAmount;
     },
@@ -36,16 +39,14 @@ export const XRCERC = () => {
   const onConvert = () => {
     store.toggleConfirmModalVisible();
   };
+  const onApprove = () => {
+    store.setApprove();
+  };
   const onConfirm = () => {};
   const isEnabled =
-    !wallet.walletConnected ||
-    (wallet.walletConnected &&
-      store.amount !== '' &&
-      store.address !== '' &&
-      store.token !== '');
+    store.amount !== '' && store.address !== '' && store.token !== '';
   return useObserver(() => (
     <div className="page__home__component__xrc_erc p-4">
-      <ConvertImageSection isERCXRC={false} />
       <div className="my-6">
         <TokenSelectField token={store.token} onChange={store.setToken} />
       </div>
@@ -67,28 +68,39 @@ export const XRCERC = () => {
           />
         </div>
       )}
-      <div className="my-6 c-white text-left c-gray">
+      <div className="my-6 text-left c-gray-30">
         <div className="font-normal text-base mb-3">{lang.t('fee')}</div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>{lang.t('fee.tube')}</span>
           <span>0 ({lang.t('free')})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t('fee.network')}</span>
+          <span>{lang.t('relay_to_ethereum')}</span>
           <span>0 ({lang.t('free')})</span>
         </div>
       </div>
       <div>
-        <SubmitButton
-          title={lang.t(wallet.walletConnected ? 'convert' : 'connect_io_pay')}
-          icon={
-            !wallet.walletConnected && (
-              <img src={IMG_IOPAY} className="h-6 mr-4" />
-            )
-          }
-          onClick={wallet.walletConnected ? onConvert : wallet.init}
-          disabled={!isEnabled}
-        />
+        {!wallet.walletConnected && (
+          <SubmitButton
+            title={lang.t('connect_io_pay')}
+            icon={<img src={IMG_IOPAY} className="h-6 mr-4" />}
+            onClick={wallet.init}
+          />
+        )}
+        {wallet.walletConnected && (
+          <div className="page__home__component__xrc_erc__button_group flex items-center">
+            <SubmitButton
+              title={lang.t('approve')}
+              onClick={onApprove}
+              disabled={store.approved}
+            />
+            <SubmitButton
+              title={lang.t('convert')}
+              onClick={onConvert}
+              disabled={!store.approved}
+            />
+          </div>
+        )}
       </div>
       <ConfirmModal
         visible={store.showConfirmModal}
@@ -102,6 +114,7 @@ export const XRCERC = () => {
         mintTokenName={'Ethereum'}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and withdraw"
+        isERCXRC={false}
       />
     </div>
   ));

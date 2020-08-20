@@ -1,2 +1,13 @@
 .page__home__component__xrc_erc {
+  .component__amount_field,
+  .component__token_select,
+  .component__address_input {
+    background-color: #13241c;
+  }
+
+  .page__home__component__xrc_erc__button_group {
+    & > * + * {
+      margin-left: 0.5rem;
+    }
+  }
 }

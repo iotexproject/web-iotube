@@ -1,27 +1,27 @@
-import window from "global/window";
-import React, {useEffect} from 'react';
-import {Route, Switch} from 'react-router-dom';
-import {Home} from './pages/Home';
+import window from 'global/window';
+import React, { useEffect } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { Home } from './pages/Home';
 import './App.scss';
-import {useStore} from '../common/store/index';
-import {MainLayout} from './layouts';
-import {Web3ReactProvider} from "@web3-react/core";
-import {Web3Provider} from "@ethersproject/providers";
-import store from './state'
-import {Provider} from 'react-redux'
-import ApplicationUpdater from './state/application/updater'
-import MulticallUpdater from './state/multicall/updater'
-import {Web3ProviderNetwork} from "../common/utils/create-web3";
+import { useStore } from '../common/store/index';
+import { MainLayout } from './layouts';
+import { Web3ReactProvider } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
+import store from './state';
+import { Provider } from 'react-redux';
+import ApplicationUpdater from './state/application/updater';
+import MulticallUpdater from './state/multicall/updater';
+import { Web3ProviderNetwork } from '../common/utils/create-web3';
 
 if ('ethereum' in window) {
   // @ts-ignore
-  (window.ethereum as any).autoRefreshOnNetworkChange = false
+  (window.ethereum as any).autoRefreshOnNetworkChange = false;
 }
 
 function getLibrary(provider: any): Web3Provider {
-  const library = new Web3Provider(provider)
-  library.pollingInterval = 15000
-  return library
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 15000;
+  return library;
 }
 
 function Updaters() {
@@ -30,7 +30,7 @@ function Updaters() {
       <ApplicationUpdater />
       <MulticallUpdater />
     </>
-  )
+  );
 }
 
 const App = () => {
@@ -46,7 +46,9 @@ const App = () => {
           <Updaters />
           <MainLayout>
             <Switch>
-              <Route exact={true} path="/" component={Home} />
+              <Route exact={true} path="/eth" component={Home} />
+              <Route exact={true} path="/iotx" component={Home} />
+              <Redirect to="/eth" />
             </Switch>
           </MainLayout>
         </Provider>

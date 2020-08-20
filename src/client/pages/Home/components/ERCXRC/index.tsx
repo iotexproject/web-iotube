@@ -10,7 +10,6 @@ import { Web3Provider } from '@ethersproject/providers';
 import useENSName from '../../../../hooks/useENSName';
 import { shortenAddress } from '../../../../utils/index';
 import { useETHBalances } from '../../../../state/wallet/hooks';
-import { ConvertImageSection } from '../ConvertImageSection';
 import {
   AmountField,
   SubmitButton,
@@ -32,6 +31,10 @@ export const ERCXRC = () => {
     token: '',
     address: '',
     showConfirmModal: false,
+    approved: false,
+    setApprove() {
+      this.approved = true;
+    },
     setAmount(newAmount) {
       this.amount = newAmount;
     },
@@ -77,17 +80,15 @@ export const ERCXRC = () => {
   const onConvert = () => {
     store.toggleConfirmModalVisible();
   };
+  const onApprove = () => {
+    store.setApprove();
+  };
   const onConfirm = () => {};
   const isEnabled =
-    !account ||
-    (account &&
-      store.amount !== '' &&
-      store.address !== '' &&
-      store.token !== '');
+    store.amount !== '' && store.address !== '' && store.token !== '';
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-4">
-      <ConvertImageSection isERCXRC />
       <div className="my-6">
         <TokenSelectField token={store.token} onChange={store.setToken} />
       </div>
@@ -98,7 +99,7 @@ export const ERCXRC = () => {
       />
       {store.amount && (
         <div className="my-6 text-left">
-          <div className="text-base c-gray-20">
+          <div className="text-base c-gray-20 font-thin">
             You will receive {store.token} tokens at
           </div>
           <AddressInput
@@ -108,7 +109,7 @@ export const ERCXRC = () => {
           />
         </div>
       )}
-      <div className="my-6 c-white text-left c-gray">
+      <div className="my-6 text-left c-gray-30">
         {account && (
           <>
             <div className="font-light text-sm flex items-center justify-between">
@@ -126,23 +127,34 @@ export const ERCXRC = () => {
           <span>0 ({lang.t('free')})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t('fee.network')}</span>
+          <span>{lang.t('relay_to_iotex')}</span>
           <span>0 ({lang.t('free')})</span>
         </div>
       </div>
       <div>
-        <SubmitButton
-          title={lang.t(account ? 'convert' : 'connect_metamask')}
-          icon={!account && <img src={IMG_MATAMASK} className="h-6 mr-4" />}
-          onClick={
-            account
-              ? onConvert
-              : () => {
-                  tryActivation(injected).then();
-                }
-          }
-          disabled={!isEnabled}
-        />
+        {!account && (
+          <SubmitButton
+            title={lang.t('connect_metamask')}
+            icon={<img src={IMG_MATAMASK} className="h-6 mr-4" />}
+            onClick={() => {
+              tryActivation(injected).then();
+            }}
+          />
+        )}
+        {account && (
+          <div className="page__home__component__erc_xrc__button_group flex items-center">
+            <SubmitButton
+              title={lang.t('approve')}
+              onClick={onApprove}
+              disabled={store.approved}
+            />
+            <SubmitButton
+              title={lang.t('convert')}
+              onClick={onConvert}
+              disabled={!store.approved}
+            />
+          </div>
+        )}
       </div>
       <ConfirmModal
         visible={store.showConfirmModal}
@@ -156,6 +168,7 @@ export const ERCXRC = () => {
         mintTokenName={'IOTX'}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"
+        isERCXRC
       />
     </div>
   ));

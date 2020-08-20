@@ -4,8 +4,14 @@
   justify-content: center;
   padding: 1.75rem !important;
   font-size: 1.25rem !important;
-  background-color: rgb(74, 211, 185) !important;
+  background-color: #33ff99 !important;
+  color: #262525 !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+
+  &.component__submit_button--disabled {
+    color: #8c8d92 !important;
+    background-color: #303030 !important;
+  }
 }

@@ -12,7 +12,7 @@ export const AmountField = (props: IComponentProps) => {
   return (
     <Input
       className="component__amount_field bg-secondary c-white"
-      prefix={<span className="text-xl">{props.label}</span>}
+      prefix={<span className="text-xl font-thin">{props.label}</span>}
       placeholder="0.0"
       value={props.amount}
       onChange={(event) => {

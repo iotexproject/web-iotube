@@ -13,7 +13,7 @@ interface IComponentProps {
 export const AddressInput = (props: IComponentProps) => {
   return (
     <div className="component__address_input bg-secondary c-white rounded px-5 py-4">
-      <div className="text-xl font-normal">{props.label}</div>
+      <div className="text-xl font-thin">{props.label}</div>
       <TextArea
         value={props.address}
         rows={2}

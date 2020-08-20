@@ -4,13 +4,15 @@
   "header.connect_wallet": "Connect Wallet",
   "flip": "FLIP",
   "token.ethereum": "Ethereum",
-  "token.iotex": "IoTex",
+  "token.iotex": "IoTeX",
   "amount": "Amount",
   "convert": "Convert",
   "connect_metamask": "Connect Metamask",
   "fee": "Fee",
   "fee.tube": "Tube Fee",
   "fee.network": "Network Fee",
+  "relay_to_iotex": "Relay to IoTeX",
+  "relay_to_ethereum": "Relay to Ethereum",
   "free": "Free",
   "confirm": "Confirm",
   "connect_io_pay": "Connect ioPay",
@@ -18,5 +20,6 @@
   "broadcast_transaction_successfully": "Broadcast transaction successfully",
   "complete.check_status_comment": "You can check the status right now by clicking the following TX hash or save your TX hash and check the status later.",
   "complete.tx_broadcast_network": "Your TX has been broadcast to the network. Your XRC20 token will be minted on io12345xxx after 2/3 validators confirmed. The XRC20 tokens will be sent to your loTeX wallet:",
-  "complete.your_tx": "Your TX hash"
+  "complete.your_tx": "Your TX hash",
+  "approve": "Approve"
 }

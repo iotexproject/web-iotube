@@ -1,0 +1,9 @@
+.page__home__component__switch_header {
+  position: relative;
+  .page__home__component__switch_header__switch {
+    position: absolute;
+    left: calc(50% - 35px);
+    height: 70px;
+    z-index: 10;
+  }
+}

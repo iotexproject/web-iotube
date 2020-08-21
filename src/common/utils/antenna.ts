@@ -50,7 +50,3 @@ export class AntennaUtils {
     return this.signerPlugin ? this.signerPlugin.getAccounts() : [];
   }
 }
-
-export function getAntenna(): Antenna {
-  return AntennaUtils.antenna;
-}

@@ -12,7 +12,6 @@ import { Request, Response } from "express";
 import { BaseStore } from "../../../common/store/base";
 import { publicConfig } from "../../../../configs/public";
 import window from "global/window";
-import { Dict } from "../../../type";
 
 let assets = require(process.env.RAZZLE_ASSETS_MANIFEST!);
 

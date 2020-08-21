@@ -33,6 +33,7 @@ export class WalletStore {
 
   @action.bound
   async initWS() {
+    AntennaUtils.getAntenna();
     const [err, accounts] = await utils.helper.promise.runAsync(
       AntennaUtils.getAccounts()
     );

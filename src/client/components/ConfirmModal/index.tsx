@@ -16,6 +16,7 @@ interface IComponentProps {
   mintToken: string;
   mintTokenName: string;
   middleComment: string;
+  isERCXRC: boolean;
 }
 
 export const ConfirmModal = (props: IComponentProps) => {
@@ -58,14 +59,20 @@ export const ConfirmModal = (props: IComponentProps) => {
           <span>0 ({lang.t('free')})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t('fee.network')}</span>
+          <span>
+            {lang.t(props.isERCXRC ? 'relay_to_iotex' : 'relay_to_ethereum')}
+          </span>
           <span>0 ({lang.t('free')})</span>
         </div>
       </div>
       <div>
         <Button
           onClick={props.onConfirm}
-          className="modal__confirm_deposit__confirm w-full c-white "
+          className={`modal__confirm_deposit__confirm ${
+            props.isERCXRC
+              ? 'modal__confirm_deposit__confirm--erc-xrc'
+              : 'modal__confirm_deposit__confirm--xrc-erc'
+          } w-full c-white`}
           type="primary"
         >
           {lang.t('confirm')}

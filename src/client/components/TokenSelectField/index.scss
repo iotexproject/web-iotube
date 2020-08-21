@@ -1,6 +1,7 @@
 .component__token_select {
   padding: 0 !important;
   border-radius: 0.25rem !important;
+  background-color: inherit;
   .ant-select-selector {
     background-color: inherit !important;
     box-shadow: none !important;
@@ -14,5 +15,8 @@
       display: flex;
       align-items: center;
     }
+  }
+  .ant-select-arrow {
+    right: 1rem;
   }
 }

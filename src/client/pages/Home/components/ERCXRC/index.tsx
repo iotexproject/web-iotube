@@ -10,7 +10,6 @@ import { Web3Provider } from '@ethersproject/providers';
 import useENSName from '../../../../hooks/useENSName';
 import {getContract, shortenAddress} from '../../../../utils/index';
 import { useETHBalances } from '../../../../state/wallet/hooks';
-import { ConvertImageSection } from '../ConvertImageSection';
 import {
   AmountField,
   SubmitButton,
@@ -34,6 +33,10 @@ export const ERCXRC = () => {
     token: '',
     address: '',
     showConfirmModal: false,
+    approved: false,
+    setApprove() {
+      this.approved = true;
+    },
     setAmount(newAmount) {
       this.amount = newAmount;
     },
@@ -79,6 +82,9 @@ export const ERCXRC = () => {
   const onConvert = () => {
     store.toggleConfirmModalVisible();
   };
+  const onApprove = () => {
+    store.setApprove();
+  };
   const onConfirm = async () => {
 
     const contract: Contract | null = getContract(IOTX.address, ERC20_XRC20_ABI, library, account)
@@ -107,13 +113,13 @@ export const ERCXRC = () => {
             window.console.log('Call threw error', callError)
             let errorMessage: string
             switch (callError.reason) {
-              case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
-              case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
+              case 'INSUFFICIENT_OUTPUT_AMOUNT':
+              case 'EXCESSIVE_INPUT_AMOUNT':
                 errorMessage =
                   'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                 break
               default:
-                errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens you are swapping.`
+                errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`
             }
             return { error: new Error(errorMessage)}
           })
@@ -131,73 +137,13 @@ export const ERCXRC = () => {
           console.error(`${methodName} failed`, error, methodName, args,options)
         }
       })
-
-
-/*
-    // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
-    const successfulEstimation = estimatedCalls.find(
-      (el, ix, list): el is SuccessfulCall =>
-        'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
-    )
-
-    if (!successfulEstimation) {
-      const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
-      if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-      throw new Error('Unexpected error. Please contact support: none of the calls threw an error')
-    }
-
-
-    contract[methodName](...args, {
-      gasLimit: calculateGasMargin(gasEstimate),
-      ...(value && !isZero(value) ? {value, from: account} : {from: account})
-    })
-      .then((response: any) => {
-        const inputSymbol = trade.inputAmount.currency.symbol
-        const outputSymbol = trade.outputAmount.currency.symbol
-        const inputAmount = trade.inputAmount.toSignificant(3)
-        const outputAmount = trade.outputAmount.toSignificant(3)
-
-        const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-        const withRecipient =
-          recipient === account
-            ? base
-            : `${base} to ${
-              recipientAddressOrName && isAddress(recipientAddressOrName)
-                ? shortenAddress(recipientAddressOrName)
-                : recipientAddressOrName
-            }`
-
-        const withVersion =
-          tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
-
-        addTransaction(response, {
-          summary: withVersion
-        })
-
-        return response.hash
-      })
-      .catch((error: any) => {
-        // if the user rejected the tx, pass this along
-        if (error?.code === 4001) {
-          throw new Error('Transaction rejected.')
-        } else {
-          // otherwise, the error was unexpected and we need to convey that
-          console.error(`Swap failed`, error, methodName, args, value)
-          throw new Error(`Swap failed: ${error.message}`)
-        }
-      })*/
-
   };
+
   const isEnabled =
-    !account ||
-    (account &&
-      store.amount !== '' &&
-      store.address !== '' &&
-      store.token !== '');
+    store.amount !== '' && store.address !== '' && store.token !== '';
 
   return useObserver(() => (
-    <div className="page__home__component__erc_xrc p-4">
-      <ConvertImageSection isERCXRC />
+    <div className="page__home__component__erc_xrc p-8 pt-6">
       <div className="my-6">
         <TokenSelectField token={store.token} onChange={store.setToken} />
       </div>
@@ -208,7 +154,7 @@ export const ERCXRC = () => {
       />
       {store.amount && (
         <div className="my-6 text-left">
-          <div className="text-base c-gray-20">
+          <div className="text-base c-gray-20 font-thin">
             You will receive {store.token} tokens at
           </div>
           <AddressInput
@@ -218,7 +164,7 @@ export const ERCXRC = () => {
           />
         </div>
       )}
-      <div className="my-6 c-white text-left c-gray">
+      <div className="my-6 text-left c-gray-30">
         {account && (
           <>
             <div className="font-light text-sm flex items-center justify-between">
@@ -236,23 +182,34 @@ export const ERCXRC = () => {
           <span>0 ({lang.t('free')})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t('fee.network')}</span>
+          <span>{lang.t('relay_to_iotex')}</span>
           <span>0 ({lang.t('free')})</span>
         </div>
       </div>
       <div>
-        <SubmitButton
-          title={lang.t(account ? 'convert' : 'connect_metamask')}
-          icon={!account && <img src={IMG_MATAMASK} className="h-6 mr-4" />}
-          onClick={
-            account
-              ? onConvert
-              : () => {
-                  tryActivation(injected).then();
-                }
-          }
-          disabled={!isEnabled}
-        />
+        {!account && (
+          <SubmitButton
+            title={lang.t('connect_metamask')}
+            icon={<img src={IMG_MATAMASK} className="h-6 mr-4" />}
+            onClick={() => {
+              tryActivation(injected).then();
+            }}
+          />
+        )}
+        {account && (
+          <div className="page__home__component__erc_xrc__button_group flex items-center">
+            <SubmitButton
+              title={lang.t('approve')}
+              onClick={onApprove}
+              disabled={store.approved}
+            />
+            <SubmitButton
+              title={lang.t('convert')}
+              onClick={onConvert}
+              disabled={!store.approved}
+            />
+          </div>
+        )}
       </div>
       <ConfirmModal
         visible={store.showConfirmModal}
@@ -266,6 +223,7 @@ export const ERCXRC = () => {
         mintTokenName={'IOTX'}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"
+        isERCXRC
       />
     </div>
   ));

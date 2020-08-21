@@ -14,7 +14,9 @@ export const SubmitButton = (props: IComponentProps) => {
     <Button
       icon={props.icon}
       onClick={props.onClick}
-      className="component__submit_button w-full"
+      className={`component__submit_button w-full ${
+        props.disabled ? 'component__submit_button--disabled' : ''
+      }`}
       type="primary"
       size="large"
       disabled={props.disabled || false}

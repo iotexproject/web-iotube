@@ -1,15 +1,19 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'DM Mono', monospace;
   background-color: var(--bg) !important;
-  --bg: rgb(69, 71, 87);
-  --bg-primary: #2d3137;
-  --bg-secondary: rgb(63, 70, 80);
+  --bg: #3b3b3b;
+  --bg-primary: #262525;
+  --bg-secondary: #051a0f;
   --app-frame-width: 450px;
   --app-header-width: 1200px;
-  --c-green: rgb(74, 211, 185);
-  --c-green-10: rgb(1, 201, 170);
+  --c-green: #33ff99;
+  --c-green-10: #33ff99;
+  --c-gray: #9398a2;
+  --c-gray-10: rgb(147, 152, 162);
+  --c-gray-20: rgb(147, 147, 153);
+  --c-gray-30: #bac0cc;
 
   #root {
     margin: 0 auto;
@@ -26,9 +30,9 @@ body {
   }
 
   .app_frame_shadow {
-    -webkit-box-shadow: 0px 0px 5px 4px rgba(69, 71, 87, 1);
-    -moz-box-shadow: 0px 0px 5px 4px rgba(69, 71, 87, 1);
-    box-shadow: 0px 0px 5px 4px rgba(69, 71, 87, 1);
+    -webkit-box-shadow: 0px 0px 5px 4px #3b3b3b;
+    -moz-box-shadow: 0px 0px 5px 4px #3b3b3b;
+    box-shadow: 0px 0px 5px 4px #3b3b3b;
     border-radius: 0.25rem;
   }
 
@@ -61,15 +65,35 @@ body {
   }
 
   .c-gray {
-    color: rgb(186, 192, 204);
+    color: var(--c-gray);
   }
 
   .c-gray-10 {
-    color: rgb(147, 152, 162);
+    color: var(--c-gray-10);
   }
 
   .c-gray-20 {
-    color: rgb(147, 147, 153);
+    color: var(--c-gray-20);
+  }
+
+  .c-gray-30 {
+    color: var(--c-gray-30) !important;
+  }
+
+  .c-primary {
+    color: var(--bg-primary) !important;
+  }
+
+  .c-secondary {
+    color: var(--bg-secondary) !important;
+  }
+
+  .border-primary {
+    border-color: var(--bg-primary) !important;
+  }
+
+  .border-secondary {
+    border-color: var(--bg-secondary) !important;
   }
 
   // token select dropdown
@@ -79,7 +103,7 @@ body {
     .ant-select-item-option {
       transition: all 0.3s;
       background-color: transparent !important;
-      padding: 0.5rem 0.75rem !important;
+      padding: 0.5rem 1.5rem !important;
       &.ant-select-item-option-selected {
         background-color: #2d3137 !important;
         color: white !important;
@@ -90,6 +114,10 @@ body {
     }
   }
 
+  .ant-modal-mask {
+    background-color: rgba($color: #000000, $alpha: 0.5);
+  }
+
   // confirm modal
   .modal__confirm_deposit {
     width: 400px !important;
@@ -98,7 +126,7 @@ body {
     .ant-modal-content {
       border-radius: 0.5rem !important;
       .ant-modal-close-x {
-        color: rgb(186, 192, 204);
+        color: #9398a2;
         font-size: 1.4rem;
       }
       .ant-modal-header {
@@ -107,13 +135,20 @@ body {
         padding-top: 1.5rem;
         .ant-modal-title {
           color: white;
+          font-weight: 200;
         }
       }
       .ant-modal-body {
         padding-top: 0.5rem;
-        background-color: var(--bg-primary) !important;
+        &.modal__confirm_deposit__confirm--erc-xrc {
+          background-color: var(--bg-primary) !important;
+        }
+        &.modal__confirm_deposit__confirm--xrc-erc {
+          background-color: var(--bg-secondary) !important;
+        }
         .modal__confirm_deposit__confirm {
           background-color: var(--c-green);
+          color: var(--bg-primary) !important;
           font-size: 1.25rem;
           outline: none !important;
           box-shadow: none !important;

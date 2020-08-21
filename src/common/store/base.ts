@@ -10,8 +10,7 @@ export class BaseStore {
   @observable showComplete = false;
 
   @action.bound
-  flipMode() {
-    this.mode =
-      this.mode === CARD_ERC20_XRC20 ? CARD_XRC20_ERC20 : CARD_ERC20_XRC20;
+  setMode(mode) {
+    this.mode = mode;
   }
 }

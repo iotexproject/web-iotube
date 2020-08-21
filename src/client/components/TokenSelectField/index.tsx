@@ -37,8 +37,8 @@ export const TOKENS: IToken[] = [
 export const TokenSelectField = (props: IComponentProps) => {
   return (
     <Select
-      className="component__token_select w-full bg-secondary c-white"
-      suffixIcon={<DownOutlined className="c-gray-10" />}
+      className="component__token_select w-full c-white"
+      suffixIcon={<DownOutlined className="c-gray-10 text-base mr-2" />}
       dropdownClassName="component__token_select__dropdown"
       onChange={(value) => {
         props.onChange(value);
@@ -51,7 +51,9 @@ export const TokenSelectField = (props: IComponentProps) => {
           className="flex bg-secondary c-white items-center"
         >
           <Avatar src={token.img} size="small" />
-          <span className="flex-1 text-xl text-left ml-4">{token.name}</span>
+          <span className="flex-1 text-xl text-left ml-4 font-thin">
+            {token.name}
+          </span>
         </Option>
       ))}
     </Select>

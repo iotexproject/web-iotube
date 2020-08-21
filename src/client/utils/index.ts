@@ -1,44 +1,66 @@
-import {Contract} from '@ethersproject/contracts'
-import {getAddress} from '@ethersproject/address'
-import {AddressZero} from '@ethersproject/constants'
-import {JsonRpcSigner, Web3Provider} from '@ethersproject/providers'
+import { Contract } from "@ethersproject/contracts";
+import { getAddress } from "@ethersproject/address";
+import { AddressZero } from "@ethersproject/constants";
+import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
+import { validateAddress } from "iotex-antenna/lib/account/utils";
 
-// returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
   try {
-    return getAddress(value)
+    if (
+      typeof value === "string" &&
+      value.startsWith("io") &&
+      validateAddress(`${value}`)
+    ) {
+      return value;
+    }
+    return getAddress(value);
   } catch {
-    return false
+    return false;
   }
 }
 
-// shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
-  const parsed = isAddress(address)
+  const parsed = isAddress(address);
   if (!parsed) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
+    window.console.log(`Invalid 'address' parameter '${address}'.`);
+    return `Invalid address ('${address}')`;
   }
-  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
+  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`;
 }
 
 // account is not optional
-export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
-  return library.getSigner(account).connectUnchecked()
+export function getSigner(
+  library: Web3Provider,
+  account: string
+): JsonRpcSigner {
+  return library.getSigner(account).connectUnchecked();
 }
 
 // account is optional
-export function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
-  return account ? getSigner(library, account) : library
+export function getProviderOrSigner(
+  library: Web3Provider,
+  account?: string
+): Web3Provider | JsonRpcSigner {
+  return account ? getSigner(library, account) : library;
 }
 
-export function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract {
+export function getContract(
+  address: string,
+  ABI: any,
+  library: Web3Provider,
+  account?: string
+): Contract {
   if (!isAddress(address) || address === AddressZero) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
+    throw Error(`Invalid 'address' parameter '${address}'.`);
   }
 
-  return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
+  return new Contract(
+    address,
+    ABI,
+    getProviderOrSigner(library, account) as any
+  );
 }
 
 export function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }

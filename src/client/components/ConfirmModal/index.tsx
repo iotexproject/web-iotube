@@ -1,7 +1,8 @@
-import React, { MouseEventHandler } from "react";
-import { Modal, Avatar, Button } from "antd";
-import { TOKENS } from "../index";
-import { useStore } from "../../../common/store";
+import React, { MouseEventHandler } from 'react';
+import { Modal, Avatar, Button } from 'antd';
+import { TOKENS } from '../index';
+import { useStore } from '../../../common/store';
+const TOKEN_IMG = require('../../static/images/icon-eth.png');
 
 interface IComponentProps {
   visible: boolean;
@@ -37,7 +38,7 @@ export const ConfirmModal = (props: IComponentProps) => {
     >
       <div className="c-white flex items-center">
         <span className="font-normal text-3xl mr-3">{props.depositAmount}</span>
-        <Avatar size="small" src={depositToken && depositToken.img} />
+        <Avatar size="small" src={depositToken && TOKEN_IMG} />
         <span className="text-xl ml-2 font-light">
           {depositToken && depositToken.name}
         </span>
@@ -47,7 +48,7 @@ export const ConfirmModal = (props: IComponentProps) => {
       </div>
       <div className="c-white  flex items-center">
         <span className="font-normal text-3xl mr-3">{props.mintAmount}</span>
-        <Avatar size="small" src={mintToken && mintToken.img} />
+        <Avatar size="small" src={mintToken && TOKEN_IMG} />
         <span className="text-xl ml-2 font-light">
           {mintToken && mintToken.name}
         </span>
@@ -56,16 +57,16 @@ export const ConfirmModal = (props: IComponentProps) => {
         on {props.mintTokenName}
       </div>
       <div className="my-6 text-left c-gray">
-        <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
+        <div className="font-normal text-base mb-3">{lang.t('fee')}</div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t("fee.tube")}</span>
-          <span>0 ({lang.t("free")})</span>
+          <span>{lang.t('fee.tube')}</span>
+          <span>0 ({lang.t('free')})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>
-            {lang.t(props.isERCXRC ? "relay_to_iotex" : "relay_to_ethereum")}
+            {lang.t(props.isERCXRC ? 'relay_to_iotex' : 'relay_to_ethereum')}
           </span>
-          <span>0 ({lang.t("free")})</span>
+          <span>0 ({lang.t('free')})</span>
         </div>
       </div>
       <div>
@@ -73,12 +74,12 @@ export const ConfirmModal = (props: IComponentProps) => {
           onClick={props.onConfirm}
           className={`modal__confirm_deposit__confirm ${
             props.isERCXRC
-              ? "modal__confirm_deposit__confirm--erc-xrc"
-              : "modal__confirm_deposit__confirm--xrc-erc"
+              ? 'modal__confirm_deposit__confirm--erc-xrc'
+              : 'modal__confirm_deposit__confirm--xrc-erc'
           } w-full c-white`}
           type="primary"
         >
-          {lang.t("confirm")}
+          {lang.t('confirm')}
         </Button>
       </div>
     </Modal>

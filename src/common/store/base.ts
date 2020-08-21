@@ -8,6 +8,7 @@ export class BaseStore {
   @observable NODE_ENV = '';
   @observable mode = CARD_ERC20_XRC20;
   @observable showComplete = false;
+  @observable APP_TOKENS = '';
 
   @action.bound
   setMode(mode) {

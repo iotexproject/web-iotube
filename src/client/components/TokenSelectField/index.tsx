@@ -2,6 +2,9 @@ import React from 'react';
 import './index.scss';
 import { Select, Avatar } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { publicConfig } from '../../../../configs/public';
+
+const TOKEN_IMG = require('../../static/images/icon-eth.png');
 
 interface IComponentProps {
   token: string;
@@ -11,28 +14,13 @@ interface IComponentProps {
 interface IToken {
   id: string;
   name: string;
-  img: string;
 }
 
 const { Option } = Select;
 
-export const TOKENS: IToken[] = [
-  {
-    name: 'ABC token (ERC-20)',
-    id: 'ABC token (ERC-20)',
-    img: require('../../static/images/icon-eth.png'),
-  },
-  {
-    name: 'bcd token (ERC-20)',
-    id: 'bcd token (ERC-20)',
-    img: require('../../static/images/icon-eth.png'),
-  },
-  {
-    name: 'qwe token (ERC-20)',
-    id: 'qwe token (ERC-20)',
-    img: require('../../static/images/icon-eth.png'),
-  },
-];
+export const TOKENS: IToken[] = publicConfig.APP_TOKENS.split(
+  ';'
+).map((id) => ({ id, name: id }));
 
 export const TokenSelectField = (props: IComponentProps) => {
   return (
@@ -50,7 +38,7 @@ export const TokenSelectField = (props: IComponentProps) => {
           value={token.id}
           className="flex bg-secondary c-white items-center"
         >
-          <Avatar src={token.img} size="small" />
+          <Avatar src={TOKEN_IMG} size="small" />
           <span className="flex-1 text-xl text-left ml-4 font-thin">
             {token.name}
           </span>

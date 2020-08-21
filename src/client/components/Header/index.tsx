@@ -14,8 +14,8 @@ import { Web3Provider } from "@ethersproject/providers";
 import { SUPPORTED_WALLETS } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
-import { IMG_LOGO } from "../IoPayRequire/iopay-required";
 
+const IMG_LOGO = require('../../static/images/logo-iotex.png');
 const IMG_IOTX = require("../../static/images/icon_wallet.png");
 const IMG_ETHER = require("../../static/images/icon-eth.png");
 

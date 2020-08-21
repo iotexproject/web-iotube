@@ -6,7 +6,7 @@ import { AntennaUtils } from "../utils/antenna";
 @remotedev({ name: "wallet" })
 export class WalletStore {
   @observable walletAddress = "";
-  @observable walletBalance = 100;
+  @observable walletBalance = 0;
   @observable token = "IOTX";
   @observable walletConnected = false;
 
@@ -58,6 +58,7 @@ export class WalletStore {
     if (data?.accountMeta) {
       const { balance } = data?.accountMeta;
       this.walletBalance = Number(balance);
+      this.walletConnected = true;
     }
   }
 

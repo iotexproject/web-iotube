@@ -14,8 +14,8 @@ import { Web3Provider } from "@ethersproject/providers";
 import { SUPPORTED_WALLETS } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
-
-const IMG_LOGO = require('../../static/images/logo-iotex.png');
+import { fromRau } from "iotex-antenna/lib/account/utils";
+const IMG_LOGO = require("../../static/images/logo-iotex.png");
 const IMG_IOTX = require("../../static/images/icon_wallet.png");
 const IMG_ETHER = require("../../static/images/icon-eth.png");
 
@@ -63,10 +63,7 @@ export const Header = () => {
   };
 
   const renderWalletInfo = () => {
-    const walletConnected =
-      base.mode === CARD_ERC20_XRC20
-        ? wallet.metaMaskConnected
-        : wallet.walletConnected;
+    const walletConnected = wallet.metaMaskConnected || wallet.walletConnected;
     const walletAddress = walletConnected
       ? base.mode === CARD_ERC20_XRC20
         ? ENSName || shortenAddress(account)
@@ -75,8 +72,8 @@ export const Header = () => {
     const walletBalance =
       base.mode === CARD_ERC20_XRC20
         ? userEthBalance?.toSignificant(4)
-        : wallet.walletBalance;
-    const balanceUnit = base.mode === CARD_ERC20_XRC20 ? "ETH" : "IOTX";
+        : fromRau(`${wallet.walletBalance}`, "iotx");
+    const balanceUnit = base.mode === CARD_ERC20_XRC20 ? "ETH" : wallet.token;
     return walletConnected ? (
       <>
         <span>

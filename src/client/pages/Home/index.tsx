@@ -38,7 +38,7 @@ export const Home = () => {
                 className={`page__home__content__frame bg-primary rounded-md ${
                   isERCXRC
                     ? 'page__home__content__frame--active'
-                    : 'page__home__content__frame--left'
+                    : 'page__home__content__frame--inactive'
                 }`}
               >
                 <SwitchHeader
@@ -50,7 +50,7 @@ export const Home = () => {
               <div
                 className={`page__home__content__frame bg-secondary rounded-md ${
                   isERCXRC
-                    ? 'page__home__content__frame--right'
+                    ? 'page__home__content__frame--inactive'
                     : 'page__home__content__frame--active'
                 }`}
               >

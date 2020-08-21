@@ -10,7 +10,7 @@ import {
   ConfirmModal,
 } from '../../../../components';
 
-const IMG_IOPAY = require('../../../../static/images/logo_iotex.png');
+const IMG_IOPAY = require('../../../../static/images/icon-iotex-black.png');
 
 export const XRCERC = () => {
   const { lang, wallet } = useStore();

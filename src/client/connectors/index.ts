@@ -5,15 +5,14 @@ import { PortisConnector } from '@web3-react/portis-connector'
 
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
+import {publicConfig} from "../../../configs/public";
 
-// const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
-const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
-const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
-
-const NETWORK_URL = "https://kovan.infura.io/v3/1d4b3ba280cb43678bb11eb272ea70f4"
+const NETWORK_URL = publicConfig.IOTEX_CORE_ENDPOPINT
+const FORMATIC_KEY = publicConfig.APP_FORTMATIC_KEY
+const PORTIS_ID = publicConfig.APP_PORTIS_ID
 
 if (typeof NETWORK_URL === 'undefined') {
-  throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)
+  throw new Error(`APP_NETWORK_URL must be a defined environment variable`)
 }
 
 export const network = new NetworkConnector({

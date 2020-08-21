@@ -2,13 +2,13 @@ import React from 'react';
 import { useLocalStore, useObserver } from 'mobx-react-lite';
 import './index.scss';
 import { useStore } from '../../../../../common/store';
-import { SUPPORTED_WALLETS } from '../../../../constants/index';
+import {IOTX, SUPPORTED_WALLETS} from '../../../../constants/index';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { injected } from '../../../../connectors/index';
 import { Web3Provider } from '@ethersproject/providers';
 import useENSName from '../../../../hooks/useENSName';
-import { shortenAddress } from '../../../../utils/index';
+import {getContract, shortenAddress} from '../../../../utils/index';
 import { useETHBalances } from '../../../../state/wallet/hooks';
 import {
   AmountField,
@@ -17,12 +17,14 @@ import {
   AddressInput,
 } from '../../../../components';
 import { ConfirmModal } from '../../../../components/ConfirmModal/index';
+import ERC20_XRC20_ABI from '../../../../constants/abis/erc20_xrc20.json'
+import { Contract } from '@ethersproject/contracts'
 
 const IMG_MATAMASK = require('../../../../static/images/metamask.png');
 
 export const ERCXRC = () => {
   const { lang, wallet } = useStore();
-  const { account, activate } = useWeb3React<Web3Provider>();
+  const { account, activate,chainId, library } = useWeb3React<Web3Provider>();
   const { ENSName } = useENSName(account);
   const userEthBalance = useETHBalances([account])[account];
 
@@ -83,7 +85,60 @@ export const ERCXRC = () => {
   const onApprove = () => {
     store.setApprove();
   };
-  const onConfirm = () => {};
+  const onConfirm = async () => {
+
+    const contract: Contract | null = getContract(IOTX.address, ERC20_XRC20_ABI, library, account)
+    if (!contract) {
+      return []
+    }
+
+    //dai
+    const args = ["0xad6d458402f60fd3bd25163575031acdce07538d","0xb7860456d0918b14d75edb53216f5c9eb22859d8","1200000000000000000"]
+    const methodName = "depositTo"
+    const options = { from: account, gasLimit: 1000000 }
+    const estimatedCalls = contract.estimateGas[methodName](...args, {})
+      .then(gasEstimate => {
+        window.console.log('Gas estimate success', gasEstimate)
+        return {
+          gasEstimate
+        }
+      })
+      .catch(gasError => {
+        window.console.log('Gas estimate failed, trying eth_call to extract error', gasError)
+        return contract.callStatic[methodName](...args, options)
+          .then(result => {
+            window.console.log('Unexpected successful call after failed estimate gas', gasError, result)
+          })
+          .catch(callError => {
+            window.console.log('Call threw error', callError)
+            let errorMessage: string
+            switch (callError.reason) {
+              case 'INSUFFICIENT_OUTPUT_AMOUNT':
+              case 'EXCESSIVE_INPUT_AMOUNT':
+                errorMessage =
+                  'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
+                break
+              default:
+                errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`
+            }
+            return { error: new Error(errorMessage)}
+          })
+      })
+
+    contract[methodName](...args, options)
+      .then((response: any) => {
+        window.console.log(`${methodName} success hash`, response.hash, response)
+        return response.hash
+      })
+      .catch((error: any) => {
+        if (error?.code === 4001) {
+          window.console.log('Transaction rejected.')
+        } else {
+          console.error(`${methodName} failed`, error, methodName, args,options)
+        }
+      })
+  };
+
   const isEnabled =
     store.amount !== '' && store.address !== '' && store.token !== '';
 

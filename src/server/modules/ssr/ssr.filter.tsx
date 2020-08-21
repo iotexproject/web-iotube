@@ -3,14 +3,16 @@ import {
   Catch,
   ExceptionFilter,
   NotFoundException,
-} from '@nestjs/common';
-import React from 'react';
-import App from '../../../client/App';
-import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom';
-import { Request, Response } from 'express';
-import { BaseStore } from '../../../common/store/base';
-import { publicConfig } from '../../../../configs/public';
+} from "@nestjs/common";
+import React from "react";
+import App from "../../../client/App";
+import { renderToString } from "react-dom/server";
+import { StaticRouter } from "react-router-dom";
+import { Request, Response } from "express";
+import { BaseStore } from "../../../common/store/base";
+import { publicConfig } from "../../../../configs/public";
+import window from "global/window";
+import { Dict } from "../../../type";
 
 let assets = require(process.env.RAZZLE_ASSETS_MANIFEST!);
 
@@ -24,9 +26,17 @@ export class SSRFilter implements ExceptionFilter {
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
 
+    const ua = req.get("user-agent");
+    window.console.log(ua);
+    const extra = {};
+    if (ua && (ua.includes("IoPayAndroid") || ua.includes("IoPayiOs"))) {
+      extra["isIoPayMobile"] = true;
+    }
+
     const rootStore = {
       base: {
         ...publicConfig,
+        ...extra,
       } as Partial<BaseStore>,
     };
     const context = {};
@@ -51,10 +61,10 @@ export class SSRFilter implements ExceptionFilter {
       ${
         assets.client.css
           ? `<link rel="stylesheet" href="${assets.client.css}">`
-          : ''
+          : ""
       }
       ${
-        process.env.NODE_ENV === 'production'
+        process.env.NODE_ENV === "production"
           ? `<script src="${assets.client.js}" defer></script>`
           : `<script src="${assets.client.js}" defer crossorigin></script>`
       }

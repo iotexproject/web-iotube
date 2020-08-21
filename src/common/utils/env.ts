@@ -24,4 +24,17 @@ export class Env {
       return process.env;
     }
   }
+
+  isIoPayMobile() {
+    // @ts-ignore
+    if (
+      this.isBrowser() &&
+      window.__ROOT__STORE__ &&
+      window.__ROOT__STORE__.base
+    ) {
+      //@ts-ignore
+      return Boolean(window.__ROOT__STORE__.base.isIoPayMobile);
+    }
+    return false;
+  }
 }

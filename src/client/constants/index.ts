@@ -5,7 +5,7 @@ import {fortmatic, injected, portis, walletconnect, walletlink} from '../connect
 
 export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
-export const IOTX = new Token(ChainId.ROPSTEN, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'IOTX', 'IoTeX')
+export const IOTX = new Token(ChainId.ROPSTEN, '0x293b54deb9821469e7f0a41432ac17b31e77a3a5', 18, 'IOTX', 'IoTeX')
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
   [ChainId.MAINNET]: [

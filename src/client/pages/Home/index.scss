@@ -7,23 +7,19 @@
     .page__home__content__frame {
       overflow: hidden;
       position: absolute;
-      transition: all 0.5s;
+      transition: all 0.7s;
       margin-bottom: 2rem;
 
       &.page__home__content__frame--active {
         left: 0;
         width: 100%;
         opacity: 1;
+        z-index: 1;
       }
-      &.page__home__content__frame--left {
-        left: -5000px;
+      &.page__home__content__frame--inactive {
         opacity: 0;
         width: 100%;
-      }
-      &.page__home__content__frame--right {
-        left: 5000px;
-        opacity: 0;
-        width: 100%;
+        z-index: -1;
       }
     }
   }

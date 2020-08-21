@@ -1,17 +1,25 @@
-import { ArgumentsHost, Catch, ExceptionFilter, NotFoundException } from "@nestjs/common";
-import React from "react";
-import App from "../../../client/App";
-import { renderToString } from "react-dom/server";
-import { StaticRouter } from "react-router-dom";
-import { Request, Response } from "express";
-import { BaseStore } from "../../../common/store/base";
-import { publicConfig } from "../../../../configs/public";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  NotFoundException,
+} from '@nestjs/common';
+import React from 'react';
+import App from '../../../client/App';
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
+import { Request, Response } from 'express';
+import { BaseStore } from '../../../common/store/base';
+import { publicConfig } from '../../../../configs/public';
 
 let assets = require(process.env.RAZZLE_ASSETS_MANIFEST!);
 
 @Catch(NotFoundException)
 export class SSRFilter implements ExceptionFilter {
-  async catch(exception: NotFoundException, host: ArgumentsHost): Promise<void> {
+  async catch(
+    exception: NotFoundException,
+    host: ArgumentsHost
+  ): Promise<void> {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
@@ -39,8 +47,17 @@ export class SSRFilter implements ExceptionFilter {
         window.__ROOT__STORE__ = ${JSON.stringify(rootStore)};
       </script>
       <link rel="stylesheet" href="/tailwind.css">
-      ${assets.client.css ? `<link rel="stylesheet" href="${assets.client.css}">` : ""}
-      ${process.env.NODE_ENV === "production" ? `<script src="${assets.client.js}" defer></script>` : `<script src="${assets.client.js}" defer crossorigin></script>`}
+      <link rel="stylesheet" href="/fonts/font.css">
+      ${
+        assets.client.css
+          ? `<link rel="stylesheet" href="${assets.client.css}">`
+          : ''
+      }
+      ${
+        process.env.NODE_ENV === 'production'
+          ? `<script src="${assets.client.js}" defer></script>`
+          : `<script src="${assets.client.js}" defer crossorigin></script>`
+      }
     </head>
     <body>
       <div id="root">${markup}</div>

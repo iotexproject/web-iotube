@@ -1,6 +1,5 @@
 import wildcard from "@wildcard-api/server";
 import { AuthAPI } from "./auth.endpoints";
-import { _ } from "../../../common/utils/lodash";
 import { Request } from "express";
 
 export type WildcardContext = {

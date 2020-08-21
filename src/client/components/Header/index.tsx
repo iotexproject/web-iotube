@@ -1,23 +1,23 @@
-import React from 'react';
-import './index.scss';
-import { EllipsisOutlined } from '@ant-design/icons';
-import { Avatar, Button } from 'antd';
-import { useStore } from '../../../common/store';
-import { useObserver } from 'mobx-react';
-import './index.scss';
-import { CARD_ERC20_XRC20 } from '../../../common/store/base';
-import { shortenAddress } from '../../utils';
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
-import useENSName from '../../hooks/useENSName';
-import { useETHBalances } from '../../state/wallet/hooks';
-import { Web3Provider } from '@ethersproject/providers';
-import { SUPPORTED_WALLETS } from '../../constants';
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import { injected } from '../../connectors';
+import React from "react";
+import "./index.scss";
+import { EllipsisOutlined } from "@ant-design/icons";
+import { Avatar, Button } from "antd";
+import { useStore } from "../../../common/store";
+import { useObserver } from "mobx-react";
+import "./index.scss";
+import { CARD_ERC20_XRC20 } from "../../../common/store/base";
+import { shortenAddress } from "../../utils";
+import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import useENSName from "../../hooks/useENSName";
+import { useETHBalances } from "../../state/wallet/hooks";
+import { Web3Provider } from "@ethersproject/providers";
+import { SUPPORTED_WALLETS } from "../../constants";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { injected } from "../../connectors";
 
 const IMG_LOGO = require('../../static/images/logo-iotex.png');
-const IMG_IOTX = require('../../static/images/icon_wallet.png');
-const IMG_ETHER = require('../../static/images/icon-eth.png');
+const IMG_IOTX = require("../../static/images/icon_wallet.png");
+const IMG_ETHER = require("../../static/images/icon-eth.png");
 
 export const Header = () => {
   const { wallet, lang, base } = useStore();
@@ -26,7 +26,7 @@ export const Header = () => {
   const userEthBalance = useETHBalances([account])[account];
 
   const tryActivation = async (connector) => {
-    let name = '';
+    let name = "";
     Object.keys(SUPPORTED_WALLETS).map((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
         return (name = SUPPORTED_WALLETS[key].name);
@@ -71,12 +71,12 @@ export const Header = () => {
       ? base.mode === CARD_ERC20_XRC20
         ? ENSName || shortenAddress(account)
         : shortenAddress(wallet.walletAddress)
-      : '';
+      : "";
     const walletBalance =
       base.mode === CARD_ERC20_XRC20
         ? userEthBalance?.toSignificant(4)
         : wallet.walletBalance;
-    const balanceUnit = base.mode === CARD_ERC20_XRC20 ? 'ETH' : 'IOTX';
+    const balanceUnit = base.mode === CARD_ERC20_XRC20 ? "ETH" : "IOTX";
     return walletConnected ? (
       <>
         <span>
@@ -94,7 +94,7 @@ export const Header = () => {
       </>
     ) : (
       <Button className="c-white" type="text" onClick={onConnectWallet}>
-        {lang.t('header.connect_wallet')}
+        {lang.t("header.connect_wallet")}
       </Button>
     );
   };

@@ -88,7 +88,7 @@ export const ERCXRC = () => {
     store.amount !== '' && store.address !== '' && store.token !== '';
 
   return useObserver(() => (
-    <div className="page__home__component__erc_xrc p-4">
+    <div className="page__home__component__erc_xrc p-8 pt-6">
       <div className="my-6">
         <TokenSelectField token={store.token} onChange={store.setToken} />
       </div>

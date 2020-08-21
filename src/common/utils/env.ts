@@ -26,10 +26,11 @@ export class Env {
   }
 
   isIoPayMobile() {
-    // @ts-ignore
     if (
       this.isBrowser() &&
+      // @ts-ignore
       window.__ROOT__STORE__ &&
+      // @ts-ignore
       window.__ROOT__STORE__.base
     ) {
       //@ts-ignore

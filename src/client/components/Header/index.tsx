@@ -14,9 +14,9 @@ import { Web3Provider } from "@ethersproject/providers";
 import { SUPPORTED_WALLETS } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
-import {fromRau} from "iotex-antenna/lib/account/utils";
+import { fromRau } from "iotex-antenna/lib/account/utils";
 
-const IMG_LOGO = require('../../static/images/logo-iotex.png');
+const IMG_LOGO = require("../../static/images/logo-iotex.png");
 const IMG_IOTX = require("../../static/images/icon_wallet.png");
 const IMG_ETHER = require("../../static/images/icon-eth.png");
 
@@ -64,7 +64,7 @@ export const Header = () => {
   };
 
   const renderWalletInfo = () => {
-    const walletConnected = wallet.metaMaskConnected|| wallet.walletConnected;
+    const walletConnected = wallet.metaMaskConnected || wallet.walletConnected;
     const walletAddress = walletConnected
       ? shortenAddress(wallet.walletAddress)
       : "";

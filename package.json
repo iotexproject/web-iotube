@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "razzle start",
-    "build": "razzle build",
+    "build": "CI=false razzle build",
     "test": "razzle test",
     "start": "NODE_ENV=production node build/server.js",
     "gen": "generate-graphql-client -e http://localhost:3000/api-gateway -o ./generated/gql",

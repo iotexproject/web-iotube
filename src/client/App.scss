@@ -27,6 +27,9 @@ body {
   .app_frame {
     max-width: var(--app-frame-width);
     margin: auto;
+    @media screen and (max-width: 500px) {
+      max-width: 90%;
+    }
   }
 
   .app_frame_shadow {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
@@ -11,6 +11,8 @@ import useENSName from "../../../../hooks/useENSName";
 import {
   calculateGasMargin,
   getContract,
+  getEtherscanLink,
+  isAddress,
   shortenAddress,
 } from "../../../../utils/index";
 import { useETHBalances } from "../../../../state/wallet/hooks";
@@ -23,16 +25,17 @@ import {
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import { Contract } from "@ethersproject/contracts";
-import { toRau } from "iotex-antenna/lib/account/utils";
-import { useTokenContract } from "../../../../hooks/useContract";
+import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { MaxUint256 } from "@ethersproject/constants";
 import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
+import { fromString } from "iotex-antenna/lib/crypto/address";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
 const cashierContractAddress = IOTX.address;
 const tokenAddress = "0xad6d458402f60fd3bd25163575031acdce07538d";
+
 export const ERCXRC = () => {
   const { lang, wallet } = useStore();
   const { account, activate, chainId, library } = useWeb3React<Web3Provider>();
@@ -149,8 +152,16 @@ export const ERCXRC = () => {
       return [];
     }
 
-    //dai
-    const args = [tokenAddress, store.address, amount];
+    const toAddress = validateAddress(store.address)
+      ? fromString(store.address).stringEth()
+      : isAddress(store.address)
+      ? store.address
+      : "";
+    if (!toAddress) {
+      window.console.log("invalidate address", store.address);
+      return;
+    }
+    const args = [tokenAddress, toAddress, amount];
     const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
     contract.estimateGas[methodName](...args, {})
@@ -196,6 +207,8 @@ export const ERCXRC = () => {
           response.hash,
           response
         );
+        setHash(response.hash);
+        store.toggleConfirmModalVisible();
         return response.hash;
       })
       .catch((error: any) => {
@@ -215,6 +228,7 @@ export const ERCXRC = () => {
 
   const isEnabled =
     store.amount !== "" && store.address !== "" && store.token !== "";
+  const [hash, setHash] = useState("");
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
@@ -259,6 +273,16 @@ export const ERCXRC = () => {
           <span>{lang.t("relay_to_iotex")}</span>
           <span>0 ({lang.t("free")})</span>
         </div>
+        {hash && (
+          <div className="font-light text-sm flex items-center justify-between">
+            <a
+              href={getEtherscanLink(chainId, hash, "transaction")}
+              target={"_blank"}
+            >
+              {`view on Etherscan ${hash}`}
+            </a>
+          </div>
+        )}
       </div>
       <div>
         {!account && (

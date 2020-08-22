@@ -3,6 +3,7 @@ import { getAddress } from "@ethersproject/address";
 import { AddressZero } from "@ethersproject/constants";
 import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
+import { BigNumber } from "@ethersproject/bignumber";
 
 export function isAddress(value: any): string | false {
   try {
@@ -63,4 +64,11 @@ export function getContract(
 
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
+// add 10%
+export function calculateGasMargin(value: BigNumber): BigNumber {
+  return value
+    .mul(BigNumber.from(10000).add(BigNumber.from(1000)))
+    .div(BigNumber.from(10000));
 }

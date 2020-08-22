@@ -196,9 +196,41 @@ export const ERCXRC = () => {
     const args = [tokenAddress, toAddress, amount];
     const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
+    const depositTo = () => {
+      contract[methodName](...args, options)
+        .then((response: any) => {
+          window.console.log(
+            `${methodName} success hash`,
+            response.hash,
+            response
+          );
+          setHash(response.hash);
+          store.toggleConfirmModalVisible();
+          message.success("Transaction broadcast successfully");
+          return response.hash;
+        })
+        .catch((error: any) => {
+          let content = "";
+          if (error?.code === 4001) {
+            content = "Transaction rejected.";
+            window.console.log(content);
+          } else {
+            content = `${methodName} failed. please check log for detail`;
+            window.console.error(
+              `${methodName} failed`,
+              error,
+              methodName,
+              args,
+              options
+            );
+          }
+          message.error(content);
+        });
+    };
     contract.estimateGas[methodName](...args, {})
       .then((gasEstimate) => {
         window.console.log("Gas estimate success", gasEstimate);
+        depositTo();
         return {
           gasEstimate,
         };
@@ -215,36 +247,7 @@ export const ERCXRC = () => {
               gasError,
               result
             );
-
-            contract[methodName](...args, options)
-              .then((response: any) => {
-                window.console.log(
-                  `${methodName} success hash`,
-                  response.hash,
-                  response
-                );
-                setHash(response.hash);
-                store.toggleConfirmModalVisible();
-                message.success("Transaction broadcast successfully");
-                return response.hash;
-              })
-              .catch((error: any) => {
-                let content = "";
-                if (error?.code === 4001) {
-                  content = "Transaction rejected.";
-                  window.console.log(content);
-                } else {
-                  content = `${methodName} failed. please check log for detail`;
-                  window.console.error(
-                    `${methodName} failed`,
-                    error,
-                    methodName,
-                    args,
-                    options
-                  );
-                }
-                message.error(content);
-              });
+            depositTo();
           })
           .catch((callError) => {
             window.console.log("Call threw error", callError);

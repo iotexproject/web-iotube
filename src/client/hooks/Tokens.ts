@@ -1,8 +1,16 @@
-import { ChainId, Token } from "@uniswap/sdk";
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  JSBI,
+  Token,
+  TokenAmount,
+} from "@uniswap/sdk";
 import { useMemo } from "react";
 import { useActiveWeb3React } from "./index";
 import { CHAIN_TOKEN_LIST } from "../constants/index";
 import { TokenInfo } from "@uniswap/token-lists";
+import { parseUnits } from "@ethersproject/units";
 
 export class WrappedTokenInfo extends Token {
   public readonly tokenInfo: TokenInfo;
@@ -39,4 +47,16 @@ export function useTokens(): { [address: string]: Token } {
     });
     return tokenList;
   }, [chainId]);
+}
+
+export function tryParseAmount(value?: string, currency?: Currency): string {
+  if (!value || !currency) {
+    return "";
+  }
+  try {
+    return parseUnits(value, currency.decimals).toString();
+  } catch (error) {
+    console.debug(`Failed to parse input amount: "${value}"`, error);
+  }
+  return "";
 }

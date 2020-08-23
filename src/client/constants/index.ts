@@ -10,6 +10,9 @@ import {
 import { TokenInfo } from "@uniswap/token-lists";
 import { WrappedTokenInfo } from "../hooks/Tokens";
 
+export const CASHIER_CONTRACT_ADDRESS =
+  "0x293b54deb9821469e7f0a41432ac17b31e77a3a5";
+
 type ChainTokenList = {
   readonly [chainId in ChainId]: TokenInfo[];
 };
@@ -161,3 +164,5 @@ export const BETTER_TRADE_LINK_THRESHOLD = new Percent(
   JSBI.BigInt(75),
   JSBI.BigInt(10000)
 );
+
+export const TRANSACTION_REJECTED = 4001;

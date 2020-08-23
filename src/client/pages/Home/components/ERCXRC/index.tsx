@@ -3,8 +3,10 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import {
+  CASHIER_CONTRACT_ADDRESS,
   IOTX,
   SUPPORTED_WALLETS,
+  TRANSACTION_REJECTED,
   wrappedIOTXInfo,
 } from "../../../../constants/index";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
@@ -35,10 +37,9 @@ import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
+import { tryParseAmount } from "../../../../hooks/Tokens";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
-
-const cashierContractAddress = IOTX.address;
 
 export const ERCXRC = () => {
   const { lang, wallet } = useStore();
@@ -108,7 +109,11 @@ export const ERCXRC = () => {
     if (!validateInputs()) {
       return;
     }
-    const amount = toRau(store.amount, "iotx");
+    const amount = tryParseAmount(store.amount, token).toString();
+    if (!amount) {
+      message.error(`Could not parse amount for token ${token.name}`);
+      return;
+    }
     try {
       const tokenAddress = token ? token.address : "";
       if (!tokenAddress) {
@@ -128,22 +133,22 @@ export const ERCXRC = () => {
       }
       let useExact = false;
       const estimatedGas = await tokenContract.estimateGas
-        .approve(cashierContractAddress, MaxUint256)
+        .approve(CASHIER_CONTRACT_ADDRESS, MaxUint256)
         .catch(() => {
           useExact = true;
           return tokenContract.estimateGas.approve(
-            cashierContractAddress,
+            CASHIER_CONTRACT_ADDRESS,
             amount
           );
         });
       tokenContract
-        .approve(cashierContractAddress, useExact ? amount : MaxUint256, {
+        .approve(CASHIER_CONTRACT_ADDRESS, useExact ? amount : MaxUint256, {
           gasLimit: calculateGasMargin(estimatedGas),
         })
         .then((response: TransactionResponse) => {
           store.setApprove();
           message.success("Approved");
-          window.console.log(`tokenContract.approve success`);
+          window.console.log(`Approve success`);
         })
         .catch((error: Error) => {
           message.error(`Failed to approve token. ${error.message}`);
@@ -155,7 +160,7 @@ export const ERCXRC = () => {
     }
   };
 
-  function correctAddress(): string {
+  function getReceiptAddress(): string {
     return validateAddress(store.address)
       ? fromString(store.address).stringEth()
       : isAddress(store.address)
@@ -163,20 +168,14 @@ export const ERCXRC = () => {
       : "";
   }
 
-  function correctAmount(): string {
-    //TODO use token decimal
-    return store.isValidAmount() ? toRau(store.amount, "iotx") : "";
-  }
-
   function validateInputs(showMessage: boolean = true): boolean {
-    const amount = correctAmount();
-    if (!amount) {
+    if (!store.isValidAmount()) {
       if (showMessage) {
         message.error("invalid amount");
       }
       return false;
     }
-    const toAddress = correctAddress();
+    const toAddress = getReceiptAddress();
     if (!toAddress) {
       if (showMessage) {
         message.error(`invalid address ${store.address}`);
@@ -195,10 +194,13 @@ export const ERCXRC = () => {
     if (!validateInputs()) {
       return;
     }
-    const amount = toRau(store.amount, "iotx");
-    const toAddress = correctAddress();
+    const amount = tryParseAmount(store.amount, token).toString();
+    if (!amount) {
+      message.error(`Could not parse amount for token ${token.name}`);
+      return;
+    }
     const contract: Contract | null = getContract(
-      cashierContractAddress,
+      CASHIER_CONTRACT_ADDRESS,
       ERC20_XRC20_ABI,
       library,
       account
@@ -212,6 +214,7 @@ export const ERCXRC = () => {
       message.error("could not get token address");
       return;
     }
+    const toAddress = getReceiptAddress();
     const args = [tokenAddress, toAddress, amount];
     const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
@@ -225,13 +228,13 @@ export const ERCXRC = () => {
           );
           setHash(response.hash);
           store.toggleConfirmModalVisible();
-          message.success("Transaction broadcast successfully");
+          message.success(" Ethereum transaction broadcasted successfully.");
           return response.hash;
         })
         .catch((error: any) => {
           let content = "";
-          if (error?.code === 4001) {
-            content = "Transaction rejected.";
+          if (error?.code === TRANSACTION_REJECTED) {
+            content = "Ethereum Transaction rejected.";
             window.console.log(content);
           } else {
             content = `${methodName} failed. please check log for detail`;
@@ -248,7 +251,7 @@ export const ERCXRC = () => {
     };
     contract.estimateGas[methodName](...args, {})
       .then((gasEstimate) => {
-        window.console.log("Gas estimate success", gasEstimate);
+        window.console.log("Gas estimation succeeded.", gasEstimate);
         depositTo();
         return {
           gasEstimate,
@@ -256,13 +259,13 @@ export const ERCXRC = () => {
       })
       .catch((gasError) => {
         window.console.log(
-          "Gas estimate failed, trying eth_call to extract error",
+          "Gas estimation failed. Trying eth_call to extract error.",
           gasError
         );
         return contract.callStatic[methodName](...args, options)
           .then((result) => {
             window.console.log(
-              "Unexpected successful call after failed estimate gas",
+              "Be possible unexpected successful call after failed estimate gas. Let's try",
               gasError,
               result
             );
@@ -271,14 +274,14 @@ export const ERCXRC = () => {
           .catch((callError) => {
             window.console.log("Call threw error", callError);
             let errorMessage: string;
-            switch (callError.reason) {
-              case "UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT":
-              case "UniswapV2Router: EXCESSIVE_INPUT_AMOUNT":
-                errorMessage =
-                  "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
-                break;
-              default:
-                errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
+            if (
+              callError.reason.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0 ||
+              callError.reason.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0
+            ) {
+              errorMessage =
+                "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
+            } else {
+              errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
             }
             message.error(errorMessage);
           });
@@ -364,7 +367,7 @@ export const ERCXRC = () => {
             <SubmitButton
               title={lang.t("convert")}
               onClick={onConvert}
-              disabled={!store.approved && isEnabled}
+              disabled={!store.approved || !isEnabled}
             />
           </div>
         )}

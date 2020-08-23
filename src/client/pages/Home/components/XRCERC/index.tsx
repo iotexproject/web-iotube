@@ -9,7 +9,8 @@ import {
   SubmitButton,
   TokenSelectField,
 } from "../../../../components";
-import { wrappedIOTXInfo } from "../../../../constants/index";
+import {ChainId} from "@uniswap/sdk";
+import {IOTX_TOKEN_INFO} from "../../../../constants/index";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -107,10 +108,9 @@ export const XRCERC = () => {
         tubeFee={0}
         networkFee={0}
         depositAmount={10}
-        depositToken={wrappedIOTXInfo}
+        depositToken={IOTX_TOKEN_INFO[ChainId.ROPSTEN]}
         mintAmount={10}
         mintToken={token}
-        mintTokenName={"Ethereum"}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and withdraw"
         isERCXRC={false}

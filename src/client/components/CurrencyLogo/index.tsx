@@ -12,14 +12,6 @@ const getTokenLogoURL = (address) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
 const BAD_URIS: { [tokenAddress: string]: true } = {};
 
-const Image = styled.img<{ size: string }>`
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  background-color: white;
-  border-radius: 1rem;
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-`;
-
 const Emoji = styled.span<{ size?: string }>`
   display: flex;
   align-items: center;
@@ -56,6 +48,10 @@ export default function CurrencyLogo({
     let uri: string | undefined;
 
     if (currency instanceof WrappedTokenInfo) {
+      if (currency.logoURI&&currency.logoURI.startsWith("data:image")){
+        return <Avatar src={currency.logoURI} size="small" />;
+      }
+
       if (currency.logoURI && !BAD_URIS[currency.logoURI]) {
         uri = uriToHttp(currency.logoURI).filter((s) => !BAD_URIS[s])[0];
       }

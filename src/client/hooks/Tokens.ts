@@ -1,10 +1,7 @@
 import {
   ChainId,
   Currency,
-  CurrencyAmount,
-  JSBI,
   Token,
-  TokenAmount,
 } from "@uniswap/sdk";
 import { useMemo } from "react";
 import { useActiveWeb3React } from "./index";

@@ -9,37 +9,65 @@ import {
 } from "../connectors";
 import { TokenInfo } from "@uniswap/token-lists";
 import { WrappedTokenInfo } from "../hooks/Tokens";
+import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
+import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
+import {publicConfig} from "../../../configs/public";
 
-export const CASHIER_CONTRACT_ADDRESS =
-  "0x293b54deb9821469e7f0a41432ac17b31e77a3a5";
+export const IMG_LOGO = require("../static/images/logo-iotex.png");
+export const IMG_IOTX = require("../static/images/icon_wallet.png");
+export const IMG_ETHER = require("../static/images/icon-eth.png");
 
 type ChainTokenList = {
   readonly [chainId in ChainId]: TokenInfo[];
 };
 
+type ChainContractAddress = {
+  readonly [chainId in ChainId]: string;
+};
+
+type ChainToken = {
+  readonly [chainId in ChainId]: Token;
+};
+
+const  TEMP_ETH_ADDRESS = "0xad6d458402f60fd3bd25163575031acdce07538d";
+
 export const IOTX: TokenInfo = {
-  chainId: ChainId.ROPSTEN,
-  address: "0x293b54deb9821469e7f0a41432ac17b31e77a3a5",
+  chainId: 0,
+  address: "",
   name: "IOTEX",
   decimals: 18,
   symbol: "IOTX",
-  logoURI: "",
+  logoURI: IMG_IOTX,
 };
 
-export const DAI_ROPSTEN: TokenInfo = {
-  chainId: ChainId.ROPSTEN,
-  address: "0xad6d458402f60fd3bd25163575031acdce07538d",
-  name: "Dai Stablecoin",
-  decimals: 18,
-  symbol: "DAI",
-  logoURI: "",
+export const CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
+  [ChainId.MAINNET]: publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.MAINNET}`],
+  [ChainId.ROPSTEN]: publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.ROPSTEN}`],
+  [ChainId.RINKEBY]: "",
+  [ChainId.GÖRLI]: "",
+  [ChainId.KOVAN]: "",
 };
 
-export const wrappedIOTXInfo = new WrappedTokenInfo(IOTX);
+function initIOTEXToken(chainId: ChainId) {
+  const info = {...IOTX, chainId, address: publicConfig[`IOTX_TOKEN_ADDRESS${chainId}`] || TEMP_ETH_ADDRESS};
+  return new WrappedTokenInfo(info);
+}
+
+export const IOTX_TOKEN_INFO: ChainToken = {
+  [ChainId.MAINNET]: initIOTEXToken(ChainId.MAINNET),
+  [ChainId.ROPSTEN]: initIOTEXToken(ChainId.ROPSTEN),
+  [ChainId.RINKEBY]: initIOTEXToken(ChainId.RINKEBY),
+  [ChainId.GÖRLI]: initIOTEXToken(ChainId.GÖRLI),
+  [ChainId.KOVAN]: initIOTEXToken(ChainId.KOVAN),
+};
 
 export const CHAIN_TOKEN_LIST: ChainTokenList = {
-  [ChainId.MAINNET]: [],
-  [ChainId.ROPSTEN]: [DAI_ROPSTEN],
+  [ChainId.MAINNET]: MAINNET_TOKEN_LIST.map((item) => {
+    return {...item, chainId: ChainId.MAINNET} as TokenInfo
+  }),
+  [ChainId.ROPSTEN]: ROPSTEN_TOKEN_LIST.map((item) => {
+    return {...item, chainId: ChainId.ROPSTEN} as TokenInfo
+  }),
   [ChainId.RINKEBY]: [],
   [ChainId.GÖRLI]: [],
   [ChainId.KOVAN]: [],

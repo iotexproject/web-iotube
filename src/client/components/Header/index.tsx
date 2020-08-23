@@ -15,9 +15,7 @@ import { SUPPORTED_WALLETS } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
 import { fromRau } from "iotex-antenna/lib/account/utils";
-const IMG_LOGO = require("../../static/images/logo-iotex.png");
-const IMG_IOTX = require("../../static/images/icon_wallet.png");
-const IMG_ETHER = require("../../static/images/icon-eth.png");
+import {IMG_ETHER, IMG_IOTX, IMG_LOGO} from "../../constants/index";
 
 export const Header = () => {
   const { wallet, lang, base } = useStore();

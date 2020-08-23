@@ -3,11 +3,10 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import {
-  CASHIER_CONTRACT_ADDRESS,
-  IOTX,
+  CHAIN_CASHIER_CONTRACT_ADDRESS,
+  IOTX_TOKEN_INFO,
   SUPPORTED_WALLETS,
-  TRANSACTION_REJECTED,
-  wrappedIOTXInfo,
+  TRANSACTION_REJECTED
 } from "../../../../constants/index";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
@@ -31,7 +30,7 @@ import {
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import { Contract } from "@ethersproject/contracts";
-import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
+import { validateAddress } from "iotex-antenna/lib/account/utils";
 import { MaxUint256 } from "@ethersproject/constants";
 import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
@@ -47,6 +46,8 @@ export const ERCXRC = () => {
   const { ENSName } = useENSName(account);
   const userEthBalance = useETHBalances([account])[account];
   const [token, setToken] = useState(null);
+  const cashierContractAddress = CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
+  const wrappedIOTXInfo = IOTX_TOKEN_INFO[chainId];
 
   const store = useLocalStore(() => ({
     amount: "",
@@ -67,6 +68,9 @@ export const ERCXRC = () => {
     },
     isValidAmount() {
       return this.amount && Number(this.amount) > 0;
+    },
+    getAmountNumber() {
+      return this.isValidAmount()? Number(this.amount):0;
     },
   }));
 
@@ -114,6 +118,12 @@ export const ERCXRC = () => {
       message.error(`Could not parse amount for token ${token.name}`);
       return;
     }
+    if(!cashierContractAddress){
+      let content= `please set CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
+      message.error(content);
+      window.console.log(content);
+      return ;
+    }
     try {
       const tokenAddress = token ? token.address : "";
       if (!tokenAddress) {
@@ -133,16 +143,16 @@ export const ERCXRC = () => {
       }
       let useExact = false;
       const estimatedGas = await tokenContract.estimateGas
-        .approve(CASHIER_CONTRACT_ADDRESS, MaxUint256)
+        .approve(cashierContractAddress, MaxUint256)
         .catch(() => {
           useExact = true;
           return tokenContract.estimateGas.approve(
-            CASHIER_CONTRACT_ADDRESS,
+            cashierContractAddress,
             amount
           );
         });
       tokenContract
-        .approve(CASHIER_CONTRACT_ADDRESS, useExact ? amount : MaxUint256, {
+        .approve(cashierContractAddress, useExact ? amount : MaxUint256, {
           gasLimit: calculateGasMargin(estimatedGas),
         })
         .then((response: TransactionResponse) => {
@@ -194,13 +204,20 @@ export const ERCXRC = () => {
     if (!validateInputs()) {
       return;
     }
+
+    if(!cashierContractAddress){
+      let content= `please set CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
+      message.error(content);
+      window.console.log(content);
+      return ;
+    }
     const amount = tryParseAmount(store.amount, token).toString();
     if (!amount) {
       message.error(`Could not parse amount for token ${token.name}`);
       return;
     }
     const contract: Contract | null = getContract(
-      CASHIER_CONTRACT_ADDRESS,
+      cashierContractAddress,
       ERC20_XRC20_ABI,
       library,
       account
@@ -377,11 +394,10 @@ export const ERCXRC = () => {
         onConfirm={onConfirm}
         tubeFee={0}
         networkFee={0}
-        depositAmount={10}
+        depositAmount={store.getAmountNumber()}
         depositToken={token}
         mintAmount={1}
         mintToken={wrappedIOTXInfo}
-        mintTokenName={"IOTX"}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"
         isERCXRC

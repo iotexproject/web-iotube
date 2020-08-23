@@ -32,31 +32,31 @@ export const ConfirmModal = (props: IComponentProps) => {
     >
       <div className="c-gray flex items-center">
         <span className="font-normal text-3xl mr-3">{props.depositAmount}</span>
-        {
-          props.depositToken &&(
-            <>
-              <CurrencyLogo currency={props.depositToken} />
-              <span className="text-xl ml-2 font-light">{props.depositToken.name}</span>
-            </>
-          )
-        }
+        {props.depositToken && (
+          <>
+            <CurrencyLogo currency={props.depositToken} />
+            <span className="text-xl ml-2 font-light">
+              {props.depositToken.name}
+            </span>
+          </>
+        )}
       </div>
       <div className="c-gray font-thin text-base mt-2 mb-5">
         {props.middleComment}
       </div>
       <div className="c-gray flex items-center">
         <span className="font-normal text-3xl mr-3">{props.mintAmount}</span>
-        {
-          props.mintToken &&(
-            <>
-              <CurrencyLogo currency={props.mintToken} />
-              <span className="text-xl ml-2 font-light">{props.mintToken.symbol}</span>
-            </>
-          )
-        }
+        {props.mintToken && (
+          <>
+            <CurrencyLogo currency={props.mintToken} />
+            <span className="text-xl ml-2 font-light">
+              {props.mintToken.symbol}
+            </span>
+          </>
+        )}
       </div>
       <div className="c-gray font-thin text-base mt-2 mb-5">
-        on {props.mintToken?props.mintToken.name:""}
+        on {props.mintToken ? props.mintToken.name : ""}
       </div>
       <div className="my-6 text-left c-gray">
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>

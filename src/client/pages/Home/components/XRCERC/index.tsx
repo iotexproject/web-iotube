@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
+import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import {
   AddressInput,
@@ -9,8 +10,8 @@ import {
   SubmitButton,
   TokenSelectField,
 } from "../../../../components";
-import {ChainId} from "@uniswap/sdk";
-import {IOTX_TOKEN_INFO} from "../../../../constants/index";
+import { ChainId } from "@uniswap/sdk";
+import { IOTX_TOKEN_INFO } from "../../../../constants/index";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -28,9 +29,6 @@ export const XRCERC = () => {
     setAmount(newAmount) {
       this.amount = newAmount;
     },
-    setToken(newToken) {
-      this.token = newToken;
-    },
     setAddress(newAddress) {
       this.address = newAddress;
     },
@@ -45,6 +43,7 @@ export const XRCERC = () => {
     store.setApprove();
   };
   const onConfirm = () => {};
+  const isEnabled = store.amount !== "" && token !== null;
   return useObserver(() => (
     <div className="page__home__component__xrc_erc p-8 pt-6">
       <div className="my-6">
@@ -92,7 +91,7 @@ export const XRCERC = () => {
             <SubmitButton
               title={lang.t("approve")}
               onClick={onApprove}
-              disabled={store.approved}
+              disabled={store.approved || !isEnabled}
             />
             <SubmitButton
               title={lang.t("convert")}

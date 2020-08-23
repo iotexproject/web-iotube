@@ -3,11 +3,13 @@ const { NODE_ENV } = utils.env.getEnv();
 
 const IS_PROD = NODE_ENV == "production";
 
-const { APP_NETWORK_URL,
+const {
+  APP_NETWORK_URL,
   APP_FORTMATIC_KEY,
   APP_PORTIS_ID,
   CASHIER_CONTRACT_ADDRESS_1,
-  CASHIER_CONTRACT_ADDRESS_3 } = utils.env.getEnv();
+  CASHIER_CONTRACT_ADDRESS_3,
+} = utils.env.getEnv();
 
 export const publicConfig = {
   IS_PROD,
@@ -18,5 +20,5 @@ export const publicConfig = {
   APP_FORTMATIC_KEY,
   APP_PORTIS_ID,
   CASHIER_CONTRACT_ADDRESS_1,
-  CASHIER_CONTRACT_ADDRESS_3
+  CASHIER_CONTRACT_ADDRESS_3,
 };

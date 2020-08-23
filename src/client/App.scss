@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'DM Mono', monospace;
+  font-family: "DM Mono", monospace;
   background-color: var(--bg) !important;
   --bg: #3b3b3b;
   --bg-primary: #262525;
@@ -27,6 +27,9 @@ body {
   .app_frame {
     max-width: var(--app-frame-width);
     margin: auto;
+    @media screen and (max-width: 500px) {
+      max-width: 90%;
+    }
   }
 
   .app_frame_shadow {

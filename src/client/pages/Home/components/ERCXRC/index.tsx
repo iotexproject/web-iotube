@@ -6,12 +6,12 @@ import {
   CHAIN_CASHIER_CONTRACT_ADDRESS,
   IOTX_TOKEN_INFO,
   SUPPORTED_WALLETS,
-  TRANSACTION_REJECTED
+  TRANSACTION_REJECTED,
 } from "../../../../constants/index";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { injected } from "../../../../connectors/index";
-import { Web3Provider } from "@ethersproject/providers";
+import { TransactionResponse, Web3Provider } from "@ethersproject/providers";
 import useENSName from "../../../../hooks/useENSName";
 import {
   calculateGasMargin,
@@ -21,18 +21,18 @@ import {
   shortenAddress,
 } from "../../../../utils/index";
 import { useETHBalances } from "../../../../state/wallet/hooks";
+import "./index.scss";
 import {
+  AddressInput,
   AmountField,
   SubmitButton,
   TokenSelectField,
-  AddressInput,
 } from "../../../../components";
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import { Contract } from "@ethersproject/contracts";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import { MaxUint256 } from "@ethersproject/constants";
-import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
@@ -70,7 +70,7 @@ export const ERCXRC = () => {
       return this.amount && Number(this.amount) > 0;
     },
     getAmountNumber() {
-      return this.isValidAmount()? Number(this.amount):0;
+      return this.isValidAmount() ? Number(this.amount) : 0;
     },
   }));
 
@@ -118,11 +118,11 @@ export const ERCXRC = () => {
       message.error(`Could not parse amount for token ${token.name}`);
       return;
     }
-    if(!cashierContractAddress){
-      let content= `please set CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
+    if (!cashierContractAddress) {
+      let content = `please set CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
       message.error(content);
       window.console.log(content);
-      return ;
+      return;
     }
     try {
       const tokenAddress = token ? token.address : "";
@@ -205,11 +205,11 @@ export const ERCXRC = () => {
       return;
     }
 
-    if(!cashierContractAddress){
-      let content= `please set CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
+    if (!cashierContractAddress) {
+      let content = `please set CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
       message.error(content);
       window.console.log(content);
-      return ;
+      return;
     }
     const amount = tryParseAmount(store.amount, token).toString();
     if (!amount) {
@@ -304,7 +304,6 @@ export const ERCXRC = () => {
           });
       });
   };
-
   const isEnabled = validateInputs(false);
   const [hash, setHash] = useState("");
 

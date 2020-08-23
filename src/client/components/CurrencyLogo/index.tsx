@@ -48,7 +48,7 @@ export default function CurrencyLogo({
     let uri: string | undefined;
 
     if (currency instanceof WrappedTokenInfo) {
-      if (currency.logoURI&&currency.logoURI.startsWith("data:image")){
+      if (currency.logoURI && currency.logoURI.startsWith("data:image")) {
         return <Avatar src={currency.logoURI} size="small" />;
       }
 

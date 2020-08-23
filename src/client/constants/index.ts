@@ -11,7 +11,7 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { WrappedTokenInfo } from "../hooks/Tokens";
 import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
-import {publicConfig} from "../../../configs/public";
+import { publicConfig } from "../../../configs/public";
 
 export const IMG_LOGO = require("../static/images/logo-iotex.png");
 export const IMG_IOTX = require("../static/images/icon_wallet.png");
@@ -29,7 +29,7 @@ type ChainToken = {
   readonly [chainId in ChainId]: Token;
 };
 
-const  TEMP_ETH_ADDRESS = "0xad6d458402f60fd3bd25163575031acdce07538d";
+const TEMP_ETH_ADDRESS = "0xad6d458402f60fd3bd25163575031acdce07538d";
 
 export const IOTX: TokenInfo = {
   chainId: 0,
@@ -41,15 +41,21 @@ export const IOTX: TokenInfo = {
 };
 
 export const CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
-  [ChainId.MAINNET]: publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.MAINNET}`],
-  [ChainId.ROPSTEN]: publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.ROPSTEN}`],
+  [ChainId.MAINNET]:
+    publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.MAINNET}`],
+  [ChainId.ROPSTEN]:
+    publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.ROPSTEN}`],
   [ChainId.RINKEBY]: "",
   [ChainId.GÖRLI]: "",
   [ChainId.KOVAN]: "",
 };
 
 function initIOTEXToken(chainId: ChainId) {
-  const info = {...IOTX, chainId, address: publicConfig[`IOTX_TOKEN_ADDRESS${chainId}`] || TEMP_ETH_ADDRESS};
+  const info = {
+    ...IOTX,
+    chainId,
+    address: publicConfig[`IOTX_TOKEN_ADDRESS${chainId}`] || TEMP_ETH_ADDRESS,
+  };
   return new WrappedTokenInfo(info);
 }
 
@@ -63,10 +69,10 @@ export const IOTX_TOKEN_INFO: ChainToken = {
 
 export const CHAIN_TOKEN_LIST: ChainTokenList = {
   [ChainId.MAINNET]: MAINNET_TOKEN_LIST.map((item) => {
-    return {...item, chainId: ChainId.MAINNET} as TokenInfo
+    return { ...item, chainId: ChainId.MAINNET } as TokenInfo;
   }),
   [ChainId.ROPSTEN]: ROPSTEN_TOKEN_LIST.map((item) => {
-    return {...item, chainId: ChainId.ROPSTEN} as TokenInfo
+    return { ...item, chainId: ChainId.ROPSTEN } as TokenInfo;
   }),
   [ChainId.RINKEBY]: [],
   [ChainId.GÖRLI]: [],

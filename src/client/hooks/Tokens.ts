@@ -1,8 +1,4 @@
-import {
-  ChainId,
-  Currency,
-  Token,
-} from "@uniswap/sdk";
+import { ChainId, Currency, Token } from "@uniswap/sdk";
 import { useMemo } from "react";
 import { useActiveWeb3React } from "./index";
 import { CHAIN_TOKEN_LIST } from "../constants/index";

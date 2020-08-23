@@ -1,26 +1,26 @@
-import React from 'react';
-import { useLocalStore, useObserver } from 'mobx-react-lite';
-import './index.scss';
-import { useStore } from '../../../../../common/store';
-import { IOTX, SUPPORTED_WALLETS } from '../../../../constants/index';
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-import { injected } from '../../../../connectors/index';
-import { Web3Provider } from '@ethersproject/providers';
-import useENSName from '../../../../hooks/useENSName';
-import { getContract, shortenAddress } from '../../../../utils/index';
-import { useETHBalances } from '../../../../state/wallet/hooks';
+import React from "react";
+import { useLocalStore, useObserver } from "mobx-react-lite";
+import "./index.scss";
+import { useStore } from "../../../../../common/store";
+import { IOTX, SUPPORTED_WALLETS } from "../../../../constants/index";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
+import { injected } from "../../../../connectors/index";
+import { Web3Provider } from "@ethersproject/providers";
+import useENSName from "../../../../hooks/useENSName";
+import { getContract, shortenAddress } from "../../../../utils/index";
+import { useETHBalances } from "../../../../state/wallet/hooks";
 import {
   AmountField,
   SubmitButton,
   TokenSelectField,
   AddressInput,
-} from '../../../../components';
-import { ConfirmModal } from '../../../../components/ConfirmModal/index';
-import ERC20_XRC20_ABI from '../../../../constants/abis/erc20_xrc20.json';
-import { Contract } from '@ethersproject/contracts';
+} from "../../../../components";
+import { ConfirmModal } from "../../../../components/ConfirmModal/index";
+import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
+import { Contract } from "@ethersproject/contracts";
 
-const IMG_MATAMASK = require('../../../../static/images/metamask.png');
+const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
 export const ERCXRC = () => {
   const { lang, wallet } = useStore();
@@ -29,9 +29,8 @@ export const ERCXRC = () => {
   const userEthBalance = useETHBalances([account])[account];
 
   const store = useLocalStore(() => ({
-    amount: '',
-    token: '',
-    address: '',
+    amount: "",
+    token: "",
     showConfirmModal: false,
     approved: false,
     setApprove() {
@@ -43,16 +42,13 @@ export const ERCXRC = () => {
     setToken(newToken) {
       this.token = newToken;
     },
-    setAddress(newAddress) {
-      this.address = newAddress;
-    },
     toggleConfirmModalVisible() {
       this.showConfirmModal = !this.showConfirmModal;
     },
   }));
 
   const tryActivation = async (connector) => {
-    let name = '';
+    let name = "";
     Object.keys(SUPPORTED_WALLETS).map((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
         return (name = SUPPORTED_WALLETS[key].name);
@@ -98,40 +94,40 @@ export const ERCXRC = () => {
 
     //dai
     const args = [
-      '0xad6d458402f60fd3bd25163575031acdce07538d',
-      '0xb7860456d0918b14d75edb53216f5c9eb22859d8',
-      '1200000000000000000',
+      "0xad6d458402f60fd3bd25163575031acdce07538d",
+      "0xb7860456d0918b14d75edb53216f5c9eb22859d8",
+      "1200000000000000000",
     ];
-    const methodName = 'depositTo';
+    const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
     const estimatedCalls = contract.estimateGas[methodName](...args, {})
       .then((gasEstimate) => {
-        window.console.log('Gas estimate success', gasEstimate);
+        window.console.log("Gas estimate success", gasEstimate);
         return {
           gasEstimate,
         };
       })
       .catch((gasError) => {
         window.console.log(
-          'Gas estimate failed, trying eth_call to extract error',
+          "Gas estimate failed, trying eth_call to extract error",
           gasError
         );
         return contract.callStatic[methodName](...args, options)
           .then((result) => {
             window.console.log(
-              'Unexpected successful call after failed estimate gas',
+              "Unexpected successful call after failed estimate gas",
               gasError,
               result
             );
           })
           .catch((callError) => {
-            window.console.log('Call threw error', callError);
+            window.console.log("Call threw error", callError);
             let errorMessage: string;
             switch (callError.reason) {
-              case 'INSUFFICIENT_OUTPUT_AMOUNT':
-              case 'EXCESSIVE_INPUT_AMOUNT':
+              case "INSUFFICIENT_OUTPUT_AMOUNT":
+              case "EXCESSIVE_INPUT_AMOUNT":
                 errorMessage =
-                  'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.';
+                  "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
                 break;
               default:
                 errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
@@ -151,7 +147,7 @@ export const ERCXRC = () => {
       })
       .catch((error: any) => {
         if (error?.code === 4001) {
-          window.console.log('Transaction rejected.');
+          window.console.log("Transaction rejected.");
         } else {
           console.error(
             `${methodName} failed`,
@@ -164,7 +160,7 @@ export const ERCXRC = () => {
       });
   };
 
-  const isEnabled = store.amount !== '' && store.token !== '';
+  const isEnabled = store.amount !== "" && store.token !== "";
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
@@ -173,7 +169,7 @@ export const ERCXRC = () => {
       </div>
       <AmountField
         amount={store.amount}
-        label={lang.t('amount')}
+        label={lang.t("amount")}
         onChange={store.setAmount}
       />
       {store.amount && (
@@ -182,8 +178,8 @@ export const ERCXRC = () => {
             You will receive {store.token} tokens at
           </div>
           <AddressInput
-            address={store.address}
-            onChange={store.setAddress}
+            readOnly
+            address={wallet.walletAddress || ""}
             label="IOTX Address"
           />
         </div>
@@ -200,20 +196,20 @@ export const ERCXRC = () => {
           </>
         )}
 
-        <div className="font-normal text-base mb-3">{lang.t('fee')}</div>
+        <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t('fee.tube')}</span>
-          <span>0 ({lang.t('free')})</span>
+          <span>{lang.t("fee.tube")}</span>
+          <span>0 ({lang.t("free")})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t('relay_to_iotex')}</span>
-          <span>0 ({lang.t('free')})</span>
+          <span>{lang.t("relay_to_iotex")}</span>
+          <span>0 ({lang.t("free")})</span>
         </div>
       </div>
       <div>
         {!account && (
           <SubmitButton
-            title={lang.t('connect_metamask')}
+            title={lang.t("connect_metamask")}
             icon={<img src={IMG_MATAMASK} className="h-6 mr-4" />}
             onClick={() => {
               tryActivation(injected).then();
@@ -223,12 +219,12 @@ export const ERCXRC = () => {
         {account && (
           <div className="page__home__component__erc_xrc__button_group flex items-center">
             <SubmitButton
-              title={lang.t('approve')}
+              title={lang.t("approve")}
               onClick={onApprove}
               disabled={store.approved || !isEnabled}
             />
             <SubmitButton
-              title={lang.t('convert')}
+              title={lang.t("convert")}
               onClick={onConvert}
               disabled={!store.approved}
             />
@@ -244,7 +240,7 @@ export const ERCXRC = () => {
         depositToken={store.token}
         mintAmount={10}
         mintToken={store.token}
-        mintTokenName={'IOTX'}
+        mintTokenName={"IOTX"}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"
         isERCXRC

@@ -1,58 +1,93 @@
-import React, { useEffect, MouseEventHandler } from 'react';
-import './index.scss';
-import { Button } from 'antd';
-import { useStore } from '../../../../../common/store';
-import { SwapOutlined } from '@ant-design/icons';
-import { useObserver } from 'mobx-react';
-import { CARD_XRC20_ERC20 } from '../../../../../common/store/base';
+import React, { useEffect, MouseEventHandler } from "react";
+import "./index.scss";
+import { useStore } from "../../../../../common/store";
+import { useObserver, useLocalStore } from "mobx-react";
+import { useSwipeable } from "react-swipeable";
 
-const IMG_ETH = require('../../../../static/images/logo-ethereum.png');
-const IMG_IOTEX = require('../../../../static/images/logo-iotex.png');
-const IMG_SWITCH = require('../../../../static/images/icon-arrow.png');
+const IMG_ETH = require("../../../../static/images/logo-ethereum.png");
+const IMG_IOTEX = require("../../../../static/images/logo-iotex.png");
+const IMG_SWITCH = require("../../../../static/images/icon-arrow.png");
 
 interface IComponentProps {
-  onSwitch: MouseEventHandler;
-  mode: string;
+  onSwitch: Function;
+  isERCXRC: boolean;
 }
 
 export const SwitchHeader = (props: IComponentProps) => {
   const { lang } = useStore();
-  const { mode, onSwitch } = props;
-  const isERCXRC = mode !== CARD_XRC20_ERC20;
+  const { onSwitch } = props;
+  const store = useLocalStore(() => ({
+    isERCXRC: props.isERCXRC,
+    toggleERCXRC() {
+      this.isERCXRC = !this.isERCXRC;
+      setTimeout(() => {
+        onSwitch();
+      }, 400);
+    },
+  }));
+  const ethHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (!store.isERCXRC) {
+        store.toggleERCXRC();
+      }
+    },
+    delta: 30,
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true,
+  });
+
+  const iotxHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (store.isERCXRC) {
+        store.toggleERCXRC();
+      }
+    },
+    delta: 30,
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true,
+  });
+
   return useObserver(() => (
     <div
-      className={`page__home__component__switch_header flex items-center ${
-        !isERCXRC ? 'flex-row-reverse' : ''
+      className={`page__home__component__switch_header ${
+        store.isERCXRC ? "bg-secondary" : "bg-primary"
       }`}
     >
-      <div className="flex-1 flex flex-col justify-center items-center bg-primary c-white py-8">
-        <div
-          className={`flex items-center flex-col ${
-            !isERCXRC ? 'cursor-pointer' : ''
-          }`}
-          onClick={!isERCXRC ? onSwitch : null}
-        >
-          <img src={IMG_ETH} className="h-20" />
+      <div
+        {...ethHandlers}
+        className={`page__home__component__switch_header__item page__home__component__switch_header__item--ethereum ${
+          store.isERCXRC
+            ? "page__home__component__switch_header__item--active"
+            : "page__home__component__switch_header__item--inactive"
+        } flex-1 flex flex-col justify-center items-center bg-primary c-white py-8 `}
+      >
+        <div className="flex items-center select-none flex-col">
+          <img src={IMG_ETH} className="h-20 select-none pointer-events-none" />
           <div className="text-xl font-light -mt-2">
-            {lang.t('token.ethereum')}
+            {lang.t("token.ethereum")}
           </div>
         </div>
       </div>
       <img
         src={IMG_SWITCH}
         className="page__home__component__switch_header__switch cursor-pointer"
-        onClick={onSwitch}
+        onClick={store.toggleERCXRC}
       />
-      <div className="flex-1 flex flex-col justify-center items-center bg-secondary c-white py-8">
-        <div
-          className={`flex items-center flex-col ${
-            isERCXRC ? 'cursor-pointer' : ''
-          }`}
-          onClick={isERCXRC ? onSwitch : null}
-        >
-          <img src={IMG_IOTEX} className="h-20" />
+      <div
+        {...iotxHandlers}
+        className={`page__home__component__switch_header__item page__home__component__switch_header__item--iotex ${
+          !store.isERCXRC
+            ? "page__home__component__switch_header__item--active"
+            : "page__home__component__switch_header__item--inactive"
+        } flex-1 flex flex-col justify-center items-center bg-secondary c-white py-8`}
+      >
+        <div className="flex items-center flex-col select-none">
+          <img
+            src={IMG_IOTEX}
+            className="h-20 select-none pointer-events-none"
+          />
           <div className="text-xl font-light -mt-2">
-            {lang.t('token.iotex')}
+            {lang.t("token.iotex")}
           </div>
         </div>
       </div>

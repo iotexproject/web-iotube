@@ -1,7 +1,9 @@
 import React, { MouseEventHandler } from "react";
-import { Modal, Avatar, Button } from "antd";
-import { TOKENS } from "../index";
+import { Button, Modal } from "antd";
 import { useStore } from "../../../common/store";
+import { Token } from "@uniswap/sdk";
+import CurrencyLogo from "../CurrencyLogo/index";
+import { useTokens } from "../../hooks/Tokens";
 
 interface IComponentProps {
   visible: boolean;
@@ -10,9 +12,9 @@ interface IComponentProps {
   tubeFee: number;
   networkFee: number;
   depositAmount: number;
-  depositToken: string;
+  depositToken: Token | null;
   mintAmount: number;
-  mintToken: string;
+  mintToken: Token | null;
   mintTokenName: string;
   middleComment: string;
   isERCXRC: boolean;
@@ -20,10 +22,15 @@ interface IComponentProps {
 
 export const ConfirmModal = (props: IComponentProps) => {
   const { lang } = useStore();
-  const depositToken = TOKENS.find(
-    (element) => element.id === props.depositToken
-  );
-  const mintToken = TOKENS.find((element) => element.id === props.mintToken);
+  const tokenList = useTokens();
+  const depositToken =
+    props.depositToken && tokenList
+      ? tokenList[props.depositToken.address]
+      : undefined;
+  const mintToken =
+    props.mintToken && tokenList
+      ? tokenList[props.mintToken.address]
+      : undefined;
 
   if (!props.visible) return null;
 
@@ -37,7 +44,7 @@ export const ConfirmModal = (props: IComponentProps) => {
     >
       <div className="c-white flex items-center">
         <span className="font-normal text-3xl mr-3">{props.depositAmount}</span>
-        <Avatar size="small" src={depositToken && depositToken.img} />
+        <CurrencyLogo currency={depositToken} />
         <span className="text-xl ml-2 font-light">
           {depositToken && depositToken.name}
         </span>
@@ -47,7 +54,7 @@ export const ConfirmModal = (props: IComponentProps) => {
       </div>
       <div className="c-white  flex items-center">
         <span className="font-normal text-3xl mr-3">{props.mintAmount}</span>
-        <Avatar size="small" src={mintToken && mintToken.img} />
+        <CurrencyLogo currency={mintToken} />
         <span className="text-xl ml-2 font-light">
           {mintToken && mintToken.name}
         </span>

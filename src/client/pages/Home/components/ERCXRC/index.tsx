@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
-import { IOTX, SUPPORTED_WALLETS } from "../../../../constants/index";
+import {
+  IOTX,
+  SUPPORTED_WALLETS,
+  wrappedIOTXInfo,
+} from "../../../../constants/index";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { injected } from "../../../../connectors/index";
@@ -35,17 +39,16 @@ import message from "antd/lib/message";
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
 const cashierContractAddress = IOTX.address;
-const tokenAddress = "0xad6d458402f60fd3bd25163575031acdce07538d";
 
 export const ERCXRC = () => {
   const { lang, wallet } = useStore();
   const { account, activate, chainId, library } = useWeb3React<Web3Provider>();
   const { ENSName } = useENSName(account);
   const userEthBalance = useETHBalances([account])[account];
+  const [token, setToken] = useState(null);
 
   const store = useLocalStore(() => ({
     amount: "",
-    token: "",
     address: "",
     showConfirmModal: false,
     approved: false,
@@ -54,9 +57,6 @@ export const ERCXRC = () => {
     },
     setAmount(newAmount) {
       this.amount = newAmount;
-    },
-    setToken(newToken) {
-      this.token = newToken;
     },
     setAddress(newAddress) {
       this.address = newAddress;
@@ -110,6 +110,11 @@ export const ERCXRC = () => {
     }
     const amount = toRau(store.amount, "iotx");
     try {
+      const tokenAddress = token ? token.address : "";
+      if (!tokenAddress) {
+        message.error("could not get token address");
+        return;
+      }
       const tokenContract: Contract | null = getContract(
         tokenAddress,
         ERC20_ABI,
@@ -163,15 +168,24 @@ export const ERCXRC = () => {
     return store.isValidAmount() ? toRau(store.amount, "iotx") : "";
   }
 
-  function validateInputs(): boolean {
+  function validateInputs(showMessage: boolean = true): boolean {
     const amount = correctAmount();
     if (!amount) {
-      message.error("invalid amount");
+      if (showMessage) {
+        message.error("invalid amount");
+      }
       return false;
     }
     const toAddress = correctAddress();
     if (!toAddress) {
-      message.error(`invalid address ${store.address}`);
+      if (showMessage) {
+        message.error(`invalid address ${store.address}`);
+      }
+      return false;
+    }
+    const tokenAddress = token ? token.address : "";
+    if (!tokenAddress) {
+      if (showMessage) message.error("could not get token address");
       return false;
     }
     return true;
@@ -191,6 +205,11 @@ export const ERCXRC = () => {
     );
     if (!contract) {
       message.error("could not get cashier contract");
+      return;
+    }
+    const tokenAddress = token ? token.address : "";
+    if (!tokenAddress) {
+      message.error("could not get token address");
       return;
     }
     const args = [tokenAddress, toAddress, amount];
@@ -266,14 +285,13 @@ export const ERCXRC = () => {
       });
   };
 
-  const isEnabled =
-    store.amount !== "" && store.address !== "" && store.token !== "";
+  const isEnabled = validateInputs(false);
   const [hash, setHash] = useState("");
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
       <div className="my-6">
-        <TokenSelectField token={store.token} onChange={store.setToken} />
+        <TokenSelectField onChange={setToken} />
       </div>
       <AmountField
         amount={store.amount}
@@ -282,9 +300,11 @@ export const ERCXRC = () => {
       />
       {store.amount && (
         <div className="my-6 text-left">
-          <div className="text-base c-gray-20 font-thin">
-            You will receive {store.token} tokens at
-          </div>
+          {token && (
+            <div className="text-base c-gray-20 font-thin">
+              You will receive {wrappedIOTXInfo.name} tokens at
+            </div>
+          )}
           <AddressInput
             address={store.address}
             onChange={store.setAddress}
@@ -339,12 +359,12 @@ export const ERCXRC = () => {
             <SubmitButton
               title={lang.t("approve")}
               onClick={onApprove}
-              disabled={store.approved}
+              disabled={store.approved || !isEnabled}
             />
             <SubmitButton
               title={lang.t("convert")}
               onClick={onConvert}
-              disabled={!store.approved}
+              disabled={!store.approved && isEnabled}
             />
           </div>
         )}
@@ -355,9 +375,9 @@ export const ERCXRC = () => {
         tubeFee={0}
         networkFee={0}
         depositAmount={10}
-        depositToken={store.token}
-        mintAmount={10}
-        mintToken={store.token}
+        depositToken={token}
+        mintAmount={1}
+        mintToken={wrappedIOTXInfo}
         mintTokenName={"IOTX"}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"

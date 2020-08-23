@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
@@ -9,14 +9,15 @@ import {
   SubmitButton,
   TokenSelectField,
 } from "../../../../components";
+import { wrappedIOTXInfo } from "../../../../constants/index";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
 export const XRCERC = () => {
   const { lang, wallet } = useStore();
+  const [token, setToken] = useState(null);
   const store = useLocalStore(() => ({
     amount: "",
-    token: "",
     address: "",
     showConfirmModal: false,
     approved: false,
@@ -43,12 +44,10 @@ export const XRCERC = () => {
     store.setApprove();
   };
   const onConfirm = () => {};
-  const isEnabled =
-    store.amount !== "" && store.address !== "" && store.token !== "";
   return useObserver(() => (
     <div className="page__home__component__xrc_erc p-8 pt-6">
       <div className="my-6">
-        <TokenSelectField token={store.token} onChange={store.setToken} />
+        <TokenSelectField onChange={setToken} />
       </div>
 
       <AmountField
@@ -59,7 +58,7 @@ export const XRCERC = () => {
       {store.amount && (
         <div className="my-6 text-left">
           <div className="text-base c-gray-20">
-            You will receive {store.token} tokens at
+            You will receive {token.name} tokens at
           </div>
           <AddressInput
             address={store.address}
@@ -108,9 +107,9 @@ export const XRCERC = () => {
         tubeFee={0}
         networkFee={0}
         depositAmount={10}
-        depositToken={store.token}
+        depositToken={wrappedIOTXInfo}
         mintAmount={10}
-        mintToken={store.token}
+        mintToken={token}
         mintTokenName={"Ethereum"}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and withdraw"

@@ -75,7 +75,7 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
-// add 10%
+// add 10% on top of estimated gas limit
 export function calculateGasMargin(value: BigNumber): BigNumber {
   return value
     .mul(BigNumber.from(10000).add(BigNumber.from(1000)))

@@ -29,6 +29,7 @@ type ChainToken = {
   readonly [chainId in ChainId]: Token;
 };
 
+// TODO add this temp_eth to env
 const TEMP_ETH_ADDRESS = "0xad6d458402f60fd3bd25163575031acdce07538d";
 
 export const IOTX: TokenInfo = {

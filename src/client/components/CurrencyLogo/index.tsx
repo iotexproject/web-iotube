@@ -8,6 +8,7 @@ import { WrappedTokenInfo } from "../../hooks/Tokens";
 
 const EthereumLogo = require("../../static/images/icon-eth.png");
 
+// TODO: we need to pin this a forked version of the repo. Otherwise, the link may not be stable.
 const getTokenLogoURL = (address) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
 const BAD_URIS: { [tokenAddress: string]: true } = {};
@@ -40,6 +41,7 @@ export default function CurrencyLogo({
 }) {
   const [, refresh] = useState<number>(0);
 
+  // TODO we should only support ERC20 tokens.
   if (currency === ETHER) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />;
   }
@@ -69,6 +71,7 @@ export default function CurrencyLogo({
     }
   }
 
+  // TODO change emoji.
   return (
     <Emoji {...rest} size={size}>
       <span role="img" aria-label="Thinking">

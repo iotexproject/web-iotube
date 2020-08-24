@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'DM Mono', monospace;
+  font-family: "DM Mono", monospace;
   background-color: var(--bg) !important;
   --bg: #3b3b3b;
   --bg-primary: #262525;
@@ -103,6 +103,7 @@ body {
   .component__token_select__dropdown {
     border: none !important;
     background-color: rgb(63, 70, 80) !important;
+
     .ant-select-item-option {
       transition: all 0.3s;
       background-color: transparent !important;

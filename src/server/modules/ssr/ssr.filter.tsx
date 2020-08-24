@@ -26,7 +26,6 @@ export class SSRFilter implements ExceptionFilter {
     const req = ctx.getRequest<Request>();
 
     const ua = req.get("user-agent");
-    window.console.log(ua);
     const extra = {};
     if (ua && (ua.includes("IoPayAndroid") || ua.includes("IoPayiOs"))) {
       extra["isIoPayMobile"] = true;

@@ -9,6 +9,7 @@ import { redirectToHTTPS } from "express-http-to-https";
 import { SSRFilter } from "./server/modules/ssr/ssr.filter";
 import wildcard from "@wildcard-api/server/express";
 import cookieParser from "cookie-parser";
+import { publicConfig } from '../configs/public';
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -16,7 +17,9 @@ export async function bootstrap() {
   });
   app.disable("x-powered-by");
   app.use(compression());
-  app.use(redirectToHTTPS([/localhost:(\d{4})/], [/\/insecure/], 301));
+  if(publicConfig.IS_PROD){
+    app.use(redirectToHTTPS([/localhost:(\d{4})/], [/\/insecure/], 301));
+  }
   app.useStaticAssets(process.env.RAZZLE_PUBLIC_DIR, {
     index: false,
     redirect: false,

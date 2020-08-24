@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.scss";
 import { Select } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { RightOutlined } from "@ant-design/icons";
 import { Token } from "@uniswap/sdk";
 import CurrencyLogo from "../CurrencyLogo/index";
 import { useTokens } from "../../hooks/Tokens";
@@ -17,7 +17,7 @@ export const TokenSelectField = (props: IComponentProps) => {
   return (
     <Select
       className="component__token_select w-full c-white"
-      suffixIcon={<DownOutlined className="c-gray-10 text-base mr-2" />}
+      suffixIcon={<RightOutlined className="c-gray-10 text-base mr-2" />}
       dropdownClassName="component__token_select__dropdown"
       onChange={(value: string) => {
         if (tokenList && value) {

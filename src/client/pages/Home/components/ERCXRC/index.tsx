@@ -51,7 +51,7 @@ export const ERCXRC = () => {
 
   const store = useLocalStore(() => ({
     amount: "",
-    address: "",
+    token: "",
     showConfirmModal: false,
     approved: false,
     setApprove() {
@@ -60,8 +60,8 @@ export const ERCXRC = () => {
     setAmount(newAmount) {
       this.amount = newAmount;
     },
-    setAddress(newAddress) {
-      this.address = newAddress;
+    setToken(newToken) {
+      this.token = newToken;
     },
     toggleConfirmModalVisible() {
       this.showConfirmModal = !this.showConfirmModal;
@@ -171,10 +171,10 @@ export const ERCXRC = () => {
   };
 
   function getReceiptAddress(): string {
-    return validateAddress(store.address)
-      ? fromString(store.address).stringEth()
-      : isAddress(store.address)
-      ? store.address
+    return validateAddress(wallet.walletAddress)
+      ? fromString(wallet.walletAddress).stringEth()
+      : isAddress(wallet.walletAddress)
+      ? wallet.walletAddress
       : "";
   }
 
@@ -188,7 +188,7 @@ export const ERCXRC = () => {
     const toAddress = getReceiptAddress();
     if (!toAddress) {
       if (showMessage) {
-        message.error(`invalid address ${store.address}`);
+        message.error(`invalid address ${wallet.walletAddress}`);
       }
       return false;
     }
@@ -325,8 +325,8 @@ export const ERCXRC = () => {
             </div>
           )}
           <AddressInput
-            address={store.address}
-            onChange={store.setAddress}
+            readOnly
+            address={wallet.walletAddress || ""}
             label="IOTX Address"
           />
         </div>

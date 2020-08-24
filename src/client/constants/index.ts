@@ -1,6 +1,5 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { ChainId, JSBI, Percent, Token, WETH } from "@uniswap/sdk";
-
+import { ChainId, JSBI, Percent, Token } from "@uniswap/sdk";
 import {
   fortmatic,
   injected,
@@ -8,38 +7,77 @@ import {
   walletconnect,
   walletlink,
 } from "../connectors";
+import { TokenInfo } from "@uniswap/token-lists";
+import { WrappedTokenInfo } from "../hooks/Tokens";
+import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
+import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
+import { publicConfig } from "../../../configs/public";
 
-export const ROUTER_ADDRESS = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
+export const IMG_LOGO = require("../static/images/logo-iotex.png");
+export const IMG_IOTX = require("../static/images/icon_wallet.png");
+export const IMG_ETHER = require("../static/images/icon-eth.png");
 
-export const IOTX = new Token(
-  ChainId.ROPSTEN,
-  "0x293b54deb9821469e7f0a41432ac17b31e77a3a5",
-  18,
-  "IOTX",
-  "IoTeX"
-);
+type ChainTokenList = {
+  readonly [chainId in ChainId]: TokenInfo[];
+};
 
-export const PINNED_PAIRS: {
-  readonly [chainId in ChainId]?: [Token, Token][];
-} = {
-  [ChainId.MAINNET]: [
-    [
-      new Token(
-        ChainId.MAINNET,
-        "0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643",
-        8,
-        "cDAI",
-        "Compound Dai"
-      ),
-      new Token(
-        ChainId.MAINNET,
-        "0x39AA39c021dfbaE8faC545936693aC917d5E7563",
-        8,
-        "cUSDC",
-        "Compound USD Coin"
-      ),
-    ],
-  ],
+type ChainContractAddress = {
+  readonly [chainId in ChainId]: string;
+};
+
+type ChainToken = {
+  readonly [chainId in ChainId]: Token;
+};
+
+// TODO add this temp_eth to env
+const TEMP_ETH_ADDRESS = "0xad6d458402f60fd3bd25163575031acdce07538d";
+
+export const IOTX: TokenInfo = {
+  chainId: 0,
+  address: "",
+  name: "IOTEX",
+  decimals: 18,
+  symbol: "IOTX",
+  logoURI: IMG_IOTX,
+};
+
+export const CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
+  [ChainId.MAINNET]:
+    publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.MAINNET}`],
+  [ChainId.ROPSTEN]:
+    publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.ROPSTEN}`],
+  [ChainId.RINKEBY]: "",
+  [ChainId.GÖRLI]: "",
+  [ChainId.KOVAN]: "",
+};
+
+function initIOTEXToken(chainId: ChainId) {
+  const info = {
+    ...IOTX,
+    chainId,
+    address: publicConfig[`IOTX_TOKEN_ADDRESS${chainId}`] || TEMP_ETH_ADDRESS,
+  };
+  return new WrappedTokenInfo(info);
+}
+
+export const IOTX_TOKEN_INFO: ChainToken = {
+  [ChainId.MAINNET]: initIOTEXToken(ChainId.MAINNET),
+  [ChainId.ROPSTEN]: initIOTEXToken(ChainId.ROPSTEN),
+  [ChainId.RINKEBY]: initIOTEXToken(ChainId.RINKEBY),
+  [ChainId.GÖRLI]: initIOTEXToken(ChainId.GÖRLI),
+  [ChainId.KOVAN]: initIOTEXToken(ChainId.KOVAN),
+};
+
+export const CHAIN_TOKEN_LIST: ChainTokenList = {
+  [ChainId.MAINNET]: MAINNET_TOKEN_LIST.map((item) => {
+    return { ...item, chainId: ChainId.MAINNET } as TokenInfo;
+  }),
+  [ChainId.ROPSTEN]: ROPSTEN_TOKEN_LIST.map((item) => {
+    return { ...item, chainId: ChainId.ROPSTEN } as TokenInfo;
+  }),
+  [ChainId.RINKEBY]: [],
+  [ChainId.GÖRLI]: [],
+  [ChainId.KOVAN]: [],
 };
 
 export interface WalletInfo {
@@ -118,14 +156,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
 };
 
-const WETH_ONLY: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-};
-
 export const ETH_NETWORKS = {
   [ChainId.MAINNET]: "MAINNET",
   [ChainId.ROPSTEN]: "ROPSTEN",
@@ -178,22 +208,4 @@ export const BETTER_TRADE_LINK_THRESHOLD = new Percent(
   JSBI.BigInt(10000)
 );
 
-export const DEFAULT_TOKEN_LIST_URL = "";
-
-type ChainTokenList = {
-  readonly [chainId in ChainId]: Token[];
-};
-
-export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET]],
-};
-
-export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET]],
-};
-
-export const CUSTOM_BASES: {
-  [chainId in ChainId]?: { [tokenAddress: string]: Token[] };
-} = {};
+export const TRANSACTION_REJECTED = 4001;

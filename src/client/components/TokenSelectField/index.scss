@@ -18,5 +18,11 @@
   }
   .ant-select-arrow {
     right: 1rem;
+    transition: all 0.2s;
+  }
+  &.ant-select-open {
+    .ant-select-arrow {
+      transform: rotate(90deg);
+    }
   }
 }

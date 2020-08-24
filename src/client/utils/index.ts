@@ -3,6 +3,16 @@ import { getAddress } from "@ethersproject/address";
 import { AddressZero } from "@ethersproject/constants";
 import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
+import { BigNumber } from "@ethersproject/bignumber";
+import { ChainId } from "@uniswap/sdk";
+
+const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
+  1: "",
+  3: "ropsten.",
+  4: "rinkeby.",
+  5: "goerli.",
+  42: "kovan.",
+};
 
 export function isAddress(value: any): string | false {
   try {
@@ -63,4 +73,64 @@ export function getContract(
 
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
+// add 10% on top of estimated gas limit
+export function calculateGasMargin(value: BigNumber): BigNumber {
+  return value
+    .mul(BigNumber.from(10000).add(BigNumber.from(1000)))
+    .div(BigNumber.from(10000));
+}
+
+export function getEtherscanLink(
+  chainId: ChainId,
+  data: string,
+  type: "transaction" | "token" | "address"
+): string {
+  const prefix = `https://${
+    ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]
+  }etherscan.io`;
+
+  switch (type) {
+    case "transaction": {
+      return `${prefix}/tx/${data}`;
+    }
+    case "token": {
+      return `${prefix}/token/${data}`;
+    }
+    case "address":
+    default: {
+      return `${prefix}/address/${data}`;
+    }
+  }
+}
+
+export default function uriToHttp(uri: string): string[] {
+  try {
+    const parsed = new URL(uri);
+    if (parsed.protocol === "http:") {
+      return ["https" + uri.substr(4), uri];
+    } else if (parsed.protocol === "https:") {
+      return [uri];
+    } else if (parsed.protocol === "ipfs:") {
+      const hash = parsed.href.match(/^ipfs:(\/\/)?(.*)$/)?.[2];
+      return [
+        `https://cloudflare-ipfs.com/ipfs/${hash}/`,
+        `https://ipfs.io/ipfs/${hash}/`,
+      ];
+    } else if (parsed.protocol === "ipns:") {
+      const name = parsed.href.match(/^ipns:(\/\/)?(.*)$/)?.[2];
+      return [
+        `https://cloudflare-ipfs.com/ipns/${name}/`,
+        `https://ipfs.io/ipns/${name}/`,
+      ];
+    } else {
+      return [];
+    }
+  } catch (error) {
+    if (uri.toLowerCase().endsWith(".eth")) {
+      return [`https://${uri.toLowerCase()}.link`];
+    }
+    return [];
+  }
 }

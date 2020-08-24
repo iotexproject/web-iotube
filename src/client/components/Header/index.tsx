@@ -1,13 +1,7 @@
-import React from "react";
-import "./index.scss";
-import { EllipsisOutlined, CopyOutlined } from "@ant-design/icons";
 import { Avatar, Button, notification } from "antd";
-import { useStore } from "../../../common/store";
 import { useObserver } from "mobx-react";
-import "./index.scss";
 import { CARD_ERC20_XRC20 } from "../../../common/store/base";
-import { shortenAddress } from "../../utils";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import useENSName from "../../hooks/useENSName";
 import { useETHBalances } from "../../state/wallet/hooks";
 import { Web3Provider } from "@ethersproject/providers";
@@ -15,11 +9,13 @@ import { SUPPORTED_WALLETS, ETH_NETWORKS } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
 import { fromRau } from "iotex-antenna/lib/account/utils";
+import { IMG_ETHER, IMG_IOTX, IMG_LOGO } from "../../constants/index";
+import React from "react";
+import "./index.scss";
+import { CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { useStore } from "../../../common/store";
+import { shortenAddress } from "../../utils";
 import copy from "copy-to-clipboard";
-
-const IMG_LOGO = require("../../static/images/logo-iotex.png");
-const IMG_IOTX = require("../../static/images/icon_wallet.png");
-const IMG_ETHER = require("../../static/images/icon-eth.png");
 
 export const Header = () => {
   const { wallet, lang, base } = useStore();

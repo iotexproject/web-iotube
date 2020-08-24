@@ -5,7 +5,7 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import useENSName from "../../hooks/useENSName";
 import { useETHBalances } from "../../state/wallet/hooks";
 import { Web3Provider } from "@ethersproject/providers";
-import { SUPPORTED_WALLETS, ETH_NETWORKS } from "../../constants";
+import { SUPPORTED_WALLETS, ETH_NETWORK_NAMES } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
 import { fromRau } from "iotex-antenna/lib/account/utils";
@@ -93,7 +93,7 @@ export const Header = () => {
         {chainId !== 1 && (
           <>
             <span className="capitalize inline-block rounded bg-primary c-green px-2">
-              {ETH_NETWORKS[chainId]}
+              {ETH_NETWORK_NAMES[chainId]}
             </span>
             &nbsp;
           </>

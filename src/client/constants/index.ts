@@ -156,7 +156,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
 };
 
-export const ETH_NETWORKS = {
+export const ETH_NETWORK_NAMES = {
   [ChainId.MAINNET]: "MAINNET",
   [ChainId.ROPSTEN]: "ROPSTEN",
   [ChainId.RINKEBY]: "RINKEBY",

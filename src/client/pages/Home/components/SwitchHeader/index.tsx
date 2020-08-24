@@ -62,7 +62,13 @@ export const SwitchHeader = (props: IComponentProps) => {
         } flex-1 flex flex-col justify-center items-center bg-primary c-white py-8 `}
       >
         <div className="flex items-center select-none flex-col">
-          <img src={IMG_ETH} className="h-20 select-none pointer-events-none" />
+          <img
+            src={IMG_ETH}
+            className={`h-20 ${!store.isERCXRC ? "cursor-pointer" : ""}`}
+            onClick={() => {
+              if (!store.isERCXRC) store.toggleERCXRC();
+            }}
+          />
           <div className="text-xl font-light -mt-2">
             {lang.t("token.ethereum")}
           </div>
@@ -84,7 +90,10 @@ export const SwitchHeader = (props: IComponentProps) => {
         <div className="flex items-center flex-col select-none">
           <img
             src={IMG_IOTEX}
-            className="h-20 select-none pointer-events-none"
+            className={`h-20 ${store.isERCXRC ? "cursor-pointer" : ""}`}
+            onClick={() => {
+              if (store.isERCXRC) store.toggleERCXRC();
+            }}
           />
           <div className="text-xl font-light -mt-2">
             {lang.t("token.iotex")}

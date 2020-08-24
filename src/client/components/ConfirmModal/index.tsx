@@ -1,7 +1,8 @@
 import React, { MouseEventHandler } from "react";
-import { Modal, Avatar, Button } from "antd";
-import { TOKENS } from "../index";
+import { Button, Modal } from "antd";
 import { useStore } from "../../../common/store";
+import { Token } from "@uniswap/sdk";
+import CurrencyLogo from "../CurrencyLogo/index";
 
 interface IComponentProps {
   visible: boolean;
@@ -10,21 +11,15 @@ interface IComponentProps {
   tubeFee: number;
   networkFee: number;
   depositAmount: number;
-  depositToken: string;
+  depositToken: Token | null;
   mintAmount: number;
-  mintToken: string;
-  mintTokenName: string;
+  mintToken: Token | null;
   middleComment: string;
   isERCXRC: boolean;
 }
 
 export const ConfirmModal = (props: IComponentProps) => {
   const { lang } = useStore();
-  const depositToken = TOKENS.find(
-    (element) => element.id === props.depositToken
-  );
-  const mintToken = TOKENS.find((element) => element.id === props.mintToken);
-
   if (!props.visible) return null;
 
   return (
@@ -35,25 +30,33 @@ export const ConfirmModal = (props: IComponentProps) => {
       footer={null}
       className="modal__confirm_deposit"
     >
-      <div className="c-white flex items-center">
+      <div className="c-gray flex items-center">
         <span className="font-normal text-3xl mr-3">{props.depositAmount}</span>
-        <Avatar size="small" src={depositToken && depositToken.img} />
-        <span className="text-xl ml-2 font-light">
-          {depositToken && depositToken.name}
-        </span>
+        {props.depositToken && (
+          <>
+            <CurrencyLogo currency={props.depositToken} />
+            <span className="text-xl ml-2 font-light">
+              {props.depositToken.name}
+            </span>
+          </>
+        )}
       </div>
       <div className="c-gray font-thin text-base mt-2 mb-5">
         {props.middleComment}
       </div>
-      <div className="c-white  flex items-center">
+      <div className="c-gray flex items-center">
         <span className="font-normal text-3xl mr-3">{props.mintAmount}</span>
-        <Avatar size="small" src={mintToken && mintToken.img} />
-        <span className="text-xl ml-2 font-light">
-          {mintToken && mintToken.name}
-        </span>
+        {props.mintToken && (
+          <>
+            <CurrencyLogo currency={props.mintToken} />
+            <span className="text-xl ml-2 font-light">
+              {props.mintToken.symbol}
+            </span>
+          </>
+        )}
       </div>
       <div className="c-gray font-thin text-base mt-2 mb-5">
-        on {props.mintTokenName}
+        on {props.mintToken ? props.mintToken.name : ""}
       </div>
       <div className="my-6 text-left c-gray">
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>

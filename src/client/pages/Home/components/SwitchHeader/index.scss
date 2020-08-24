@@ -1,8 +1,37 @@
 .page__home__component__switch_header {
   position: relative;
+  .page__home__component__switch_header__item {
+    width: 50%;
+    display: inline-block;
+    position: relative;
+    transition: all 0.25s;
+    &.page__home__component__switch_header__item--ethereum {
+      &.page__home__component__switch_header__item--active {
+        left: 0;
+        z-index: 5;
+      }
+      &.page__home__component__switch_header__item--inactive {
+        left: 50%;
+
+        transition-delay: 0.15s;
+      }
+    }
+    &.page__home__component__switch_header__item--iotex {
+      &.page__home__component__switch_header__item--active {
+        left: -50%;
+        z-index: 5;
+      }
+      &.page__home__component__switch_header__item--inactive {
+        left: 0;
+
+        transition-delay: 0.15s;
+      }
+    }
+  }
   .page__home__component__switch_header__switch {
     position: absolute;
     left: calc(50% - 35px);
+    top: calc(50% - 35px);
     height: 70px;
     z-index: 10;
   }

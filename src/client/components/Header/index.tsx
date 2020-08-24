@@ -1,4 +1,3 @@
-import "./index.scss";
 import { Avatar, Button, notification } from "antd";
 import { useObserver } from "mobx-react";
 import { CARD_ERC20_XRC20 } from "../../../common/store/base";
@@ -6,7 +5,7 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import useENSName from "../../hooks/useENSName";
 import { useETHBalances } from "../../state/wallet/hooks";
 import { Web3Provider } from "@ethersproject/providers";
-import { SUPPORTED_WALLETS } from "../../constants";
+import { SUPPORTED_WALLETS, ETH_NETWORK_NAMES } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
 import { fromRau } from "iotex-antenna/lib/account/utils";
@@ -20,7 +19,7 @@ import copy from "copy-to-clipboard";
 
 export const Header = () => {
   const { wallet, lang, base } = useStore();
-  const { account, activate } = useWeb3React<Web3Provider>();
+  const { account, activate, chainId } = useWeb3React<Web3Provider>();
   const { ENSName } = useENSName(account);
   const userEthBalance = useETHBalances([account])[account];
 
@@ -91,6 +90,14 @@ export const Header = () => {
 
     return walletConnected ? (
       <>
+        {chainId !== 1 && (
+          <>
+            <span className="capitalize inline-block rounded bg-primary c-green px-2">
+              {ETH_NETWORK_NAMES[chainId]}
+            </span>
+            &nbsp;
+          </>
+        )}
         <span>
           {walletBalance}&nbsp;{balanceUnit}
         </span>
@@ -122,7 +129,7 @@ export const Header = () => {
         <img alt="logo" className="h-full" src={IMG_LOGO} />
         <span className="flex items-center c-white font-thin">
           {renderWalletInfo()}
-          &nbsp;&nbsp;&nbsp;
+          &nbsp;
           <Button
             type="text"
             shape="circle"

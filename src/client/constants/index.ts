@@ -156,6 +156,14 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
 };
 
+export const ETH_NETWORK_NAMES = {
+  [ChainId.MAINNET]: "MAINNET",
+  [ChainId.ROPSTEN]: "ROPSTEN",
+  [ChainId.RINKEBY]: "RINKEBY",
+  [ChainId.GÖRLI]: "GÖRLI",
+  [ChainId.KOVAN]: "KOVAN",
+};
+
 export const NetworkContextName = "NETWORK";
 
 // default allowed slippage, in bips

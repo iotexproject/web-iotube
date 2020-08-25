@@ -10,6 +10,7 @@ body {
   --app-header-width: 1200px;
   --c-green: #33ff99;
   --c-green-10: #33ff99;
+  --c-green-20: rgb(51, 254, 153);
   --c-gray: #9398a2;
   --c-gray-10: rgb(147, 152, 162);
   --c-gray-20: rgb(147, 147, 153);
@@ -67,6 +68,10 @@ body {
     color: var(--c-green-10);
   }
 
+  .c-green-20 {
+    color: var(--c-green-20);
+  }
+
   .c-gray {
     color: var(--c-gray);
   }
@@ -97,6 +102,14 @@ body {
 
   .border-secondary {
     border-color: var(--bg-secondary) !important;
+  }
+
+  .border-green {
+    border-color: var(--c-green) !important;
+  }
+
+  .border-green-20 {
+    border-color: var(--c-green-20);
   }
 
   // token select dropdown

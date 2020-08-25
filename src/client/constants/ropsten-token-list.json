@@ -1,9 +1,18 @@
-[
-  {
-    "address": "0xad6d458402f60fd3bd25163575031acdce07538d",
-    "name": "Dai Stablecoin",
-    "decimals": 18,
-    "symbol": "DAI",
-    "logoURI": ""
+{
+  "DAI": {
+    "eth": {
+      "address": "0xad6d458402f60fd3bd25163575031acdce07538d",
+      "name": "Dai token",
+      "decimals": 18,
+      "symbol": "xDAI",
+      "logoURI": ""
+    },
+    "iotx": {
+      "iotexaddr": "io140p3vu4gtvqg545nek6ewx74u3fv9yyjt9gvda",
+      "name": "Dai Token (XRC20)",
+      "decimals": 18,
+      "symbol": "xDAI",
+      "logoURI": ""
+    }
   }
-]
+}

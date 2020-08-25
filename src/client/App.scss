@@ -138,8 +138,15 @@ body {
   // confirm modal
   .modal__confirm_deposit {
     width: 400px !important;
-
     top: 150px !important;
+
+    &.modal__confirm_deposit--ercxrc .ant-modal-body {
+      background-color: var(--bg-primary) !important;
+    }
+    &.modal__confirm_deposit--xrcerc .ant-modal-body {
+      background-color: var(--bg-secondary) !important;
+    }
+
     .ant-modal-content {
       border-radius: 0.5rem !important;
       .ant-modal-close-x {

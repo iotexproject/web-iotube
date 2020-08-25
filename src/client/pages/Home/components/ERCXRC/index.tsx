@@ -34,7 +34,7 @@ import { Contract } from "@ethersproject/contracts";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import { MaxUint256 } from "@ethersproject/constants";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
-import { fromString } from "iotex-antenna/lib/crypto/address";
+import { fromString, fromBytes } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import { tryParseAmount } from "../../../../hooks/Tokens";
 
@@ -317,7 +317,7 @@ export const ERCXRC = () => {
         label={lang.t("amount")}
         onChange={store.setAmount}
       />
-      {store.amount && (
+      {store.amount && account && (
         <div className="my-6 text-left">
           {token && (
             <div className="text-base c-gray-20 font-thin">
@@ -326,7 +326,9 @@ export const ERCXRC = () => {
           )}
           <AddressInput
             readOnly
-            address={wallet.walletAddress || ""}
+            address={fromBytes(
+              Buffer.from(String(account).replace(/^0x/, ""), "hex")
+            ).string()}
             label="IOTX Address"
           />
         </div>

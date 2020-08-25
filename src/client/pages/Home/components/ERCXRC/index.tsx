@@ -293,7 +293,7 @@ export const ERCXRC = () => {
       {store.amount && account && (
         <div className="my-6 text-left">
           {token && (
-            <div className="text-base c-gray-20 font-thin">You will receive {wrappedIOTXInfo.name} tokens at</div>
+            <div className="text-base c-gray-20 font-thin">You will receive {wrappedIOTXInfo.symbol} tokens at</div>
           )}
           <AddressInput
             readOnly

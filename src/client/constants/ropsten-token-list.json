@@ -4,7 +4,7 @@
       "address": "0xad6d458402f60fd3bd25163575031acdce07538d",
       "name": "Dai token",
       "decimals": 18,
-      "symbol": "xDAI",
+      "symbol": "DAI",
       "logoURI": ""
     },
     "iotx": {

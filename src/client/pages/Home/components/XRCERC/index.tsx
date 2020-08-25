@@ -12,6 +12,7 @@ import {
 } from "../../../../components";
 import { ChainId } from "@uniswap/sdk";
 import { IOTX_TOKEN_INFO } from "../../../../constants/index";
+import { fromString } from "iotex-antenna/lib/crypto/address";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -20,7 +21,6 @@ export const XRCERC = () => {
   const [token, setToken] = useState(null);
   const store = useLocalStore(() => ({
     amount: "",
-    address: "",
     showConfirmModal: false,
     approved: false,
     setApprove() {
@@ -28,9 +28,6 @@ export const XRCERC = () => {
     },
     setAmount(newAmount) {
       this.amount = newAmount;
-    },
-    setAddress(newAddress) {
-      this.address = newAddress;
     },
     toggleConfirmModalVisible() {
       this.showConfirmModal = !this.showConfirmModal;
@@ -61,9 +58,9 @@ export const XRCERC = () => {
             You will receive {token.name} tokens at
           </div>
           <AddressInput
-            address={store.address}
-            onChange={store.setAddress}
+            address={fromString(wallet.walletAddress).stringEth()}
             label="Ether Address"
+            readOnly
           />
         </div>
       )}

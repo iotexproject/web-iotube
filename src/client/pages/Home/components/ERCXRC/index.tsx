@@ -34,7 +34,7 @@ import { Contract } from "@ethersproject/contracts";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import { MaxUint256 } from "@ethersproject/constants";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
-import { fromString } from "iotex-antenna/lib/crypto/address";
+import { fromString, fromBytes } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import { tryParseAmount } from "../../../../hooks/Tokens";
 
@@ -326,7 +326,9 @@ export const ERCXRC = () => {
           )}
           <AddressInput
             readOnly
-            address={wallet.walletAddress || ""}
+            address={fromBytes(
+              Buffer.from(String(account || ENSName).replace(/^0x/, ""), "hex")
+            ).string()}
             label="IOTX Address"
           />
         </div>

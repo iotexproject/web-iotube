@@ -90,7 +90,7 @@ export const Header = () => {
 
     return walletConnected ? (
       <>
-        {chainId !== 1 && (
+        {chainId !== 1 && base.mode === CARD_ERC20_XRC20 && (
           <>
             <span className="capitalize inline-block rounded bg-primary c-green px-2">
               {ETH_NETWORK_NAMES[chainId]}

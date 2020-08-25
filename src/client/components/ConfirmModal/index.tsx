@@ -45,12 +45,12 @@ export const ConfirmModal = (props: IComponentProps) => {
         {props.middleComment}
       </div>
       <div className="c-gray flex items-center">
-        <span className="font-normal text-3xl mr-3">{props.mintAmount}</span>
-        {props.mintToken && (
+        <span className="font-normal text-3xl mr-3">{props.depositAmount}</span>
+        {props.depositToken && (
           <>
-            <CurrencyLogo currency={props.mintToken} />
+            <CurrencyLogo currency={props.depositToken} />
             <span className="text-xl ml-2 font-light">
-              {props.mintToken.symbol}
+              {props.depositToken.symbol}
             </span>
           </>
         )}

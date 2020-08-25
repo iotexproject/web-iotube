@@ -20,7 +20,10 @@ import {
   isAddress,
   shortenAddress,
 } from "../../../../utils/index";
-import { useETHBalances } from "../../../../state/wallet/hooks";
+import {
+  useETHBalances,
+  useTokenBalances,
+} from "../../../../state/wallet/hooks";
 import "./index.scss";
 import {
   AddressInput,
@@ -48,10 +51,12 @@ export const ERCXRC = () => {
   const [token, setToken] = useState(null);
   const cashierContractAddress = CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
   const wrappedIOTXInfo = IOTX_TOKEN_INFO[chainId];
+  const tokenBalance = useTokenBalances(!!token ? token.address : undefined, [
+    account,
+  ])[account];
 
   const store = useLocalStore(() => ({
     amount: "",
-    token: "",
     showConfirmModal: false,
     approved: false,
     setApprove() {
@@ -60,9 +65,7 @@ export const ERCXRC = () => {
     setAmount(newAmount) {
       this.amount = newAmount;
     },
-    setToken(newToken) {
-      this.token = newToken;
-    },
+
     toggleConfirmModalVisible() {
       this.showConfirmModal = !this.showConfirmModal;
     },
@@ -171,10 +174,10 @@ export const ERCXRC = () => {
   };
 
   function getReceiptAddress(): string {
-    return validateAddress(wallet.walletAddress)
-      ? fromString(wallet.walletAddress).stringEth()
-      : isAddress(wallet.walletAddress)
-      ? wallet.walletAddress
+    return account
+      ? fromBytes(
+          Buffer.from(String(account).replace(/^0x/, ""), "hex")
+        ).string()
       : "";
   }
 
@@ -188,7 +191,7 @@ export const ERCXRC = () => {
     const toAddress = getReceiptAddress();
     if (!toAddress) {
       if (showMessage) {
-        message.error(`invalid address ${wallet.walletAddress}`);
+        message.error(`invalid address ${account}`);
       }
       return false;
     }
@@ -316,7 +319,28 @@ export const ERCXRC = () => {
         amount={store.amount}
         label={lang.t("amount")}
         onChange={store.setAmount}
+        customAddon={
+          token && (
+            <span
+              onClick={() => {
+                store.setAmount(tokenBalance.toFixed(3));
+              }}
+              className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
+            >
+              MAX
+            </span>
+          )
+        }
       />
+      {token && (
+        <div className="font-light text-sm text-right c-gray-30 mt-2">
+          {tokenBalance && (
+            <span>
+              {tokenBalance?.toSignificant(4)} {token.symbol}
+            </span>
+          )}
+        </div>
+      )}
       {store.amount && account && (
         <div className="my-6 text-left">
           {token && (
@@ -334,17 +358,6 @@ export const ERCXRC = () => {
         </div>
       )}
       <div className="my-6 text-left c-gray-30">
-        {account && (
-          <>
-            <div className="font-light text-sm flex items-center justify-between">
-              <span>{ENSName || (account && shortenAddress(account))}</span>
-              {userEthBalance && (
-                <span>{userEthBalance?.toSignificant(4)} ETH</span>
-              )}
-            </div>
-          </>
-        )}
-
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>{lang.t("fee.tube")}</span>

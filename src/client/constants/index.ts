@@ -72,8 +72,8 @@ export const CHAIN_TOKEN_LIST: ChainTokenList = {
   [ChainId.MAINNET]: MAINNET_TOKEN_LIST.map((item) => {
     return { ...item, chainId: ChainId.MAINNET } as TokenInfo;
   }),
-  [ChainId.ROPSTEN]: ROPSTEN_TOKEN_LIST.map((item) => {
-    return { ...item, chainId: ChainId.ROPSTEN } as TokenInfo;
+  [ChainId.ROPSTEN]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
+    return { ...item.eth, chainId: ChainId.ROPSTEN } as TokenInfo;
   }),
   [ChainId.RINKEBY]: [],
   [ChainId.GÖRLI]: [],

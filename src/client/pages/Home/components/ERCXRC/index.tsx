@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
@@ -13,12 +13,14 @@ import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { injected } from "../../../../connectors/index";
 import { TransactionResponse, Web3Provider } from "@ethersproject/providers";
 import {
-  calculateGasMargin, getAmountNumber,
+  calculateGasMargin,
+  getAmountNumber,
   getContract,
   getEtherscanLink,
-  isAddress, isValidAmount,
+  isAddress,
+  isValidAmount,
 } from "../../../../utils/index";
-import {useTokenBalances} from "../../../../state/wallet/hooks";
+import { useTokenBalances } from "../../../../state/wallet/hooks";
 import "./index.scss";
 import {
   AddressInput,
@@ -31,11 +33,11 @@ import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import { Contract } from "@ethersproject/contracts";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
-import {fromBytes, fromString} from "iotex-antenna/lib/crypto/address";
+import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import { tryParseAmount } from "../../../../hooks/Tokens";
-import {parseUnits} from "@ethersproject/units";
-import {BigNumber} from "@ethersproject/bignumber";
+import { parseUnits } from "@ethersproject/units";
+import { BigNumber } from "@ethersproject/bignumber";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -49,64 +51,67 @@ export const ERCXRC = () => {
   const [hash, setHash] = useState("");
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
   const wrappedIOTXInfo = IOTX_TOKEN_INFO[chainId];
-  const cashierContractAddress = useMemo(() => CHAIN_CASHIER_CONTRACT_ADDRESS[chainId],
-    [chainId]);
-  const tokenBalance = useTokenBalances(token ? token.address : undefined, [account])[account];
+  const cashierContractAddress = useMemo(
+    () => CHAIN_CASHIER_CONTRACT_ADDRESS[chainId],
+    [chainId]
+  );
+  const tokenBalance = useTokenBalances(token ? token.address : undefined, [
+    account,
+  ])[account];
 
   const store = useLocalStore(() => ({
     showConfirmModal: false,
     toggleConfirmModalVisible() {
       this.showConfirmModal = !this.showConfirmModal;
-    }
+    },
   }));
 
   const cashierContractValidate = useMemo(() => {
-      if (!cashierContractAddress || !isAddress(cashierContractAddress)) {
-        if(chainId){
-          let content = `please set correctly CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
-          message.error(content);
-          window.console.log(content);
-        }
-        return false;
+    if (!cashierContractAddress || !isAddress(cashierContractAddress)) {
+      if (chainId) {
+        let content = `please set correctly CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
+        message.error(content);
+        window.console.log(content);
       }
-      return true;
-    },
-    [cashierContractAddress]);
+      return false;
+    }
+    return true;
+  }, [cashierContractAddress]);
 
-  const tokenAddress = useMemo(() => token?token.address:"",[token]);
+  const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
 
   const tokenContract = useMemo(() => {
-    if(isAddress(tokenAddress)){
-      return getContract(
-        tokenAddress,
-        ERC20_ABI,
-        library,
-        account
-      );
+    if (isAddress(tokenAddress)) {
+      return getContract(tokenAddress, ERC20_ABI, library, account);
     }
     return null;
-  },
-    [tokenAddress, library, account])
+  }, [tokenAddress, library, account]);
 
-    useEffect(() => {
-      if(isAddress(account) && cashierContractValidate && tokenContract){
-        try {
-          tokenContract.allowance(account, cashierContractAddress)
-            .then((value: BigNumber)=> {
-              setAllowance(value);
-              return value;
-            })
-            .catch((error: Error) => {
-              message.error(`Failed to get allowance! ${error.message}`);
-              window.console.log(`Failed to get allowance!`, error);
-            });
-        } catch (e) {
-          message.error(`Failed to get allowance!`);
-          window.console.log(`Failed to get allowance!`, e);
-        }
+  useEffect(() => {
+    if (isAddress(account) && cashierContractValidate && tokenContract) {
+      try {
+        tokenContract
+          .allowance(account, cashierContractAddress)
+          .then((value: BigNumber) => {
+            setAllowance(value);
+            return value;
+          })
+          .catch((error: Error) => {
+            message.error(`Failed to get allowance! ${error.message}`);
+            window.console.log(`Failed to get allowance!`, error);
+          });
+      } catch (e) {
+        message.error(`Failed to get allowance!`);
+        window.console.log(`Failed to get allowance!`, e);
       }
-    },
-    [account, cashierContractValidate, tokenContract, beApproved, beConverted]);
+    }
+  }, [
+    account,
+    cashierContractValidate,
+    tokenContract,
+    beApproved,
+    beConverted,
+  ]);
 
   const tryActivation = async (connector) => {
     let name = "";
@@ -152,7 +157,7 @@ export const ERCXRC = () => {
       message.error(`Could not parse amount for token ${token.name}`);
       return;
     }
-    if(!cashierContractValidate){
+    if (!cashierContractValidate) {
       message.error("invalidate cashier contract address!");
       return;
     }
@@ -194,9 +199,11 @@ export const ERCXRC = () => {
   };
 
   function getReceiptAddress(): string | boolean {
-    return validateAddress(account)
-      ? fromString(account).stringEth()
-      : isAddress(account);
+    return account
+      ? fromBytes(
+          Buffer.from(String(account).replace(/^0x/, ""), "hex")
+        ).string()
+      : "";
   }
 
   function validateInputs(showMessage: boolean = true): boolean {
@@ -207,19 +214,20 @@ export const ERCXRC = () => {
       return false;
     }
     const amountNumber = getAmountNumber(amount);
-    if(amountNumber<1){
+    //TODO: check minimal amount from contract data.
+    if (amountNumber < 1) {
       if (showMessage) {
         message.error("amount must >= 1");
       }
       return false;
-    };
-    try{
-      if(tokenBalance && amountNumber>Number(tokenBalance.toFixed(10))){
+    }
+    try {
+      if (tokenBalance && amountNumber > Number(tokenBalance.toFixed(10))) {
         if (showMessage) {
           message.error("insufficient balance");
         }
         return false;
-      };
+      }
     } catch (e) {
       if (showMessage) {
         message.error("invalid amount");
@@ -342,28 +350,28 @@ export const ERCXRC = () => {
   };
   const isEnabled = validateInputs(false);
   const disableConvert = useMemo(() => {
-      if(beConverted) return true;
-      if(!amount ||
-        allowance<=BigNumber.from(0)||
-        (token && parseUnits(amount, token.decimals)>allowance)){
-        return true;
-      }
-      return !isEnabled;
-    },
-    [allowance, amount, token, isEnabled, beConverted]);
+    if (beConverted) return true;
+    if (
+      !amount ||
+      allowance <= BigNumber.from(0) ||
+      (token && parseUnits(amount, token.decimals) > allowance)
+    ) {
+      return true;
+    }
+    return !isEnabled;
+  }, [allowance, amount, token, isEnabled, beConverted]);
 
   const needToApprove = useMemo(() => {
-      if(amount && allowance>BigNumber.from(0) && token){
-        try {
-          const amountBN = parseUnits(amount, token.decimals);
-          if(amountBN<=allowance){
-            return false;
-          }
-        } catch (error) {}
-      }
-      return isEnabled;
-    },
-    [allowance, amount, token]);
+    if (amount && allowance > BigNumber.from(0) && token) {
+      try {
+        const amountBN = parseUnits(amount, token.decimals);
+        if (amountBN <= allowance) {
+          return false;
+        }
+      } catch (error) {}
+    }
+    return isEnabled;
+  }, [allowance, amount, token]);
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
@@ -378,7 +386,7 @@ export const ERCXRC = () => {
           token && (
             <span
               onClick={() => {
-                if(tokenBalance){
+                if (tokenBalance) {
                   setAmount(tokenBalance.toFixed(3));
                 }
               }}
@@ -401,11 +409,15 @@ export const ERCXRC = () => {
       {amount && account && (
         <div className="my-6 text-left">
           {token && (
-            <div className="text-base c-gray-20 font-thin">You will receive ${amount} {wrappedIOTXInfo.symbol} tokens at</div>
+            <div className="text-base c-gray-20 font-thin">
+              You will receive ${amount} {wrappedIOTXInfo.symbol} tokens at
+            </div>
           )}
           <AddressInput
             readOnly
-            address={fromBytes(Buffer.from(String(account).replace(/^0x/, ""), "hex")).string()}
+            address={fromBytes(
+              Buffer.from(String(account).replace(/^0x/, ""), "hex")
+            ).string()}
             label="IOTX Address"
           />
         </div>
@@ -443,18 +455,17 @@ export const ERCXRC = () => {
         )}
         {account && (
           <div className="page__home__component__erc_xrc__button_group flex items-center">
-            {
-              needToApprove &&
+            {needToApprove && (
               <SubmitButton
-                  title={lang.t("approve")}
-                  onClick={onApprove}
-                  disabled={!isEnabled || beApproved}
+                title={lang.t("approve")}
+                onClick={onApprove}
+                disabled={!isEnabled || beApproved}
               />
-            }
+            )}
             <SubmitButton
               title={lang.t("convert")}
               onClick={onConvert}
-              disabled={!beApproved&&disableConvert}
+              disabled={!beApproved && disableConvert}
             />
           </div>
         )}

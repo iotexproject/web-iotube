@@ -317,7 +317,7 @@ export const ERCXRC = () => {
         label={lang.t("amount")}
         onChange={store.setAmount}
       />
-      {store.amount && (
+      {store.amount && account && (
         <div className="my-6 text-left">
           {token && (
             <div className="text-base c-gray-20 font-thin">
@@ -327,7 +327,7 @@ export const ERCXRC = () => {
           <AddressInput
             readOnly
             address={fromBytes(
-              Buffer.from(String(account || ENSName).replace(/^0x/, ""), "hex")
+              Buffer.from(String(account).replace(/^0x/, ""), "hex")
             ).string()}
             label="IOTX Address"
           />

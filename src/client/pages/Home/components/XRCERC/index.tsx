@@ -24,7 +24,7 @@ import {
 } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
-import {toRau, validateAddress} from "iotex-antenna/lib/account/utils";
+import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { tryParseAmount } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
@@ -84,7 +84,7 @@ export const XRCERC = () => {
 
   const isEnabled = validateInputs(false);
   const needToApprove = useMemo(() => {
-    if (amount && allowance.gt(BigNumber.from(0) ) && xrc20TokenInfo) {
+    if (amount && allowance.gt(BigNumber.from(0)) && xrc20TokenInfo) {
       try {
         const amountBN = parseUnits(amount, xrc20TokenInfo.decimals);
         if (allowance.gte(amountBN)) {
@@ -99,8 +99,9 @@ export const XRCERC = () => {
     if (beConverted) return true;
     if (
       !amount ||
-       BigNumber.from(0).gte(allowance) ||
-      (xrc20TokenInfo && parseUnits(amount, xrc20TokenInfo.decimals).gt(allowance))
+      BigNumber.from(0).gte(allowance) ||
+      (xrc20TokenInfo &&
+        parseUnits(amount, xrc20TokenInfo.decimals).gt(allowance))
     ) {
       return true;
     }
@@ -123,7 +124,11 @@ export const XRCERC = () => {
       return false;
     }
     try {
-      if (tokenBalance && amountNumber > Number(formatUnits(tokenBalance, xrc20TokenInfo.decimals))) {
+      if (
+        tokenBalance &&
+        amountNumber >
+          Number(formatUnits(tokenBalance, xrc20TokenInfo.decimals))
+      ) {
         if (showMessage) {
           message.error("insufficient balance");
         }
@@ -208,7 +213,7 @@ export const XRCERC = () => {
         .approve(cashierContractAddress, rawAmount, {
           from: account,
           gasLimit: 1000000,
-          gasPrice: toRau("1", "Qev")
+          gasPrice: toRau("1", "Qev"),
         })
         .then((response: TransactionResponse) => {
           message.success("Approved");
@@ -244,9 +249,14 @@ export const XRCERC = () => {
     }
     const args = [tokenAddress, rawAmount];
     const methodName = "deposit";
-    const options = { from: account, gasLimit: 1000000, gasPrice: toRau("1", "Qev") };
+    const options = {
+      from: account,
+      gasLimit: 1000000,
+      gasPrice: toRau("1", "Qev"),
+    };
     const depositTo = () => {
-      contract.methods.deposit(...args, options)
+      contract.methods
+        .deposit(...args, options)
         .then((response: any) => {
           window.console.log(
             `${methodName} success hash`,
@@ -301,7 +311,8 @@ export const XRCERC = () => {
         <div className="font-light text-sm text-right c-gray-30 mt-2">
           {tokenBalance && (
             <span>
-              {formatUnits(tokenBalance, xrc20TokenInfo.decimals)} {xrc20TokenInfo.symbol}
+              {formatUnits(tokenBalance, xrc20TokenInfo.decimals)}{" "}
+              {xrc20TokenInfo.symbol}
             </span>
           )}
         </div>

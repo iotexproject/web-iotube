@@ -198,6 +198,14 @@ export const ERCXRC = () => {
     }
   };
 
+  function getReceiptAddress(): string {
+    return account
+      ? fromBytes(
+          Buffer.from(String(account).replace(/^0x/, ""), "hex")
+        ).string()
+      : "";
+  }
+
   function validateInputs(showMessage: boolean = true): boolean {
     if (!isValidAmount(amount)) {
       if (showMessage) {
@@ -409,9 +417,7 @@ export const ERCXRC = () => {
           )}
           <AddressInput
             readOnly
-            address={fromBytes(
-              Buffer.from(String(account).replace(/^0x/, ""), "hex")
-            ).string()}
+            address={getReceiptAddress()}
             label="IOTX Address"
           />
         </div>

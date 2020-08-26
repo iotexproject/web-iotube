@@ -134,3 +134,11 @@ export default function uriToHttp(uri: string): string[] {
     return [];
   }
 }
+
+export const isValidAmount = (amount: string) => {
+  return amount && Number(amount) > 0;
+};
+
+export const  getAmountNumber = (amount: string) => {
+  return isValidAmount(amount) ? Number(amount) : 0;
+}

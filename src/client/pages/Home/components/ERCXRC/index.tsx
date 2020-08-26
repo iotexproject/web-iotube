@@ -3,8 +3,8 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import {
-  CHAIN_CASHIER_CONTRACT_ADDRESS,
-  IOTX_TOKEN_INFO,
+  ETH_CHAIN_CASHIER_CONTRACT_ADDRESS,
+  ETHEREUM,
   SUPPORTED_WALLETS,
   TRANSACTION_REJECTED,
 } from "../../../../constants/index";
@@ -31,28 +31,34 @@ import {
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import { Contract } from "@ethersproject/contracts";
-import { validateAddress } from "iotex-antenna/lib/account/utils";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import { tryParseAmount } from "../../../../hooks/Tokens";
 import { parseUnits } from "@ethersproject/units";
 import { BigNumber } from "@ethersproject/bignumber";
+import { ChainId } from "@uniswap/sdk";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
 export const ERCXRC = () => {
   const { lang, wallet, base } = useStore();
   const { account, activate, chainId, library } = useWeb3React<Web3Provider>();
-  const [token, setToken] = useState(null);
+  const [tokenInfoPair, setTokenInfoPair] = useState(null);
   const [amount, setAmount] = useState("");
   const [beApproved, setBeApproved] = useState(false);
   const [beConverted, setBeConverted] = useState(false);
   const [hash, setHash] = useState("");
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
-  const wrappedIOTXInfo = IOTX_TOKEN_INFO[chainId];
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
+    tokenInfoPair,
+  ]);
+  const xrc20TokenInfo = useMemo(
+    () => (tokenInfoPair ? tokenInfoPair.IOTEX : null),
+    [tokenInfoPair]
+  );
   const cashierContractAddress = useMemo(
-    () => CHAIN_CASHIER_CONTRACT_ADDRESS[chainId],
+    () => ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId],
     [chainId]
   );
   const tokenBalance = useTokenBalances(token ? token.address : undefined, [
@@ -69,7 +75,7 @@ export const ERCXRC = () => {
   const cashierContractValidate = useMemo(() => {
     if (!cashierContractAddress || !isAddress(cashierContractAddress)) {
       if (chainId) {
-        let content = `please set correctly CASHIER_CONTRACT_ADDRESS_${chainId} in env for chain id ${chainId}`;
+        let content = `please set correctly ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[chainId]} in env for chain ${ChainId[chainId]}`;
         message.error(content);
         window.console.log(content);
       }
@@ -281,7 +287,7 @@ export const ERCXRC = () => {
       contract[methodName](...args, options)
         .then((response: any) => {
           window.console.log(
-            `${methodName} success hash`,
+            `${methodName} action hash`,
             response.hash,
             response
           );
@@ -359,8 +365,8 @@ export const ERCXRC = () => {
     if (beConverted) return true;
     if (
       !amount ||
-      allowance <= BigNumber.from(0) ||
-      (token && parseUnits(amount, token.decimals) > allowance)
+      BigNumber.from(0).gte(allowance) ||
+      (token && parseUnits(amount, token.decimals).gt(allowance))
     ) {
       return true;
     }
@@ -368,10 +374,10 @@ export const ERCXRC = () => {
   }, [allowance, amount, token, isEnabled, beConverted]);
 
   const needToApprove = useMemo(() => {
-    if (amount && allowance > BigNumber.from(0) && token) {
+    if (amount && allowance.gt(BigNumber.from(0)) && token) {
       try {
         const amountBN = parseUnits(amount, token.decimals);
-        if (amountBN <= allowance) {
+        if (allowance.gte(amountBN)) {
           return false;
         }
       } catch (error) {}
@@ -382,7 +388,7 @@ export const ERCXRC = () => {
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
       <div className="my-6">
-        <TokenSelectField onChange={setToken} />
+        <TokenSelectField network={ETHEREUM} onChange={setTokenInfoPair} />
       </div>
       <AmountField
         amount={amount}
@@ -418,7 +424,7 @@ export const ERCXRC = () => {
             <div className="text-base c-gray-20 font-thin">
               {lang.t("you_will_recieve_amount_symbol_tokens_at", {
                 amount,
-                symbol: wrappedIOTXInfo.symbol,
+                symbol: xrc20TokenInfo.symbol,
               })}
             </div>
           )}
@@ -485,7 +491,7 @@ export const ERCXRC = () => {
         depositAmount={getAmountNumber(amount)}
         depositToken={token}
         mintAmount={getAmountNumber(amount)}
-        mintToken={wrappedIOTXInfo}
+        mintToken={xrc20TokenInfo}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"
         isERCXRC

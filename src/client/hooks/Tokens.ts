@@ -1,7 +1,14 @@
 import { ChainId, Currency, Token } from "@uniswap/sdk";
 import { useMemo } from "react";
 import { useActiveWeb3React } from "./index";
-import { CHAIN_TOKEN_LIST } from "../constants/index";
+import {
+  CHAIN_TOKEN_LIST,
+  DEFAULT_IOTEX_CHAIN_ID,
+  ETHEREUM,
+  IOTEX_TOKEN_LIST,
+  IOTEX,
+  TokenInfoPair,
+} from "../constants/index";
 import { TokenInfo } from "@uniswap/token-lists";
 import { parseUnits } from "@ethersproject/units";
 
@@ -30,14 +37,27 @@ export type TokenAddressMap = Readonly<
   }
 >;
 
-export function useTokens(): { [address: string]: Token } {
+export function useTokens(network: string): { [p: string]: TokenInfoPair } {
   const { chainId } = useActiveWeb3React();
   return useMemo(() => {
-    if (!chainId) return {};
     const tokenList = {};
-    CHAIN_TOKEN_LIST[chainId].forEach((aToken) => {
-      tokenList[aToken.address.toLowerCase()] = new WrappedTokenInfo(aToken);
-    });
+    if (network === ETHEREUM) {
+      if (chainId) {
+        CHAIN_TOKEN_LIST[chainId].forEach((aToken) => {
+          tokenList[aToken.ETHEREUM.address.toLowerCase()] = {
+            ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
+            IOTEX: aToken.IOTEX,
+          };
+        });
+      }
+    } else if (network === IOTEX) {
+      (IOTEX_TOKEN_LIST[DEFAULT_IOTEX_CHAIN_ID] || []).forEach((aToken) => {
+        tokenList[aToken.IOTEX.address.toLowerCase()] = {
+          ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
+          IOTEX: aToken.IOTEX,
+        };
+      });
+    }
     return tokenList;
   }, [chainId]);
 }

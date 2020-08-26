@@ -1,8 +1,13 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ChainId, JSBI, Percent, Token } from "@uniswap/sdk";
-import { fortmatic, injected, portis, walletconnect, walletlink } from "../connectors";
+import {
+  fortmatic,
+  injected,
+  portis,
+  walletconnect,
+  walletlink,
+} from "../connectors";
 import { TokenInfo } from "@uniswap/token-lists";
-import { WrappedTokenInfo } from "../hooks/Tokens";
 import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
 import { publicConfig } from "../../../configs/public";
@@ -11,67 +16,96 @@ export const IMG_LOGO = require("../static/images/logo-iotex.png");
 export const IMG_IOTX = require("../static/images/icon_wallet.png");
 export const IMG_ETHER = require("../static/images/icon-eth.png");
 
-type ChainTokenList = {
-  readonly [chainId in ChainId]: TokenInfo[];
+export const ETHEREUM = "ETHEREUM";
+export const IOTEX = "IOTEX";
+
+export const DEFAULT_IOTEX_CHAIN_ID = publicConfig.DEFAULT_IOTEX_CHAIN_ID;
+
+if (typeof DEFAULT_IOTEX_CHAIN_ID === "undefined") {
+  throw new Error(
+    `DEFAULT_IOTEX_CHAIN_ID must be a defined environment variable`
+  );
+}
+
+export enum IotexChainId {
+  MAINNET = 1,
+  TESTNET = 2,
+}
+
+export type TokenInfoPair = {
+  readonly ETHEREUM: TokenInfo;
+  readonly IOTEX: TokenInfo;
+};
+
+type ChainTokenPairList = {
+  readonly [chainId in ChainId]: TokenInfoPair[];
+};
+
+type IotexTokenPairList = {
+  readonly [chainId in IotexChainId]: TokenInfoPair[];
 };
 
 type ChainContractAddress = {
   readonly [chainId in ChainId]: string;
 };
 
-type ChainToken = {
-  readonly [chainId in ChainId]: Token;
+type IotexChainContractAddress = {
+  readonly [chainId in IotexChainId]: string;
 };
 
-// TODO add this temp_eth to env
-const TEMP_ETH_ADDRESS = "0xad6d458402f60fd3bd25163575031acdce07538d";
-
-export const IOTX: TokenInfo = {
-  chainId: 0,
-  address: "",
-  name: "IOTEX",
-  decimals: 18,
-  symbol: "IOTX",
-  logoURI: IMG_IOTX,
-};
-
-export const CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
-  [ChainId.MAINNET]: publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.MAINNET}`],
-  [ChainId.ROPSTEN]: publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId.ROPSTEN}`],
+export const ETH_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
+  // ETH CHAIN ID
+  [ChainId.MAINNET]:
+    publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
+  [ChainId.ROPSTEN]:
+    publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
   [ChainId.RINKEBY]: "",
   [ChainId.GÖRLI]: "",
   [ChainId.KOVAN]: "",
 };
 
-function initIOTEXToken(chainId: ChainId) {
-  const ropstenInfo = Object.values(ROPSTEN_TOKEN_LIST)[0]?.iotx;
-  const info = {
-    ...IOTX,
-    chainId,
-    address: publicConfig[`IOTX_TOKEN_ADDRESS${chainId}`] || TEMP_ETH_ADDRESS,
-    ...(chainId === ChainId.ROPSTEN ? ropstenInfo : {}),
-  };
-  return new WrappedTokenInfo(info);
-}
-
-export const IOTX_TOKEN_INFO: ChainToken = {
-  [ChainId.MAINNET]: initIOTEXToken(ChainId.MAINNET),
-  [ChainId.ROPSTEN]: initIOTEXToken(ChainId.ROPSTEN),
-  [ChainId.RINKEBY]: initIOTEXToken(ChainId.RINKEBY),
-  [ChainId.GÖRLI]: initIOTEXToken(ChainId.GÖRLI),
-  [ChainId.KOVAN]: initIOTEXToken(ChainId.KOVAN),
+export const IOTEX_CASHIER_CONTRACT_ADDRESS: IotexChainContractAddress = {
+  [IotexChainId.MAINNET]:
+    publicConfig[
+      `IOTX_CASHIER_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.MAINNET]}`
+    ],
+  [IotexChainId.TESTNET]:
+    publicConfig[
+      `IOTX_CASHIER_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.TESTNET]}`
+    ],
 };
 
-export const CHAIN_TOKEN_LIST: ChainTokenList = {
-  [ChainId.MAINNET]: MAINNET_TOKEN_LIST.map((item) => {
-    return { ...item, chainId: ChainId.MAINNET } as TokenInfo;
+export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
+  [ChainId.MAINNET]: Object.values(MAINNET_TOKEN_LIST).map((item) => {
+    return {
+      ETHEREUM: { ...item.eth, chainId: ChainId.MAINNET } as TokenInfo,
+      IOTEX: { ...item.iotx, chainId: ChainId.MAINNET } as TokenInfo,
+    };
   }),
   [ChainId.ROPSTEN]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
-    return { ...item.eth, chainId: ChainId.ROPSTEN } as TokenInfo;
+    return {
+      ETHEREUM: { ...item.eth, chainId: ChainId.ROPSTEN } as TokenInfo,
+      IOTEX: { ...item.iotx, chainId: ChainId.ROPSTEN } as TokenInfo,
+    };
   }),
   [ChainId.RINKEBY]: [],
   [ChainId.GÖRLI]: [],
   [ChainId.KOVAN]: [],
+};
+
+export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
+  [IotexChainId.MAINNET]: Object.values(MAINNET_TOKEN_LIST).map((item) => {
+    return {
+      ETHEREUM: { ...item.eth, chainId: IotexChainId.MAINNET } as TokenInfo,
+      IOTEX: { ...item.iotx, chainId: IotexChainId.MAINNET } as TokenInfo,
+    };
+  }),
+  [IotexChainId.TESTNET]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
+    return {
+      ETHEREUM: { ...item.eth, chainId: IotexChainId.TESTNET } as TokenInfo,
+      IOTEX: { ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo,
+    };
+  }),
 };
 
 export interface WalletInfo {
@@ -165,20 +199,42 @@ export const INITIAL_ALLOWED_SLIPPAGE = 50;
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20;
 
+// TODO  remove useless constants
 // one basis point
 export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000));
 export const BIPS_BASE = JSBI.BigInt(10000);
 // used for warning states
-export const ALLOWED_PRICE_IMPACT_LOW: Percent = new Percent(JSBI.BigInt(100), BIPS_BASE); // 1%
-export const ALLOWED_PRICE_IMPACT_MEDIUM: Percent = new Percent(JSBI.BigInt(300), BIPS_BASE); // 3%
-export const ALLOWED_PRICE_IMPACT_HIGH: Percent = new Percent(JSBI.BigInt(500), BIPS_BASE); // 5%
+export const ALLOWED_PRICE_IMPACT_LOW: Percent = new Percent(
+  JSBI.BigInt(100),
+  BIPS_BASE
+); // 1%
+export const ALLOWED_PRICE_IMPACT_MEDIUM: Percent = new Percent(
+  JSBI.BigInt(300),
+  BIPS_BASE
+); // 3%
+export const ALLOWED_PRICE_IMPACT_HIGH: Percent = new Percent(
+  JSBI.BigInt(500),
+  BIPS_BASE
+); // 5%
 // if the price slippage exceeds this number, force the user to type 'confirm' to execute
-export const PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN: Percent = new Percent(JSBI.BigInt(1000), BIPS_BASE); // 10%
+export const PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN: Percent = new Percent(
+  JSBI.BigInt(1000),
+  BIPS_BASE
+); // 10%
 // for non expert mode disable swaps above this
-export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(1500), BIPS_BASE); // 15%
+export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(
+  JSBI.BigInt(1500),
+  BIPS_BASE
+); // 15%
 
 // used to ensure the user doesn't send so much ETH so they end up with <.01
-export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)); // .01 ETH
-export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.BigInt(10000));
+export const MIN_ETH: JSBI = JSBI.exponentiate(
+  JSBI.BigInt(10),
+  JSBI.BigInt(16)
+); // .01 ETH
+export const BETTER_TRADE_LINK_THRESHOLD = new Percent(
+  JSBI.BigInt(75),
+  JSBI.BigInt(10000)
+);
 
 export const TRANSACTION_REJECTED = 4001;

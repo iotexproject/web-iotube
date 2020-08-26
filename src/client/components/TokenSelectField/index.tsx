@@ -2,18 +2,20 @@ import React from "react";
 import "./index.scss";
 import { Select } from "antd";
 import { RightOutlined } from "@ant-design/icons";
-import { Token } from "@uniswap/sdk";
 import CurrencyLogo from "../CurrencyLogo/index";
 import { useTokens } from "../../hooks/Tokens";
+import { ETHEREUM, TokenInfoPair } from "../../constants/index";
 
 interface IComponentProps {
   onChange: Function;
+  network: string;
 }
 
 const { Option } = Select;
 
 export const TokenSelectField = (props: IComponentProps) => {
-  const tokenList = useTokens();
+  const { network = ETHEREUM, onChange } = props;
+  const tokenList = useTokens(network);
   return (
     <Select
       className="component__token_select w-full c-white"
@@ -21,20 +23,20 @@ export const TokenSelectField = (props: IComponentProps) => {
       dropdownClassName="component__token_select__dropdown"
       onChange={(value: string) => {
         if (tokenList && value) {
-          props.onChange(tokenList[value.toLowerCase()]);
+          onChange(tokenList[value.toLowerCase()]);
         }
       }}
     >
       {tokenList &&
-        Object.values(tokenList).map((token: Token) => (
+        Object.values(tokenList).map((tokenInfoPair: TokenInfoPair) => (
           <Option
-            key={token.address}
-            value={token.address}
+            key={tokenInfoPair[network].address}
+            value={tokenInfoPair[network].address}
             className="flex bg-secondary c-white items-center"
           >
-            <CurrencyLogo currency={token} />
+            <CurrencyLogo currency={tokenInfoPair[network]} />
             <span className="flex-1 text-xl text-left ml-4 font-thin">
-              {`${token.name}(${token.symbol})`}
+              {`${tokenInfoPair[network].name}(${tokenInfoPair[network].symbol})`}
             </span>
           </Option>
         ))}

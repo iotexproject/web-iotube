@@ -8,8 +8,8 @@
       "logoURI": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/whatsapp/238/cat-face_1f431.png"
     },
     "iotx": {
-      "iotexaddr": "io140p3vu4gtvqg545nek6ewx74u3fv9yyjt9gvda",
-      "name": "QTT (XRC20)",
+      "address": "io1gxzcl56028r2wvs5rwvsd96f4vz453qkaxxxch",
+      "name": "xQTT Token",
       "decimals": 18,
       "symbol": "xQTT",
       "logoURI": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/docomo/205/cat-face_1f431.png"

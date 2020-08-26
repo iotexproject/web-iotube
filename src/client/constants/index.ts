@@ -16,7 +16,7 @@ export const IMG_LOGO = require("../static/images/logo-iotex.png");
 export const IMG_IOTX = require("../static/images/icon_wallet.png");
 export const IMG_ETHER = require("../static/images/icon-eth.png");
 
-export const ETHERIUM = "ETHERIUM";
+export const ETHEREUM = "ETHEREUM";
 export const IOTEX = "IOTEX";
 
 export const DEFAULT_IOTEX_CHAIN_ID = publicConfig.DEFAULT_IOTEX_CHAIN_ID;
@@ -33,7 +33,7 @@ export enum IOChainId {
 }
 
 export type TokenInfoPair = {
-  readonly ETHERIUM: TokenInfo;
+  readonly ETHEREUM: TokenInfo;
   readonly IOTEX: TokenInfo;
 };
 
@@ -55,35 +55,35 @@ type IOChainContractAddress = {
 
 export const CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
   [ChainId.MAINNET]:
-    publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
+    publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
   [ChainId.ROPSTEN]:
-    publicConfig[`CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
+    publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
   [ChainId.RINKEBY]: "",
   [ChainId.GÖRLI]: "",
   [ChainId.KOVAN]: "",
 };
 
-export const IOCHAIN_CASHIER_CONTRACT_ADDRESS: IOChainContractAddress = {
+export const IOTEX_CASHIER_CONTRACT_ADDRESS: IOChainContractAddress = {
   [IOChainId.MAINNET]:
     publicConfig[
-      `IOCHAIN_CASHIER_CONTRACT_ADDRESS_${IOChainId[IOChainId.MAINNET]}`
+      `IOTX_CASHIER_CONTRACT_ADDRESS_${IOChainId[IOChainId.MAINNET]}`
     ],
   [IOChainId.TESTNET]:
     publicConfig[
-      `IOCHAIN_CASHIER_CONTRACT_ADDRESS_${IOChainId[IOChainId.TESTNET]}`
+      `IOTX_CASHIER_CONTRACT_ADDRESS_${IOChainId[IOChainId.TESTNET]}`
     ],
 };
 
 export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
   [ChainId.MAINNET]: Object.values(MAINNET_TOKEN_LIST).map((item) => {
     return {
-      ETHERIUM: { ...item.eth, chainId: ChainId.MAINNET } as TokenInfo,
+      ETHEREUM: { ...item.eth, chainId: ChainId.MAINNET } as TokenInfo,
       IOTEX: { ...item.iotx, chainId: ChainId.MAINNET } as TokenInfo,
     };
   }),
   [ChainId.ROPSTEN]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
     return {
-      ETHERIUM: { ...item.eth, chainId: ChainId.ROPSTEN } as TokenInfo,
+      ETHEREUM: { ...item.eth, chainId: ChainId.ROPSTEN } as TokenInfo,
       IOTEX: { ...item.iotx, chainId: ChainId.ROPSTEN } as TokenInfo,
     };
   }),
@@ -95,13 +95,13 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
 export const IOCHAIN_TOKEN_LIST: IOTokenPairList = {
   [IOChainId.MAINNET]: Object.values(MAINNET_TOKEN_LIST).map((item) => {
     return {
-      ETHERIUM: { ...item.eth, chainId: IOChainId.MAINNET } as TokenInfo,
+      ETHEREUM: { ...item.eth, chainId: IOChainId.MAINNET } as TokenInfo,
       IOTEX: { ...item.iotx, chainId: IOChainId.MAINNET } as TokenInfo,
     };
   }),
   [IOChainId.TESTNET]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
     return {
-      ETHERIUM: { ...item.eth, chainId: IOChainId.TESTNET } as TokenInfo,
+      ETHEREUM: { ...item.eth, chainId: IOChainId.TESTNET } as TokenInfo,
       IOTEX: { ...item.iotx, chainId: IOChainId.TESTNET } as TokenInfo,
     };
   }),

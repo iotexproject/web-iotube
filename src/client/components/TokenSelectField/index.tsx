@@ -4,7 +4,7 @@ import { Select } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import CurrencyLogo from "../CurrencyLogo/index";
 import { useTokens } from "../../hooks/Tokens";
-import { ETHERIUM, TokenInfoPair } from "../../constants/index";
+import { ETHEREUM, TokenInfoPair } from "../../constants/index";
 
 interface IComponentProps {
   onChange: Function;
@@ -14,7 +14,7 @@ interface IComponentProps {
 const { Option } = Select;
 
 export const TokenSelectField = (props: IComponentProps) => {
-  const { network = ETHERIUM, onChange } = props;
+  const { network = ETHEREUM, onChange } = props;
   const tokenList = useTokens(network);
   return (
     <Select

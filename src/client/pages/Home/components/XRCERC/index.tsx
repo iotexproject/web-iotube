@@ -11,7 +11,7 @@ import {
 } from "../../../../components";
 import {
   DEFAULT_IOTEX_CHAIN_ID,
-  IOCHAIN_CASHIER_CONTRACT_ADDRESS,
+  IOTEX_CASHIER_CONTRACT_ADDRESS,
   IOTEX,
 } from "../../../../constants/index";
 import { fromString } from "iotex-antenna/lib/crypto/address";
@@ -33,7 +33,7 @@ import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
 export const XRCERC = () => {
-  const { lang, wallet } = useStore();
+  const { lang, wallet, base } = useStore();
   const [tokenInfoPair, setTokenInfoPair] = useState(null);
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
   const [amount, setAmount] = useState("");
@@ -49,7 +49,7 @@ export const XRCERC = () => {
     [tokenInfoPair]
   );
   const cashierContractAddress =
-    IOCHAIN_CASHIER_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+    IOTEX_CASHIER_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
   const tokenAddress = useMemo(
     () => (xrc20TokenInfo ? xrc20TokenInfo.address : ""),
     [xrc20TokenInfo]
@@ -258,14 +258,15 @@ export const XRCERC = () => {
       contract.methods
         .deposit(...args, options)
         .then((response: any) => {
-          window.console.log(
-            `${methodName} success hash`,
-            response.hash,
-            response
-          );
+          window.console.log(`${methodName} success hash`, response);
           store.toggleConfirmModalVisible();
           message.success(" IOTEX transaction broadcasted successfully.");
           setBeConverted(true);
+          base.toggleComplete(
+            response.actionHash,
+            `${response.network.url}action/${response.actionHash}`,
+            fromString(account).stringEth()
+          );
           return response.hash;
         })
         .catch((error: any) => {

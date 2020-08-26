@@ -4,7 +4,7 @@ import { useActiveWeb3React } from "./index";
 import {
   CHAIN_TOKEN_LIST,
   DEFAULT_IOTEX_CHAIN_ID,
-  ETHERIUM,
+  ETHEREUM,
   IOCHAIN_TOKEN_LIST,
   IOTEX,
   TokenInfoPair,
@@ -41,11 +41,11 @@ export function useTokens(network: string): { [p: string]: TokenInfoPair } {
   const { chainId } = useActiveWeb3React();
   return useMemo(() => {
     const tokenList = {};
-    if (network === ETHERIUM) {
+    if (network === ETHEREUM) {
       if (chainId) {
         CHAIN_TOKEN_LIST[chainId].forEach((aToken) => {
-          tokenList[aToken.ETHERIUM.address.toLowerCase()] = {
-            ETHERIUM: new WrappedTokenInfo(aToken.ETHERIUM),
+          tokenList[aToken.ETHEREUM.address.toLowerCase()] = {
+            ETHERIUM: new WrappedTokenInfo(aToken.ETHEREUM),
             IOTEX: aToken.IOTEX,
           };
         });

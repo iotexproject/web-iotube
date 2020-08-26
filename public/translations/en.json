@@ -23,5 +23,6 @@
   "complete.your_tx": "Your TX hash",
   "approve": "Approve",
   "contract.install": "Please use ioPay desktop, import & unlock your wallet, and then refresh this page to continue.",
-  "copied_to_clipboard": "Copied!"
+  "copied_to_clipboard": "Copied!",
+  "you_will_recieve_amount_symbol_tokens_at": "You will receive ${amount} ${symbol} tokens at"
 }

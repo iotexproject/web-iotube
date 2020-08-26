@@ -198,7 +198,7 @@ export const ERCXRC = () => {
     }
   };
 
-  function getReceiptAddress(): string | boolean {
+  function getReceiptAddress(): string {
     return account
       ? fromBytes(
           Buffer.from(String(account).replace(/^0x/, ""), "hex")
@@ -234,10 +234,9 @@ export const ERCXRC = () => {
       }
       return false;
     }
-    const toAddress = getReceiptAddress();
-    if (!toAddress) {
+    if (!account) {
       if (showMessage) {
-        message.error(`invalid address ${account}`);
+        message.error(`wallet is not connected`);
       }
       return false;
     }
@@ -274,7 +273,7 @@ export const ERCXRC = () => {
       message.error("could not get token address");
       return;
     }
-    const toAddress = getReceiptAddress();
+    const toAddress = account;
     const args = [tokenAddress, toAddress, rawAmount];
     const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
@@ -418,9 +417,7 @@ export const ERCXRC = () => {
           )}
           <AddressInput
             readOnly
-            address={fromBytes(
-              Buffer.from(String(account).replace(/^0x/, ""), "hex")
-            ).string()}
+            address={getReceiptAddress()}
             label="IOTX Address"
           />
         </div>

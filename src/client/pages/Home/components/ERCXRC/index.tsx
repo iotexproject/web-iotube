@@ -400,7 +400,7 @@ export const ERCXRC = () => {
         <div className="font-light text-sm text-right c-gray-30 mt-2">
           {tokenBalance && (
             <span>
-              {tokenBalance?.toSignificant(4)} {token.symbol}
+              {tokenBalance?.toExact()} {token.symbol}
             </span>
           )}
         </div>
@@ -477,7 +477,7 @@ export const ERCXRC = () => {
         networkFee={0}
         depositAmount={getAmountNumber(amount)}
         depositToken={token}
-        mintAmount={1}
+        mintAmount={getAmountNumber(amount)}
         mintToken={wrappedIOTXInfo}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"

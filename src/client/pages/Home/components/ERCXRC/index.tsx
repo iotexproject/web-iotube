@@ -53,7 +53,7 @@ export const ERCXRC = () => {
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHERIUM : null), [
     tokenInfoPair,
   ]);
-  const wrappedIOTXTokenInfo = useMemo(
+  const xrc20TokenInfo = useMemo(
     () => (tokenInfoPair ? tokenInfoPair.IOTEX : null),
     [tokenInfoPair]
   );
@@ -358,8 +358,8 @@ export const ERCXRC = () => {
     if (beConverted) return true;
     if (
       !amount ||
-      allowance <= BigNumber.from(0) ||
-      (token && parseUnits(amount, token.decimals) > allowance)
+      BigNumber.from(0).gte(allowance) ||
+      (token && parseUnits(amount, token.decimals).gt(allowance))
     ) {
       return true;
     }
@@ -367,10 +367,10 @@ export const ERCXRC = () => {
   }, [allowance, amount, token, isEnabled, beConverted]);
 
   const needToApprove = useMemo(() => {
-    if (amount && allowance > BigNumber.from(0) && token) {
+    if (amount && allowance.gt(BigNumber.from(0)) && token) {
       try {
         const amountBN = parseUnits(amount, token.decimals);
-        if (amountBN <= allowance) {
+        if (allowance.gte(amountBN)) {
           return false;
         }
       } catch (error) {}
@@ -417,7 +417,7 @@ export const ERCXRC = () => {
             <div className="text-base c-gray-20 font-thin">
               {lang.t("you_will_recieve_amount_symbol_tokens_at", {
                 amount,
-                symbol: wrappedIOTXTokenInfo.symbol,
+                symbol: xrc20TokenInfo.symbol,
               })}
             </div>
           )}
@@ -484,7 +484,7 @@ export const ERCXRC = () => {
         depositAmount={getAmountNumber(amount)}
         depositToken={token}
         mintAmount={getAmountNumber(amount)}
-        mintToken={wrappedIOTXTokenInfo}
+        mintToken={xrc20TokenInfo}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"
         isERCXRC

@@ -17,7 +17,6 @@ import {
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { BigNumber } from "@ethersproject/bignumber";
 import {
-  calculateGasMargin,
   getAmountNumber,
   getIOContract,
   isAddress,
@@ -25,10 +24,11 @@ import {
 } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
-import { validateAddress } from "iotex-antenna/lib/account/utils";
+import {toRau, validateAddress} from "iotex-antenna/lib/account/utils";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { tryParseAmount } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
+import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -84,28 +84,28 @@ export const XRCERC = () => {
 
   const isEnabled = validateInputs(false);
   const needToApprove = useMemo(() => {
-    if (amount && allowance > BigNumber.from(0) && token) {
+    if (amount && allowance.gt(BigNumber.from(0) ) && xrc20TokenInfo) {
       try {
-        const amountBN = parseUnits(amount, token.decimals);
-        if (amountBN <= allowance) {
+        const amountBN = parseUnits(amount, xrc20TokenInfo.decimals);
+        if (allowance.gte(amountBN)) {
           return false;
         }
       } catch (error) {}
     }
     return isEnabled;
-  }, [allowance, amount, token]);
+  }, [allowance, amount, xrc20TokenInfo]);
 
   const disableConvert = useMemo(() => {
     if (beConverted) return true;
     if (
       !amount ||
-      allowance <= BigNumber.from(0) ||
-      (token && parseUnits(amount, token.decimals) > allowance)
+       BigNumber.from(0).gte(allowance) ||
+      (xrc20TokenInfo && parseUnits(amount, xrc20TokenInfo.decimals).gt(allowance))
     ) {
       return true;
     }
     return !isEnabled;
-  }, [allowance, amount, token, isEnabled, beConverted]);
+  }, [allowance, amount, xrc20TokenInfo, isEnabled, beConverted]);
 
   function validateInputs(showMessage: boolean = true): boolean {
     if (!isValidAmount(amount)) {
@@ -122,8 +122,8 @@ export const XRCERC = () => {
       }
       return false;
     }
-    /*try {
-      if (tokenBalance && amountNumber > Number(tokenBalance.toFixed(10))) {
+    try {
+      if (tokenBalance && amountNumber > Number(formatUnits(tokenBalance, xrc20TokenInfo.decimals))) {
         if (showMessage) {
           message.error("insufficient balance");
         }
@@ -134,7 +134,7 @@ export const XRCERC = () => {
         message.error("invalid amount");
       }
       return false;
-    }*/
+    }
     if (!account) {
       if (showMessage) {
         message.error(`wallet is not connected`);
@@ -185,9 +185,9 @@ export const XRCERC = () => {
     if (!validateInputs()) {
       return;
     }
-    const rawAmount = tryParseAmount(amount, token).toString();
+    const rawAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
     if (!rawAmount) {
-      message.error(`Could not parse amount for token ${token.name}`);
+      message.error(`Could not parse amount for token ${xrc20TokenInfo.name}`);
       return;
     }
     if (!cashierContractAddress) {
@@ -208,6 +208,7 @@ export const XRCERC = () => {
         .approve(cashierContractAddress, rawAmount, {
           from: account,
           gasLimit: 1000000,
+          gasPrice: toRau("1", "Qev")
         })
         .then((response: TransactionResponse) => {
           message.success("Approved");
@@ -215,16 +216,62 @@ export const XRCERC = () => {
           setBeApproved(true);
         })
         .catch((error: Error) => {
-          message.error(`Failed to approve token. ${error.message}`);
+          message.error(`Failed to approve xrc20TokenInfo. ${error.message}`);
           window.console.log("Failed to approve token", error);
         });
     } catch (e) {
-      message.error(`Failed to approve token.`);
+      message.error(`Failed to approve xrc20TokenInfo.`);
       window.console.log(`tokenContract.approve error `, e);
     }
   };
 
-  const onConfirm = () => {};
+  const onConfirm = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+
+    const rawAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
+    if (!rawAmount) {
+      message.error(`Could not parse amount for token ${xrc20TokenInfo.name}`);
+      return;
+    }
+
+    const contract = getIOContract(cashierContractAddress, ERC20_XRC20_ABI);
+    const tokenAddress = xrc20TokenInfo ? xrc20TokenInfo.address : "";
+    if (!tokenAddress) {
+      message.error("could not get token address");
+      return;
+    }
+    const args = [tokenAddress, rawAmount];
+    const methodName = "deposit";
+    const options = { from: account, gasLimit: 1000000, gasPrice: toRau("1", "Qev") };
+    const depositTo = () => {
+      contract.methods.deposit(...args, options)
+        .then((response: any) => {
+          window.console.log(
+            `${methodName} success hash`,
+            response.hash,
+            response
+          );
+          store.toggleConfirmModalVisible();
+          message.success(" IOTEX transaction broadcasted successfully.");
+          setBeConverted(true);
+          return response.hash;
+        })
+        .catch((error: any) => {
+          const content = `${methodName} failed. please check log for detail`;
+          window.console.error(
+            `${methodName} failed`,
+            error,
+            methodName,
+            args,
+            options
+          );
+          message.error(content);
+        });
+    };
+    depositTo();
+  };
 
   return useObserver(() => (
     <div className="page__home__component__xrc_erc p-8 pt-6">
@@ -236,11 +283,11 @@ export const XRCERC = () => {
         label={lang.t("amount")}
         onChange={setAmount}
         customAddon={
-          token && (
+          xrc20TokenInfo && (
             <span
               onClick={() => {
                 if (tokenBalance) {
-                  setAmount(formatUnits(tokenBalance, token.decimals));
+                  setAmount(formatUnits(tokenBalance, xrc20TokenInfo.decimals));
                 }
               }}
               className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
@@ -250,11 +297,11 @@ export const XRCERC = () => {
           )
         }
       />
-      {token && (
+      {xrc20TokenInfo && (
         <div className="font-light text-sm text-right c-gray-30 mt-2">
           {tokenBalance && (
             <span>
-              {formatUnits(tokenBalance, token.decimals)} {token.symbol}
+              {formatUnits(tokenBalance, xrc20TokenInfo.decimals)} {xrc20TokenInfo.symbol}
             </span>
           )}
         </div>
@@ -312,9 +359,9 @@ export const XRCERC = () => {
         onConfirm={onConfirm}
         tubeFee={0}
         networkFee={0}
-        depositAmount={10}
+        depositAmount={getAmountNumber(amount)}
         depositToken={xrc20TokenInfo}
-        mintAmount={10}
+        mintAmount={getAmountNumber(amount)}
         mintToken={token}
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and withdraw"

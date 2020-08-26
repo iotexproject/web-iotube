@@ -26,5 +26,7 @@
   "copied_to_clipboard": "Copied!",
   "you_will_recieve_amount_symbol_tokens_at": "You will receive ${amount} ${symbol} tokens at",
   "erc_20": "ERC-20",
-  "xrc_20": "XRC-20"
+  "xrc_20": "XRC-20",
+  "address_copied": "Address Copied!",
+  "transaction_link_copied": "Transaction Link Copied!"
 }

@@ -5,6 +5,8 @@ import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ChainId } from "@uniswap/sdk";
+import { Contract as IOContract } from "iotex-antenna/lib/contract/contract";
+import { AntennaUtils } from "../../common/utils/antenna";
 
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: "",
@@ -69,6 +71,16 @@ export function getContract(
     ABI,
     getProviderOrSigner(library, account) as any
   );
+}
+
+export function getIOContract(address: string, ABI: any): IOContract {
+  if (!validateAddress(address)) {
+    throw Error(`Invalid io address parameter '${address}'.`);
+  }
+  return new IOContract(ABI, address, {
+    provider: AntennaUtils.getAntenna().iotx,
+    signer: AntennaUtils.getAntenna().iotx.signer,
+  });
 }
 
 export function escapeRegExp(string: string): string {
@@ -139,6 +151,6 @@ export const isValidAmount = (amount: string) => {
   return amount && Number(amount) > 0;
 };
 
-export const  getAmountNumber = (amount: string) => {
+export const getAmountNumber = (amount: string) => {
   return isValidAmount(amount) ? Number(amount) : 0;
-}
+};

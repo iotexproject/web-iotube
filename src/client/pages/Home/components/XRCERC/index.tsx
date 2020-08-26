@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
-import "./index.scss";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import {
@@ -10,24 +9,170 @@ import {
   SubmitButton,
   TokenSelectField,
 } from "../../../../components";
-import { ChainId } from "@uniswap/sdk";
-import { IOTX_TOKEN_INFO } from "../../../../constants/index";
+import {
+  DEFAULT_IOTEX_CHAIN_ID,
+  IOCHAIN_CASHIER_CONTRACT_ADDRESS,
+  IOTEX,
+} from "../../../../constants/index";
 import { fromString } from "iotex-antenna/lib/crypto/address";
+import { BigNumber } from "@ethersproject/bignumber";
+import {
+  calculateGasMargin,
+  getAmountNumber,
+  getIOContract,
+  isAddress,
+  isValidAmount,
+} from "../../../../utils/index";
+import ERC20_ABI from "../../../../constants/abis/erc20.json";
+import message from "antd/lib/message";
+import { validateAddress } from "iotex-antenna/lib/account/utils";
+import { formatUnits, parseUnits } from "@ethersproject/units";
+import { tryParseAmount } from "../../../../hooks/Tokens";
+import { TransactionResponse } from "@ethersproject/providers";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
 export const XRCERC = () => {
   const { lang, wallet } = useStore();
-  const [token, setToken] = useState(null);
+  const [tokenInfoPair, setTokenInfoPair] = useState(null);
+  const [allowance, setAllowance] = useState(BigNumber.from(-1));
+  const [amount, setAmount] = useState("");
+  const [beApproved, setBeApproved] = useState(false);
+  const [beConverted, setBeConverted] = useState(false);
+  const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
+  const account = wallet.walletAddress;
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHERIUM : null), [
+    tokenInfoPair,
+  ]);
+  const xrc20TokenInfo = useMemo(
+    () => (tokenInfoPair ? tokenInfoPair.IOTEX : null),
+    [tokenInfoPair]
+  );
+  const cashierContractAddress =
+    IOCHAIN_CASHIER_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+  const tokenAddress = useMemo(
+    () => (xrc20TokenInfo ? xrc20TokenInfo.address : ""),
+    [xrc20TokenInfo]
+  );
+
+  const tokenContract = useMemo(() => {
+    if (validateAddress(tokenAddress)) {
+      return getIOContract(tokenAddress, ERC20_ABI);
+    }
+    return null;
+  }, [tokenAddress, account]);
+
+  useEffect(() => {
+    if (validateAddress(account) && tokenContract) {
+      try {
+        tokenContract.methods
+          .balanceOf(account, account)
+          .then((value) => {
+            setTokenBalance(BigNumber.from(value.toString()));
+            return value;
+          })
+          .catch((error: Error) => {
+            message.error(`Failed to get balanceOf! ${error.message}`);
+            window.console.log(`Failed to get balanceOf!`, error);
+          });
+      } catch (e) {
+        message.error(`Failed to get balanceOf!`);
+        window.console.log(`Failed to get balanceOf!`, e);
+      }
+    }
+  }, [account, tokenContract]);
+
+  const isEnabled = validateInputs(false);
+  const needToApprove = useMemo(() => {
+    if (amount && allowance > BigNumber.from(0) && token) {
+      try {
+        const amountBN = parseUnits(amount, token.decimals);
+        if (amountBN <= allowance) {
+          return false;
+        }
+      } catch (error) {}
+    }
+    return isEnabled;
+  }, [allowance, amount, token]);
+
+  const disableConvert = useMemo(() => {
+    if (beConverted) return true;
+    if (
+      !amount ||
+      allowance <= BigNumber.from(0) ||
+      (token && parseUnits(amount, token.decimals) > allowance)
+    ) {
+      return true;
+    }
+    return !isEnabled;
+  }, [allowance, amount, token, isEnabled, beConverted]);
+
+  function validateInputs(showMessage: boolean = true): boolean {
+    if (!isValidAmount(amount)) {
+      if (showMessage) {
+        message.error("invalid amount");
+      }
+      return false;
+    }
+    const amountNumber = getAmountNumber(amount);
+    //TODO: check minimal amount from contract data.
+    if (amountNumber < 1) {
+      if (showMessage) {
+        message.error("amount must >= 1");
+      }
+      return false;
+    }
+    /*try {
+      if (tokenBalance && amountNumber > Number(tokenBalance.toFixed(10))) {
+        if (showMessage) {
+          message.error("insufficient balance");
+        }
+        return false;
+      }
+    } catch (e) {
+      if (showMessage) {
+        message.error("invalid amount");
+      }
+      return false;
+    }*/
+    if (!account) {
+      if (showMessage) {
+        message.error(`wallet is not connected`);
+      }
+      return false;
+    }
+    if (!tokenAddress) {
+      if (showMessage) message.error("could not get token address");
+      return false;
+    }
+    return true;
+  }
+
+  useEffect(() => {
+    if (isAddress(account) && cashierContractAddress && tokenContract) {
+      try {
+        tokenContract.methods
+          .allowance(account, cashierContractAddress, { from: account })
+          .then((value: BigNumber) => {
+            setAllowance(BigNumber.from(value.toString()));
+            return value;
+          })
+          .catch((error: Error) => {
+            message.error(`Failed to get allowance! ${error.message}`);
+            window.console.log(`Failed to get allowance!`, error);
+          });
+      } catch (e) {
+        message.error(`Failed to get allowance!`);
+        window.console.log(`Failed to get allowance!`, e);
+      }
+    }
+  }, [account, tokenContract, beApproved, beConverted]);
+
   const store = useLocalStore(() => ({
-    amount: "",
     showConfirmModal: false,
     approved: false,
     setApprove() {
       this.approved = true;
-    },
-    setAmount(newAmount) {
-      this.amount = newAmount;
     },
     toggleConfirmModalVisible() {
       this.showConfirmModal = !this.showConfirmModal;
@@ -36,29 +181,91 @@ export const XRCERC = () => {
   const onConvert = () => {
     store.toggleConfirmModalVisible();
   };
-  const onApprove = () => {
-    store.setApprove();
+  const onApprove = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+    const rawAmount = tryParseAmount(amount, token).toString();
+    if (!rawAmount) {
+      message.error(`Could not parse amount for token ${token.name}`);
+      return;
+    }
+    if (!cashierContractAddress) {
+      message.error("invalidate cashier contract address!");
+      return;
+    }
+    if (!tokenAddress) {
+      message.error("could not get token address");
+      return;
+    }
+    if (!tokenContract) {
+      window.console.error("tokenContract is null");
+      message.error("could not get token contract");
+      return;
+    }
+    try {
+      tokenContract.methods
+        .approve(cashierContractAddress, rawAmount, {
+          from: account,
+          gasLimit: 1000000,
+        })
+        .then((response: TransactionResponse) => {
+          message.success("Approved");
+          window.console.log(`Approve success`);
+          setBeApproved(true);
+        })
+        .catch((error: Error) => {
+          message.error(`Failed to approve token. ${error.message}`);
+          window.console.log("Failed to approve token", error);
+        });
+    } catch (e) {
+      message.error(`Failed to approve token.`);
+      window.console.log(`tokenContract.approve error `, e);
+    }
   };
+
   const onConfirm = () => {};
-  const isEnabled = store.amount !== "" && token !== null;
+
   return useObserver(() => (
     <div className="page__home__component__xrc_erc p-8 pt-6">
       <div className="my-6">
-        <TokenSelectField onChange={setToken} />
+        <TokenSelectField network={IOTEX} onChange={setTokenInfoPair} />
       </div>
-
       <AmountField
-        amount={store.amount}
+        amount={amount}
         label={lang.t("amount")}
-        onChange={store.setAmount}
+        onChange={setAmount}
+        customAddon={
+          token && (
+            <span
+              onClick={() => {
+                if (tokenBalance) {
+                  setAmount(formatUnits(tokenBalance, token.decimals));
+                }
+              }}
+              className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
+            >
+              MAX
+            </span>
+          )
+        }
       />
-      {store.amount && (
+      {token && (
+        <div className="font-light text-sm text-right c-gray-30 mt-2">
+          {tokenBalance && (
+            <span>
+              {formatUnits(tokenBalance, token.decimals)} {token.symbol}
+            </span>
+          )}
+        </div>
+      )}
+      {amount && account && token && (
         <div className="my-6 text-left">
           <div className="text-base c-gray-20">
             You will receive {token.name} tokens at
           </div>
           <AddressInput
-            address={fromString(wallet.walletAddress).stringEth()}
+            address={fromString(account).stringEth()}
             label="Ether Address"
             readOnly
           />
@@ -83,17 +290,19 @@ export const XRCERC = () => {
             onClick={wallet.init}
           />
         )}
-        {wallet.walletConnected && (
-          <div className="page__home__component__xrc_erc__button_group flex items-center">
-            <SubmitButton
-              title={lang.t("approve")}
-              onClick={onApprove}
-              disabled={store.approved || !isEnabled}
-            />
+        {account && (
+          <div className="page__home__component__erc_xrc__button_group flex items-center">
+            {needToApprove && (
+              <SubmitButton
+                title={lang.t("approve")}
+                onClick={onApprove}
+                disabled={!isEnabled || beApproved}
+              />
+            )}
             <SubmitButton
               title={lang.t("convert")}
               onClick={onConvert}
-              disabled={!store.approved}
+              disabled={!beApproved && disableConvert}
             />
           </div>
         )}
@@ -104,7 +313,7 @@ export const XRCERC = () => {
         tubeFee={0}
         networkFee={0}
         depositAmount={10}
-        depositToken={IOTX_TOKEN_INFO[ChainId.ROPSTEN]}
+        depositToken={xrc20TokenInfo}
         mintAmount={10}
         mintToken={token}
         close={store.toggleConfirmModalVisible}

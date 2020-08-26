@@ -9,13 +9,20 @@ export class BaseStore {
   @observable mode = CARD_ERC20_XRC20;
   @observable showComplete = false;
 
+  @observable hash = "";
+  @observable link = "";
+  @observable address = "";
+
   @action.bound
   setMode(mode) {
     this.mode = mode;
   }
 
   @action.bound
-  toggleComplete() {
+  toggleComplete(hash = "", link = "", address = "") {
     this.showComplete = !this.showComplete;
+    this.hash = hash;
+    this.link = link;
+    this.address = address;
   }
 }

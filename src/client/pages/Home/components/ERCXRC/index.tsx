@@ -42,7 +42,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
 export const ERCXRC = () => {
-  const { lang, wallet } = useStore();
+  const { lang, wallet, base } = useStore();
   const { account, activate, chainId, library } = useWeb3React<Web3Provider>();
   const [token, setToken] = useState(null);
   const [amount, setAmount] = useState("");
@@ -286,7 +286,14 @@ export const ERCXRC = () => {
             response
           );
           setHash(response.hash);
+
           store.toggleConfirmModalVisible();
+
+          base.toggleComplete(
+            response.hash,
+            getEtherscanLink(chainId, response.hash, "transaction"),
+            getReceiptAddress()
+          );
           message.success(" Ethereum transaction broadcasted successfully.");
           setBeConverted(true);
           return response.hash;

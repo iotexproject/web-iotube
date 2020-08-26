@@ -3,8 +3,10 @@ import "./index.scss";
 import { Button, Avatar } from "antd";
 import { useStore } from "../../../../../common/store";
 import copy from "copy-to-clipboard";
-import { LoadingOutlined, CheckOutlined } from "@ant-design/icons";
+import { CheckOutlined } from "@ant-design/icons";
 import { useObserver } from "mobx-react";
+import message from "antd/lib/message";
+
 const IMG_COPY = require("../../../../static/images/icon_copy.png");
 
 interface IComponentProps {
@@ -13,12 +15,13 @@ interface IComponentProps {
 
 export const CompleteFrame = (props: IComponentProps) => {
   const { lang, base } = useStore();
-  const address = "io1mheh7xep24yecw5ahym5k4ufn3k2ht5hkmp9ny";
   const onCopyAddress = () => {
-    copy(address);
+    copy(base.address);
+    message.success(lang.t("address_copied"));
   };
   const onCopyTransactionId = () => {
-    copy(address);
+    copy(base.link);
+    message.success(lang.t("transaction_link_copied"));
   };
   return useObserver(() => (
     <div
@@ -48,7 +51,7 @@ export const CompleteFrame = (props: IComponentProps) => {
         {lang.t("complete.tx_broadcast_network")}
       </div>
       <div className="c-gray-30 font-normal flex items-center text-base flex-wrap">
-        <span>{address}</span>
+        <span>{base.address}</span>
         &nbsp;&nbsp;
         <img
           src={IMG_COPY}
@@ -58,13 +61,14 @@ export const CompleteFrame = (props: IComponentProps) => {
       </div>
       <div className="c-white text-base font-thin mt-10 flex items-center">
         {lang.t("complete.your_tx")}&nbsp;
-        <LoadingOutlined />
       </div>
       <div className="text-base font-thin">
-        <a className="page__home__component__complete_frame__link c-green">
-          <u>
-            3e84c6eeb48f590195beebe446c8cb2af7fc96156c4f6500abd1b288fee2311e
-          </u>
+        <a
+          className="page__home__component__complete_frame__link c-green"
+          href={base.link}
+          target="_blank"
+        >
+          <u>{base.hash}</u>
         </a>
         &nbsp;&nbsp;
         <img
@@ -80,7 +84,9 @@ export const CompleteFrame = (props: IComponentProps) => {
         className={`page__home__component__complete_frame__btn--complete bg-green-10 w-full ${
           props.isERCXRC ? "c-primary" : "c-secondary"
         }`}
-        onClick={base.toggleComplete}
+        onClick={() => {
+          base.toggleComplete();
+        }}
       >
         {lang.t("complete")}
       </Button>

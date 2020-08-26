@@ -37,21 +37,27 @@ export const ConfirmModal = (props: IComponentProps) => {
         {props.depositToken && (
           <>
             <CurrencyLogo currency={props.depositToken} />
-            <span className="text-xl ml-2 font-light">{props.depositToken.name}</span>
+            <span className="text-xl ml-2 font-light">
+              {props.depositToken.name}&nbsp;&nbsp;({lang.t(props.isERCXRC ? "erc_20" : "xrc_20")})
+            </span>
           </>
         )}
       </div>
       <div className="c-gray font-thin text-base mt-2 mb-5">{props.middleComment}</div>
       <div className="c-white flex items-center">
-        <span className="font-normal text-3xl mr-3">{props.depositAmount}</span>
-        {props.depositToken && (
+        <span className="font-normal text-3xl mr-3">{props.mintAmount}</span>
+        {props.mintToken && (
           <>
-            <CurrencyLogo currency={props.depositToken} />
-            <span className="text-xl ml-2 font-light">{props.depositToken.symbol}</span>
+            <CurrencyLogo currency={props.mintToken} />
+            <span className="text-xl ml-2 font-light">
+              {props.mintToken.symbol}&nbsp;&nbsp;({lang.t(!props.isERCXRC ? "erc_20" : "xrc_20")})
+            </span>
           </>
         )}
       </div>
-      <div className="c-gray font-thin text-base mt-2 mb-5">on {props.mintToken ? props.mintToken.name : ""}</div>
+      <div className="c-gray font-thin text-base mt-2 mb-5">
+        on {props.isERCXRC ? lang.t("token.iotex") : lang.t("token.ethereum")}
+      </div>
       <div className="my-6 text-left c-gray">
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
         <div className="font-light text-sm flex items-center justify-between">

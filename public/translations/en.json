@@ -24,5 +24,7 @@
   "approve": "Approve",
   "contract.install": "Please use ioPay desktop, import & unlock your wallet, and then refresh this page to continue.",
   "copied_to_clipboard": "Copied!",
-  "you_will_recieve_amount_symbol_tokens_at": "You will receive ${amount} ${symbol} tokens at"
+  "you_will_recieve_amount_symbol_tokens_at": "You will receive ${amount} ${symbol} tokens at",
+  "erc_20": "ERC-20",
+  "xrc_20": "XRC-20"
 }

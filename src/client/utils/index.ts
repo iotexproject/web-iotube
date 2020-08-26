@@ -5,7 +5,7 @@ import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ChainId } from "@uniswap/sdk";
-import { Contract as IOContract } from "iotex-antenna/lib/contract/contract";
+import { Contract as IOTXContract } from "iotex-antenna/lib/contract/contract";
 import { AntennaUtils } from "../../common/utils/antenna";
 
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
@@ -73,11 +73,11 @@ export function getContract(
   );
 }
 
-export function getIOContract(address: string, ABI: any): IOContract {
+export function getIOTXContract(address: string, ABI: any): IOTXContract {
   if (!validateAddress(address)) {
     throw Error(`Invalid io address parameter '${address}'.`);
   }
-  return new IOContract(ABI, address, {
+  return new IOTXContract(ABI, address, {
     provider: AntennaUtils.getAntenna().iotx,
     signer: AntennaUtils.getAntenna().iotx.signer,
   });

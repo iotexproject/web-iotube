@@ -18,7 +18,7 @@ import { fromString } from "iotex-antenna/lib/crypto/address";
 import { BigNumber } from "@ethersproject/bignumber";
 import {
   getAmountNumber,
-  getIOContract,
+  getIOTXContract,
   isAddress,
   isValidAmount,
 } from "../../../../utils/index";
@@ -57,7 +57,7 @@ export const XRCERC = () => {
 
   const tokenContract = useMemo(() => {
     if (validateAddress(tokenAddress)) {
-      return getIOContract(tokenAddress, ERC20_ABI);
+      return getIOTXContract(tokenAddress, ERC20_ABI);
     }
     return null;
   }, [tokenAddress, account]);
@@ -241,7 +241,7 @@ export const XRCERC = () => {
       return;
     }
 
-    const contract = getIOContract(cashierContractAddress, ERC20_XRC20_ABI);
+    const contract = getIOTXContract(cashierContractAddress, ERC20_XRC20_ABI);
     const tokenAddress = xrc20TokenInfo ? xrc20TokenInfo.address : "";
     if (!tokenAddress) {
       message.error("could not get token address");
@@ -258,9 +258,9 @@ export const XRCERC = () => {
       contract.methods
         .deposit(...args, options)
         .then((response: any) => {
-          window.console.log(`${methodName} success hash`, response);
+          window.console.log(`${methodName} action hash`, response);
           store.toggleConfirmModalVisible();
-          message.success(" IOTEX transaction broadcasted successfully.");
+          message.success(" IoTeX action broadcasted successfully.");
           setBeConverted(true);
           base.toggleComplete(
             response.actionHash,

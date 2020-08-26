@@ -54,6 +54,7 @@ type IotexChainContractAddress = {
 };
 
 export const ETH_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
+  // ETH CHAIN ID
   [ChainId.MAINNET]:
     publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
   [ChainId.ROPSTEN]:
@@ -198,6 +199,7 @@ export const INITIAL_ALLOWED_SLIPPAGE = 50;
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20;
 
+// TODO  remove useless constants
 // one basis point
 export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000));
 export const BIPS_BASE = JSBI.BigInt(10000);

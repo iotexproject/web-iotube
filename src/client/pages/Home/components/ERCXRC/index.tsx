@@ -287,7 +287,7 @@ export const ERCXRC = () => {
       contract[methodName](...args, options)
         .then((response: any) => {
           window.console.log(
-            `${methodName} success hash`,
+            `${methodName} action hash`,
             response.hash,
             response
           );

@@ -3,7 +3,7 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import {
-  CHAIN_CASHIER_CONTRACT_ADDRESS,
+  ETH_CHAIN_CASHIER_CONTRACT_ADDRESS,
   ETHEREUM,
   SUPPORTED_WALLETS,
   TRANSACTION_REJECTED,
@@ -58,7 +58,7 @@ export const ERCXRC = () => {
     [tokenInfoPair]
   );
   const cashierContractAddress = useMemo(
-    () => CHAIN_CASHIER_CONTRACT_ADDRESS[chainId],
+    () => ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId],
     [chainId]
   );
   const tokenBalance = useTokenBalances(token ? token.address : undefined, [

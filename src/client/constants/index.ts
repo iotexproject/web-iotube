@@ -27,7 +27,7 @@ if (typeof DEFAULT_IOTEX_CHAIN_ID === "undefined") {
   );
 }
 
-export enum IOChainId {
+export enum IotexChainId {
   MAINNET = 1,
   TESTNET = 2,
 }
@@ -41,19 +41,19 @@ type ChainTokenPairList = {
   readonly [chainId in ChainId]: TokenInfoPair[];
 };
 
-type IOTokenPairList = {
-  readonly [chainId in IOChainId]: TokenInfoPair[];
+type IotexTokenPairList = {
+  readonly [chainId in IotexChainId]: TokenInfoPair[];
 };
 
 type ChainContractAddress = {
   readonly [chainId in ChainId]: string;
 };
 
-type IOChainContractAddress = {
-  readonly [chainId in IOChainId]: string;
+type IotexChainContractAddress = {
+  readonly [chainId in IotexChainId]: string;
 };
 
-export const CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
+export const ETH_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
   [ChainId.MAINNET]:
     publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
   [ChainId.ROPSTEN]:
@@ -63,14 +63,14 @@ export const CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
   [ChainId.KOVAN]: "",
 };
 
-export const IOTEX_CASHIER_CONTRACT_ADDRESS: IOChainContractAddress = {
-  [IOChainId.MAINNET]:
+export const IOTEX_CASHIER_CONTRACT_ADDRESS: IotexChainContractAddress = {
+  [IotexChainId.MAINNET]:
     publicConfig[
-      `IOTX_CASHIER_CONTRACT_ADDRESS_${IOChainId[IOChainId.MAINNET]}`
+      `IOTX_CASHIER_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.MAINNET]}`
     ],
-  [IOChainId.TESTNET]:
+  [IotexChainId.TESTNET]:
     publicConfig[
-      `IOTX_CASHIER_CONTRACT_ADDRESS_${IOChainId[IOChainId.TESTNET]}`
+      `IOTX_CASHIER_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.TESTNET]}`
     ],
 };
 
@@ -92,17 +92,17 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
   [ChainId.KOVAN]: [],
 };
 
-export const IOCHAIN_TOKEN_LIST: IOTokenPairList = {
-  [IOChainId.MAINNET]: Object.values(MAINNET_TOKEN_LIST).map((item) => {
+export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
+  [IotexChainId.MAINNET]: Object.values(MAINNET_TOKEN_LIST).map((item) => {
     return {
-      ETHEREUM: { ...item.eth, chainId: IOChainId.MAINNET } as TokenInfo,
-      IOTEX: { ...item.iotx, chainId: IOChainId.MAINNET } as TokenInfo,
+      ETHEREUM: { ...item.eth, chainId: IotexChainId.MAINNET } as TokenInfo,
+      IOTEX: { ...item.iotx, chainId: IotexChainId.MAINNET } as TokenInfo,
     };
   }),
-  [IOChainId.TESTNET]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
+  [IotexChainId.TESTNET]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
     return {
-      ETHEREUM: { ...item.eth, chainId: IOChainId.TESTNET } as TokenInfo,
-      IOTEX: { ...item.iotx, chainId: IOChainId.TESTNET } as TokenInfo,
+      ETHEREUM: { ...item.eth, chainId: IotexChainId.TESTNET } as TokenInfo,
+      IOTEX: { ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo,
     };
   }),
 };

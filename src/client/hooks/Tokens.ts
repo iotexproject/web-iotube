@@ -5,7 +5,7 @@ import {
   CHAIN_TOKEN_LIST,
   DEFAULT_IOTEX_CHAIN_ID,
   ETHEREUM,
-  IOCHAIN_TOKEN_LIST,
+  IOTEX_TOKEN_LIST,
   IOTEX,
   TokenInfoPair,
 } from "../constants/index";
@@ -51,7 +51,7 @@ export function useTokens(network: string): { [p: string]: TokenInfoPair } {
         });
       }
     } else if (network === IOTEX) {
-      (IOCHAIN_TOKEN_LIST[DEFAULT_IOTEX_CHAIN_ID] || []).forEach((aToken) => {
+      (IOTEX_TOKEN_LIST[DEFAULT_IOTEX_CHAIN_ID] || []).forEach((aToken) => {
         tokenList[aToken.IOTEX.address.toLowerCase()] = {
           ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
           IOTEX: aToken.IOTEX,

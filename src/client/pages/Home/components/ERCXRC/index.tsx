@@ -75,7 +75,7 @@ export const ERCXRC = () => {
   const cashierContractValidate = useMemo(() => {
     if (!cashierContractAddress || !isAddress(cashierContractAddress)) {
       if (chainId) {
-        let content = `please set correctly CASHIER_CONTRACT_ADDRESS_${ChainId[chainId]} in env for chain ${ChainId[chainId]}`;
+        let content = `please set correctly ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[chainId]} in env for chain ${ChainId[chainId]}`;
         message.error(content);
         window.console.log(content);
       }

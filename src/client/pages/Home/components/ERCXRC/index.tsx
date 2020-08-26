@@ -50,7 +50,7 @@ export const ERCXRC = () => {
   const [beConverted, setBeConverted] = useState(false);
   const [hash, setHash] = useState("");
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
-  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHERIUM : null), [
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
     tokenInfoPair,
   ]);
   const xrc20TokenInfo = useMemo(

@@ -41,7 +41,7 @@ export const XRCERC = () => {
   const [beConverted, setBeConverted] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
   const account = wallet.walletAddress;
-  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHERIUM : null), [
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
     tokenInfoPair,
   ]);
   const xrc20TokenInfo = useMemo(

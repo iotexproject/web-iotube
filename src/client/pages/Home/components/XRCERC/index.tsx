@@ -24,7 +24,11 @@ import {
 } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
-import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
+import {
+  fromRau,
+  toRau,
+  validateAddress,
+} from "iotex-antenna/lib/account/utils";
 import { formatUnits, parseUnits } from "@ethersproject/units";
 import { tryParseAmount } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
@@ -40,6 +44,7 @@ export const XRCERC = () => {
   const [beApproved, setBeApproved] = useState(false);
   const [beConverted, setBeConverted] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
+  const [depositFee, setDepositFee] = useState(BigNumber.from(0));
   const account = wallet.walletAddress;
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
     tokenInfoPair,
@@ -61,6 +66,32 @@ export const XRCERC = () => {
     }
     return null;
   }, [tokenAddress, account]);
+
+  const cashierContract = useMemo(() => {
+    return cashierContractAddress
+      ? getIOTXContract(cashierContractAddress, ERC20_XRC20_ABI)
+      : null;
+  }, [cashierContractAddress]);
+
+  useMemo(() => {
+    if (account && cashierContract) {
+      try {
+        cashierContract.methods
+          .depositFee({
+            from: account,
+          })
+          .then((value) => {
+            setDepositFee(BigNumber.from(value.toString()));
+            return value;
+          })
+          .catch((error: Error) => {
+            window.console.log(`Failed to get depositFee!`, error);
+          });
+      } catch (e) {
+        window.console.log(`Failed to get depositFee `, e);
+      }
+    }
+  }, [cashierContract, account]);
 
   useEffect(() => {
     if (validateAddress(account) && tokenContract) {
@@ -241,7 +272,6 @@ export const XRCERC = () => {
       return;
     }
 
-    const contract = getIOTXContract(cashierContractAddress, ERC20_XRC20_ABI);
     const tokenAddress = xrc20TokenInfo ? xrc20TokenInfo.address : "";
     if (!tokenAddress) {
       message.error("could not get token address");
@@ -251,11 +281,12 @@ export const XRCERC = () => {
     const methodName = "deposit";
     const options = {
       from: account,
+      amount: depositFee.toString(),
       gasLimit: 1000000,
       gasPrice: toRau("1", "Qev"),
     };
     const depositTo = () => {
-      contract.methods
+      cashierContract.methods
         .deposit(...args, options)
         .then((response: any) => {
           window.console.log(`${methodName} action hash`, response);
@@ -334,7 +365,7 @@ export const XRCERC = () => {
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>{lang.t("fee.tube")}</span>
-          <span>0 ({lang.t("free")})</span>
+          <span>{`${fromRau(depositFee.toString(), "iotx")} IOTX`}</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>{lang.t("relay_to_ethereum")}</span>
@@ -369,7 +400,7 @@ export const XRCERC = () => {
       <ConfirmModal
         visible={store.showConfirmModal}
         onConfirm={onConfirm}
-        tubeFee={0}
+        tubeFee={`${fromRau(depositFee.toString(), "iotx")} IOTX`}
         networkFee={0}
         depositAmount={getAmountNumber(amount)}
         depositToken={xrc20TokenInfo}

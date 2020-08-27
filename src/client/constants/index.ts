@@ -1,5 +1,5 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { ChainId, JSBI, Percent, Token } from "@uniswap/sdk";
+import { ChainId } from "@uniswap/sdk";
 import {
   fortmatic,
   injected,
@@ -20,6 +20,10 @@ export const ETHEREUM = "ETHEREUM";
 export const IOTEX = "IOTEX";
 
 export const DEFAULT_IOTEX_CHAIN_ID = publicConfig.DEFAULT_IOTEX_CHAIN_ID;
+export const IOTX_ETH_PRICE =
+  typeof publicConfig.IOTX_ETH_PRICE === "undefined"
+    ? 0
+    : publicConfig.IOTX_ETH_PRICE;
 
 if (typeof DEFAULT_IOTEX_CHAIN_ID === "undefined") {
   throw new Error(

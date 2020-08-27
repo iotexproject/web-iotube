@@ -13,6 +13,7 @@ import {
   DEFAULT_IOTEX_CHAIN_ID,
   IOTEX_CASHIER_CONTRACT_ADDRESS,
   IOTEX,
+  IOTX_ETH_PRICE,
 } from "../../../../constants/index";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -30,7 +31,7 @@ import {
   validateAddress,
 } from "iotex-antenna/lib/account/utils";
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import { tryParseAmount } from "../../../../hooks/Tokens";
+import { getFeeIOTX, tryParseAmount } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 
@@ -153,6 +154,18 @@ export const XRCERC = () => {
         message.error("amount must >= 1");
       }
       return false;
+    }
+    if (depositFee.gt(BigNumber.from(0))) {
+      try {
+        if (Number(depositFee.toString()) > wallet.walletBalance) {
+          if (showMessage) {
+            message.error("insufficient IOTX balance");
+          }
+          return false;
+        }
+      } catch (error) {
+        console.debug(`could not get deposit fee in iotx`, error);
+      }
     }
     try {
       if (
@@ -365,7 +378,7 @@ export const XRCERC = () => {
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>{lang.t("fee.tube")}</span>
-          <span>{`${fromRau(depositFee.toString(), "iotx")} IOTX`}</span>
+          <span>{getFeeIOTX(depositFee)}</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>{lang.t("relay_to_ethereum")}</span>
@@ -400,8 +413,7 @@ export const XRCERC = () => {
       <ConfirmModal
         visible={store.showConfirmModal}
         onConfirm={onConfirm}
-        tubeFee={`${fromRau(depositFee.toString(), "iotx")} IOTX`}
-        networkFee={0}
+        networkFee={getFeeIOTX(depositFee)}
         depositAmount={getAmountNumber(amount)}
         depositToken={xrc20TokenInfo}
         mintAmount={getAmountNumber(amount)}

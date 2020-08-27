@@ -486,7 +486,6 @@ export const ERCXRC = () => {
       <ConfirmModal
         visible={store.showConfirmModal}
         onConfirm={onConfirm}
-        networkFee={0}
         depositAmount={getAmountNumber(amount)}
         depositToken={token}
         mintAmount={getAmountNumber(amount)}

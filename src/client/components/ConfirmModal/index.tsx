@@ -8,8 +8,7 @@ interface IComponentProps {
   visible: boolean;
   onConfirm: MouseEventHandler;
   close: MouseEventHandler;
-  tubeFee?: string;
-  networkFee: number;
+  networkFee?: string;
   depositAmount: number;
   depositToken: Token | null;
   mintAmount: number;
@@ -69,7 +68,7 @@ export const ConfirmModal = (props: IComponentProps) => {
         <div className="font-light text-sm flex items-center justify-between">
           <span>{lang.t("fee.tube")}</span>
           <span>
-            {props.isERCXRC ? `0 (${lang.t("free")})` : props.tubeFee}
+            {props.isERCXRC ? `0 (${lang.t("free")})` : props.networkFee}
           </span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">

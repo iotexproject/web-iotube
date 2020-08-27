@@ -48,7 +48,11 @@ export const CompleteFrame = (props: IComponentProps) => {
         {lang.t("broadcast_transaction_successfully")}
       </div>
       <div className="c-gray-30 font-thin mt-3 text-sm">
-        {lang.t("complete.tx_broadcast_network")}
+        {props.isERCXRC
+          ? lang.t("complete.tx_broadcast_network")
+          : lang.t("complete.tx_broadcast_network.xrc20", {
+              tokenName: base.tokenName,
+            })}
       </div>
       <div className="c-gray-30 font-normal flex items-center text-base flex-wrap">
         <span>{base.address}</span>

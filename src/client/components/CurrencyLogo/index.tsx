@@ -7,7 +7,6 @@ import uriToHttp from "../../utils/index";
 import { Avatar } from "antd";
 import { WrappedTokenInfo } from "../../hooks/Tokens";
 
-// TODO: we need to pin this a forked version of the repo. Otherwise, the link may not be stable.
 const getTokenLogoURL = (address) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
 const BAD_URIS: { [tokenAddress: string]: true } = {};

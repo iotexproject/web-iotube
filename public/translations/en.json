@@ -28,5 +28,6 @@
   "erc_20": "ERC-20",
   "xrc_20": "XRC-20",
   "address_copied": "Address Copied!",
-  "transaction_link_copied": "Transaction Link Copied!"
+  "transaction_link_copied": "Transaction Link Copied!",
+  "beta_notice": "THIS PRODUCT IS IN BETA. USE AT YOUR OWN RISK."
 }

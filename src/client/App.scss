@@ -15,7 +15,7 @@ body {
   --c-gray-10: rgb(147, 152, 162);
   --c-gray-20: rgb(147, 147, 153);
   --c-gray-30: #bac0cc;
-
+  --c-gray-40: rgb(141, 147, 153);
   #root {
     margin: 0 auto;
   }
@@ -86,6 +86,10 @@ body {
 
   .c-gray-30 {
     color: var(--c-gray-30) !important;
+  }
+
+  .c-gray-40 {
+    color: var(--c-gray-40);
   }
 
   .c-primary {

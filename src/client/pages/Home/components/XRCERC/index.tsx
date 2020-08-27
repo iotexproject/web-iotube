@@ -309,7 +309,8 @@ export const XRCERC = () => {
           base.toggleComplete(
             response.actionHash,
             `${response.network.url}action/${response.actionHash}`,
-            fromString(account).stringEth()
+            fromString(account).stringEth(),
+            token.name
           );
           return response.hash;
         })

@@ -12,6 +12,7 @@ export class BaseStore {
   @observable hash = "";
   @observable link = "";
   @observable address = "";
+  @observable tokenName = "";
 
   @action.bound
   setMode(mode) {
@@ -19,10 +20,11 @@ export class BaseStore {
   }
 
   @action.bound
-  toggleComplete(hash = "", link = "", address = "") {
+  toggleComplete(hash = "", link = "", address = "", tokenName = "") {
     this.showComplete = !this.showComplete;
     this.hash = hash;
     this.link = link;
     this.address = address;
+    this.tokenName = tokenName;
   }
 }

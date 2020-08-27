@@ -8,6 +8,7 @@ const {
   APP_FORTMATIC_KEY,
   APP_PORTIS_ID,
   DEFAULT_IOTEX_CHAIN_ID,
+  IOTEX_CORE_ENDPOPINT,
   ETH_CASHIER_CONTRACT_ADDRESS_MAINNET,
   ETH_CASHIER_CONTRACT_ADDRESS_ROPSTEN,
   IOTX_CASHIER_CONTRACT_ADDRESS_TESTNET,
@@ -17,9 +18,10 @@ const {
 export const publicConfig = {
   IS_PROD,
   NODE_ENV,
-  IOTEX_CORE_ENDPOPINT: IS_PROD
-    ? "https://api.iotex.one:443"
-    : "https://api.testnet.iotex.one:443",
+  IOTEX_CORE_ENDPOPINT:
+    IOTEX_CORE_ENDPOPINT || IS_PROD
+      ? "https://api.iotex.one:443"
+      : "https://api.testnet.iotex.one:443",
   APP_NETWORK_URL,
   APP_FORTMATIC_KEY,
   APP_PORTIS_ID,

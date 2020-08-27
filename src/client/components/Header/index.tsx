@@ -84,8 +84,8 @@ export const Header = () => {
       : "";
     const walletBalance =
       base.mode === CARD_ERC20_XRC20
-        ? userEthBalance?.toFixed(4)
-        : fromRau(`${wallet.walletBalance}`, "iotx");
+        ? userEthBalance?.toFixed(2)
+        : fromRau(`${wallet.walletBalance.toFixed(2)}`, "iotx");
     const balanceUnit = base.mode === CARD_ERC20_XRC20 ? "ETH" : wallet.token;
 
     return walletConnected ? (

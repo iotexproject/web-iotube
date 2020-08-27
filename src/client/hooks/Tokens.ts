@@ -38,7 +38,7 @@ export type TokenAddressMap = Readonly<
 >;
 
 export function useTokens(network: string): { [p: string]: TokenInfoPair } {
-  const { chainId } = useActiveWeb3React();
+  const { chainId = ChainId.ROPSTEN } = useActiveWeb3React();
   return useMemo(() => {
     const tokenList = {};
     if (network === ETHEREUM) {

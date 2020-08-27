@@ -64,10 +64,10 @@ export const Header = () => {
     copy(address);
     notification.open({
       message: lang.t("copied_to_clipboard"),
-      description: shortenAddress(address),
+      description: address,
       duration: 1,
       style: {
-        width: 250,
+        padding: 15,
       },
     });
   };

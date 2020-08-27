@@ -1,6 +1,7 @@
 import { Currency, Token } from "@uniswap/sdk";
 import React, { useState } from "react";
 import styled from "styled-components";
+import { TokenInfo } from "@uniswap/token-lists";
 
 import uriToHttp from "../../utils/index";
 import { Avatar } from "antd";
@@ -26,7 +27,7 @@ export default function CurrencyLogo({
   size = "24px",
   ...rest
 }: {
-  currency?: Currency;
+  currency?: Currency | TokenInfo;
   size?: string;
   style?: React.CSSProperties;
 }) {
@@ -53,6 +54,10 @@ export default function CurrencyLogo({
     if (uri) {
       return <Avatar src={uri} size="small" />;
     }
+  }
+
+  if (currency["logoURI"]) {
+    return <Avatar src={currency["logoURI"]} size="small" />;
   }
 
   return (

@@ -125,6 +125,10 @@ body {
       transition: all 0.3s;
       background-color: transparent !important;
       padding: 0.5rem 1.5rem !important;
+      .ant-select-item-option-content {
+        display: flex;
+        align-items: center;
+      }
       &.ant-select-item-option-selected {
         background-color: #2d3137 !important;
         color: white !important;

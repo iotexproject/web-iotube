@@ -16,6 +16,7 @@ const { Option } = Select;
 export const TokenSelectField = (props: IComponentProps) => {
   const { network = ETHEREUM, onChange } = props;
   const tokenList = useTokens(network);
+
   return (
     <Select
       className="component__token_select w-full c-white"

@@ -301,7 +301,7 @@ export const XRCERC = () => {
                   setAmount(formatUnits(tokenBalance, xrc20TokenInfo.decimals));
                 }
               }}
-              className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
+              className="page__home__component__xrc_erc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
             >
               MAX
             </span>
@@ -350,7 +350,7 @@ export const XRCERC = () => {
           />
         )}
         {account && (
-          <div className="page__home__component__erc_xrc__button_group flex items-center">
+          <div className="page__home__component__xrc_erc__button_group flex items-center">
             {needToApprove && (
               <SubmitButton
                 title={lang.t("approve")}

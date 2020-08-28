@@ -1,4 +1,4 @@
-import { Avatar, Button, notification } from "antd";
+import { Avatar, Button, notification, Popover } from "antd";
 import { useObserver } from "mobx-react";
 import { CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
@@ -12,7 +12,11 @@ import { fromRau } from "iotex-antenna/lib/account/utils";
 import { IMG_ETHER, IMG_IOTX, IMG_LOGO } from "../../constants/index";
 import React from "react";
 import "./index.scss";
-import { CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
+import {
+  CopyOutlined,
+  EllipsisOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import { useStore } from "../../../common/store";
 import { shortenAddress } from "../../utils";
 import copy from "copy-to-clipboard";
@@ -135,13 +139,32 @@ export const Header = () => {
         <span className="flex items-center c-white font-thin">
           {renderWalletInfo()}
           &nbsp;
-          <Button
-            type="text"
-            shape="circle"
-            className="component__header__content__more c-white"
+          <Popover
+            placement="bottomRight"
+            title={null}
+            trigger="click"
+            overlayClassName="component__header__settings__popup"
+            content={
+              <div>
+                <a
+                  href="https://github.com/iotexproject/iotube"
+                  target="_blank"
+                  className="c-gray-30 flex items-center font-light w-24"
+                >
+                  <InfoCircleOutlined />
+                  <span className="ml-2 text-base">{lang.t("about")}</span>
+                </a>
+              </div>
+            }
           >
-            <EllipsisOutlined />
-          </Button>
+            <Button
+              type="text"
+              shape="circle"
+              className="component__header__content__more c-white"
+            >
+              <EllipsisOutlined className="text-lg" />
+            </Button>
+          </Popover>
         </span>
       </div>
     </div>

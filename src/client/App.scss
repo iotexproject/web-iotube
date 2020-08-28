@@ -193,4 +193,16 @@ body {
       }
     }
   }
+  .component__header__settings__popup {
+    .ant-popover-content {
+      .ant-popover-arrow {
+        border-top-color: var(--bg-primary);
+        border-left-color: var(--bg-primary);
+      }
+      .ant-popover-inner {
+        background-color: var(--bg-primary);
+        border-radius: 0.4rem;
+      }
+    }
+  }
 }

@@ -45,7 +45,6 @@ export class WalletStore {
       }
       return;
     }
-
     this.walletAddress = accounts[0].address;
   }
 

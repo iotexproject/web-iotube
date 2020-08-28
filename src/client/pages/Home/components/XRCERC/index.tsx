@@ -112,6 +112,7 @@ export const XRCERC = () => {
         window.console.log(`Failed to get balanceOf!`, e);
       }
     }
+    wallet.init();
   }, [account, tokenContract]);
 
   const isEnabled = validateInputs(false);

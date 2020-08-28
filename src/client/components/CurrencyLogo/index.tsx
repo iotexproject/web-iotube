@@ -18,12 +18,12 @@ const Emoji = styled.span<{ size?: string }>`
   font-size: ${({ size }) => size};
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  margin-bottom: -4px;
+  margin-bottom: -0.25rem;
 `;
 
 export default function CurrencyLogo({
   currency,
-  size = "24px",
+  size = "1.5rem",
   ...rest
 }: {
   currency?: Currency | TokenInfo;

@@ -2,13 +2,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.75rem 0 !important;
+  padding: 0 !important;
   font-size: 1.25rem !important;
   background-color: #33ff99 !important;
   color: #262525 !important;
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+  height: 3.75rem !important;
 
   &.component__submit_button--disabled {
     color: #8c8d92 !important;

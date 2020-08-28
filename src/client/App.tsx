@@ -1,19 +1,20 @@
-import window from 'global/window';
-import React, { useEffect } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import { Home } from './pages/Home';
-import './App.scss';
-import { useStore } from '../common/store/index';
-import { MainLayout } from './layouts';
-import { Web3ReactProvider } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
-import store from './state';
-import { Provider } from 'react-redux';
-import ApplicationUpdater from './state/application/updater';
-import MulticallUpdater from './state/multicall/updater';
-import { Web3ProviderNetwork } from '../common/utils/create-web3';
+import window from "global/window";
+import React, { useEffect } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { Home } from "./pages/Home";
+import "./App.scss";
+import { useStore } from "../common/store/index";
+import { MainLayout } from "./layouts";
+import { Web3ReactProvider } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import store from "./state";
+import { Provider } from "react-redux";
+import ApplicationUpdater from "./state/application/updater";
+import MulticallUpdater from "./state/multicall/updater";
+import { Web3ProviderNetwork } from "../common/utils/create-web3";
+import { utils } from "../common/utils/index";
 
-if ('ethereum' in window) {
+if ("ethereum" in window) {
   // @ts-ignore
   (window.ethereum as any).autoRefreshOnNetworkChange = false;
 }
@@ -48,7 +49,11 @@ const App = () => {
             <Switch>
               <Route exact={true} path="/eth" component={Home} />
               <Route exact={true} path="/iotx" component={Home} />
-              <Redirect to="/eth" />
+              {utils.env.isIoPayMobile() ? (
+                <Redirect to="/iotx" />
+              ) : (
+                <Redirect to="/eth" />
+              )}
             </Switch>
           </MainLayout>
         </Provider>

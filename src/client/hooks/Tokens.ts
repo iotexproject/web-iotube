@@ -15,6 +15,12 @@ import { parseUnits } from "@ethersproject/units";
 import { fromRau } from "iotex-antenna/lib/account/utils";
 import { BigNumber } from "@ethersproject/bignumber";
 
+export enum AmountState {
+  ZERO,
+  UNAPPROVED,
+  APPROVED,
+}
+
 export class WrappedTokenInfo extends Token {
   public readonly tokenInfo: TokenInfo;
   constructor(tokenInfo: TokenInfo) {
@@ -92,4 +98,20 @@ export function getFeeIOTX(iotxFee: BigNumber): string {
     );
     return `${fromRau(iotxFee.toString(), "iotx")} IOTX`;
   }
+}
+
+export function amountInAllowance(
+  allowance: BigNumber,
+  amount: string,
+  token: TokenInfo | null
+): AmountState {
+  if (amount && token && allowance.gte(BigNumber.from(0))) {
+    try {
+      const amountBN = parseUnits(amount, token.decimals);
+      return allowance.gte(amountBN)
+        ? AmountState.APPROVED
+        : AmountState.UNAPPROVED;
+    } catch (error) {}
+  }
+  return AmountState.ZERO;
 }

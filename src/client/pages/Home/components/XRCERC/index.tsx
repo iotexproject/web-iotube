@@ -11,8 +11,8 @@ import {
 } from "../../../../components";
 import {
   DEFAULT_IOTEX_CHAIN_ID,
-  IOTEX_CASHIER_CONTRACT_ADDRESS,
   IOTEX,
+  IOTEX_CASHIER_CONTRACT_ADDRESS,
   IOTEXSCAN_URL,
 } from "../../../../constants/index";
 import { fromString } from "iotex-antenna/lib/crypto/address";
@@ -25,15 +25,17 @@ import {
 } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
-import {
-  fromRau,
-  toRau,
-  validateAddress,
-} from "iotex-antenna/lib/account/utils";
+import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { formatUnits, parseUnits } from "@ethersproject/units";
-import { getFeeIOTX, tryParseAmount } from "../../../../hooks/Tokens";
+import {
+  amountInAllowance,
+  AmountState,
+  getFeeIOTX,
+  tryParseAmount,
+} from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
+import { TokenInfo } from "@uniswap/token-lists";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -42,7 +44,6 @@ export const XRCERC = () => {
   const [tokenInfoPair, setTokenInfoPair] = useState(null);
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
   const [amount, setAmount] = useState("");
-  const [beApproved, setBeApproved] = useState(false);
   const [beConverted, setBeConverted] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
   const [depositFee, setDepositFee] = useState(BigNumber.from(0));
@@ -114,32 +115,6 @@ export const XRCERC = () => {
     }
   }, [account, tokenContract]);
 
-  const isEnabled = validateInputs(false);
-  const needToApprove = useMemo(() => {
-    if (amount && allowance.gt(BigNumber.from(0)) && xrc20TokenInfo) {
-      try {
-        const amountBN = parseUnits(amount, xrc20TokenInfo.decimals);
-        if (allowance.gte(amountBN)) {
-          return false;
-        }
-      } catch (error) {}
-    }
-    return isEnabled;
-  }, [allowance, amount, xrc20TokenInfo]);
-
-  const disableConvert = useMemo(() => {
-    if (beConverted) return true;
-    if (
-      !amount ||
-      BigNumber.from(0).gte(allowance) ||
-      (xrc20TokenInfo &&
-        parseUnits(amount, xrc20TokenInfo.decimals).gt(allowance))
-    ) {
-      return true;
-    }
-    return !isEnabled;
-  }, [allowance, amount, xrc20TokenInfo, isEnabled, beConverted]);
-
   function validateInputs(showMessage: boolean = true): boolean {
     if (!isValidAmount(amount)) {
       if (showMessage) {
@@ -194,8 +169,37 @@ export const XRCERC = () => {
       if (showMessage) message.error("could not get token address");
       return false;
     }
+
+    if (!cashierContractAddress) {
+      if (showMessage) message.error("invalidate cashier contract address!");
+      return false;
+    }
+    if (!tokenAddress) {
+      if (showMessage) message.error("could not get token address");
+      return false;
+    }
+    if (!tokenContract) {
+      if (showMessage) message.error("could not get token contract");
+      return false;
+    }
     return true;
   }
+
+  const possibleApprove = useMemo(() => {
+    if (!validateInputs(false)) return false;
+    return (
+      amountInAllowance(allowance, amount, xrc20TokenInfo) ==
+      AmountState.UNAPPROVED
+    );
+  }, [allowance, amount, xrc20TokenInfo]);
+
+  const possibleConvert = useMemo(() => {
+    if (possibleApprove || !validateInputs(false)) return false;
+    return (
+      amountInAllowance(allowance, amount, xrc20TokenInfo) ==
+      AmountState.APPROVED
+    );
+  }, [possibleApprove, allowance, amount, xrc20TokenInfo]);
 
   useEffect(() => {
     if (isAddress(account) && cashierContractAddress && tokenContract) {
@@ -215,7 +219,7 @@ export const XRCERC = () => {
         window.console.log(`Failed to get allowance!`, e);
       }
     }
-  }, [account, tokenContract, beApproved, beConverted]);
+  }, [account, tokenContract, beConverted]);
 
   const store = useLocalStore(() => ({
     showConfirmModal: false,
@@ -227,31 +231,22 @@ export const XRCERC = () => {
       this.showConfirmModal = !this.showConfirmModal;
     },
   }));
+
   const onConvert = () => {
     store.toggleConfirmModalVisible();
   };
+
   const onApprove = async () => {
     if (!validateInputs()) {
       return;
     }
+
     const rawAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
     if (!rawAmount) {
       message.error(`Could not parse amount for token ${xrc20TokenInfo.name}`);
-      return;
+      return false;
     }
-    if (!cashierContractAddress) {
-      message.error("invalidate cashier contract address!");
-      return;
-    }
-    if (!tokenAddress) {
-      message.error("could not get token address");
-      return;
-    }
-    if (!tokenContract) {
-      window.console.error("tokenContract is null");
-      message.error("could not get token contract");
-      return;
-    }
+
     try {
       tokenContract.methods
         .approve(cashierContractAddress, rawAmount, {
@@ -262,7 +257,7 @@ export const XRCERC = () => {
         .then((response: TransactionResponse) => {
           message.success("Approved");
           window.console.log(`Approve success`);
-          setBeApproved(true);
+          setAllowance(BigNumber.from(rawAmount));
         })
         .catch((error: Error) => {
           message.error(`Failed to approve xrc20TokenInfo. ${error.message}`);
@@ -400,17 +395,15 @@ export const XRCERC = () => {
         )}
         {account && (
           <div className="page__home__component__xrc_erc__button_group flex items-center">
-            {needToApprove && (
-              <SubmitButton
-                title={lang.t("approve")}
-                onClick={onApprove}
-                disabled={!isEnabled || beApproved}
-              />
-            )}
+            <SubmitButton
+              title={lang.t("approve")}
+              onClick={onApprove}
+              disabled={!possibleApprove}
+            />
             <SubmitButton
               title={lang.t("convert")}
               onClick={onConvert}
-              disabled={!beApproved && disableConvert}
+              disabled={!possibleConvert}
             />
           </div>
         )}

@@ -32,10 +32,13 @@ import { ConfirmModal } from "../../../../components/ConfirmModal/index";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import { Contract } from "@ethersproject/contracts";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
-import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
+import { fromBytes } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
-import { tryParseAmount } from "../../../../hooks/Tokens";
-import { parseUnits } from "@ethersproject/units";
+import {
+  amountInAllowance,
+  AmountState,
+  tryParseAmount,
+} from "../../../../hooks/Tokens";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ChainId } from "@uniswap/sdk";
 
@@ -46,8 +49,6 @@ export const ERCXRC = () => {
   const { account, activate, chainId, library } = useWeb3React<Web3Provider>();
   const [tokenInfoPair, setTokenInfoPair] = useState(null);
   const [amount, setAmount] = useState("");
-  const [beApproved, setBeApproved] = useState(false);
-  const [beConverted, setBeConverted] = useState(false);
   const [hash, setHash] = useState("");
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
@@ -111,13 +112,7 @@ export const ERCXRC = () => {
         window.console.log(`Failed to get allowance!`, e);
       }
     }
-  }, [
-    account,
-    cashierContractValidate,
-    tokenContract,
-    beApproved,
-    beConverted,
-  ]);
+  }, [account, cashierContractValidate, tokenContract]);
 
   const tryActivation = async (connector) => {
     let name = "";
@@ -192,7 +187,7 @@ export const ERCXRC = () => {
         .then((response: TransactionResponse) => {
           message.success("Approved");
           window.console.log(`Approve success`);
-          setBeApproved(true);
+          setAllowance(BigNumber.from(rawAmount));
         })
         .catch((error: Error) => {
           message.error(`Failed to approve token. ${error.message}`);
@@ -253,6 +248,22 @@ export const ERCXRC = () => {
     return true;
   }
 
+  const possibleApprove = useMemo(() => {
+    if (!validateInputs(false)) return false;
+    return (
+      amountInAllowance(allowance, amount, xrc20TokenInfo) ==
+      AmountState.UNAPPROVED
+    );
+  }, [allowance, amount, xrc20TokenInfo, chainId, account]);
+
+  const possibleConvert = useMemo(() => {
+    if (possibleApprove || !validateInputs(false)) return false;
+    return (
+      amountInAllowance(allowance, amount, xrc20TokenInfo) ==
+      AmountState.APPROVED
+    );
+  }, [possibleApprove, allowance, amount, xrc20TokenInfo, chainId, account]);
+
   const onConfirm = async () => {
     if (!validateInputs()) {
       return;
@@ -301,7 +312,6 @@ export const ERCXRC = () => {
             getReceiptAddress()
           );
           message.success(" Ethereum transaction broadcasted successfully.");
-          setBeConverted(true);
           return response.hash;
         })
         .catch((error: any) => {
@@ -360,30 +370,6 @@ export const ERCXRC = () => {
           });
       });
   };
-  const isEnabled = validateInputs(false);
-  const disableConvert = useMemo(() => {
-    if (beConverted) return true;
-    if (
-      !amount ||
-      BigNumber.from(0).gte(allowance) ||
-      (token && parseUnits(amount, token.decimals).gt(allowance))
-    ) {
-      return true;
-    }
-    return !isEnabled;
-  }, [allowance, amount, token, isEnabled, beConverted]);
-
-  const needToApprove = useMemo(() => {
-    if (amount && allowance.gt(BigNumber.from(0)) && token) {
-      try {
-        const amountBN = parseUnits(amount, token.decimals);
-        if (allowance.gte(amountBN)) {
-          return false;
-        }
-      } catch (error) {}
-    }
-    return isEnabled;
-  }, [allowance, amount, token]);
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
@@ -468,17 +454,15 @@ export const ERCXRC = () => {
         )}
         {account && (
           <div className="page__home__component__erc_xrc__button_group flex items-center">
-            {needToApprove && (
-              <SubmitButton
-                title={lang.t("approve")}
-                onClick={onApprove}
-                disabled={!isEnabled || beApproved}
-              />
-            )}
+            <SubmitButton
+              title={lang.t("approve")}
+              onClick={onApprove}
+              disabled={!possibleApprove}
+            />
             <SubmitButton
               title={lang.t("convert")}
               onClick={onConvert}
-              disabled={!beApproved && disableConvert}
+              disabled={!possibleConvert}
             />
           </div>
         )}

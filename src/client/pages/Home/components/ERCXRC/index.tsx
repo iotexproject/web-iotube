@@ -431,7 +431,7 @@ export const ERCXRC = () => {
           <AddressInput
             readOnly
             address={getReceiptAddress()}
-            label="IOTX Address"
+            label={lang.t("iotx_Address")}
           />
         </div>
       )}
@@ -486,8 +486,6 @@ export const ERCXRC = () => {
       <ConfirmModal
         visible={store.showConfirmModal}
         onConfirm={onConfirm}
-        tubeFee={0}
-        networkFee={0}
         depositAmount={getAmountNumber(amount)}
         depositToken={token}
         mintAmount={getAmountNumber(amount)}

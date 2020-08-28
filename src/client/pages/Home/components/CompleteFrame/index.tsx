@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.scss";
-import { Button, Avatar } from "antd";
+import { Button } from "antd";
 import { useStore } from "../../../../../common/store";
 import copy from "copy-to-clipboard";
 import { CheckOutlined } from "@ant-design/icons";
@@ -45,10 +45,18 @@ export const CompleteFrame = (props: IComponentProps) => {
         <div className="page__home__component__complete_frame__top_bar__bar" />
       </div>
       <div className="c-white text-lg font-thin">
-        {lang.t("broadcast_transaction_successfully")}
+        {lang.t(
+          props.isERCXRC
+            ? "broadcast_transaction_successfully_eth"
+            : "broadcast_transaction_successfully_iotx"
+        )}
       </div>
       <div className="c-gray-30 font-thin mt-3 text-sm">
-        {lang.t("complete.tx_broadcast_network")}
+        {props.isERCXRC
+          ? lang.t("complete.tx_broadcast_network")
+          : lang.t("complete.tx_broadcast_network.xrc20", {
+              tokenName: base.tokenName,
+            })}
       </div>
       <div className="c-gray-30 font-normal flex items-center text-base flex-wrap">
         <span>{base.address}</span>
@@ -60,7 +68,10 @@ export const CompleteFrame = (props: IComponentProps) => {
         />
       </div>
       <div className="c-white text-base font-thin mt-10 flex items-center">
-        {lang.t("complete.your_tx")}&nbsp;
+        {lang.t(
+          props.isERCXRC ? "complete.your_tx_eth" : "complete.your_tx_iotx"
+        )}
+        &nbsp;
       </div>
       <div className="text-base font-thin">
         <a

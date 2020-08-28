@@ -34,5 +34,12 @@
   "transaction_link_copied": "Transaction Link Copied!",
   "beta_notice": "THIS PRODUCT IS IN BETA. USE AT YOUR OWN RISK.",
   "about": "About",
-  "iotx_Address": "IoTeX address"
+  "iotx_Address": "IoTeX address",
+  "eta": "ETA",
+  "eth_confirmations": "ETH confirmations",
+  "iotex_confirmations": "IoTeX confirmations",
+  "witness_confirmation": "Witness confirmations",
+  "min": "min",
+  "sec": "sec",
+  "may_delay_comment": "* may delay due to ETH network congestion."
 }

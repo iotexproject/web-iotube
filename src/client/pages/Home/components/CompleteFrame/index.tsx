@@ -88,8 +88,33 @@ export const CompleteFrame = (props: IComponentProps) => {
           className="page__home__component__complete_frame__btn--copy cursor-pointer"
         />
       </div>
-      <div className="c-gray-30 font-light mt-3 mb-20 text-sm">
+      <div className="c-gray-30 font-light mt-3 mb-6 text-sm">
         {lang.t("complete.check_status_comment")}
+      </div>
+      <div className="text-sm c-gray-30 font-light mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <span>{lang.t("eta")}</span>
+          <span>
+            ~{props.isERCXRC ? `4 ${lang.t("min")}` : `1 ${lang.t("min")}*`}
+          </span>
+        </div>
+        <div className="flex justify-between items-center mb-2">
+          <span>
+            {lang.t(
+              props.isERCXRC ? "eth_confirmations" : "iotex_confirmations"
+            )}
+          </span>
+          <span>
+            ~{props.isERCXRC ? `3 ${lang.t("min")}` : `5 ${lang.t("sec")}`}
+          </span>
+        </div>
+        <div className="flex justify-between items-center mb-2">
+          <span>{lang.t("witness_confirmation")}</span>
+          <span>
+            ~{props.isERCXRC ? `7 ${lang.t("sec")}` : `1 ${lang.t("min")}*`}
+          </span>
+        </div>
+        {!props.isERCXRC && <div>{lang.t("may_delay_comment")}</div>}
       </div>
       <Button
         className={`page__home__component__complete_frame__btn--complete bg-green-10 w-full ${

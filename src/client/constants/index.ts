@@ -57,6 +57,11 @@ type IotexChainContractAddress = {
   readonly [chainId in IotexChainId]: string;
 };
 
+export const IOTEXSCAN_URL = {
+  [IotexChainId.MAINNET]: "https://iotexscan.io/",
+  [IotexChainId.TESTNET]: "https://testnet.iotexscan.io/",
+};
+
 export const ETH_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
   // ETH CHAIN ID
   [ChainId.MAINNET]:

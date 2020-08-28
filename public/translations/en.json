@@ -17,11 +17,13 @@
   "confirm": "Confirm",
   "connect_io_pay": "Connect ioPay",
   "complete": "Complete",
-  "broadcast_transaction_successfully": "Action submitted successfully",
+  "broadcast_transaction_successfully_iotx": "Action submitted successfully",
+  "broadcast_transaction_successfully_eth": "Transaction submitted successfully",
   "complete.check_status_comment": "You can check the status right now by clicking the following TX hash or save your TX hash and check the status later.",
   "complete.tx_broadcast_network": "After 12 ETH network confimations and 2/3 witnesses' confirmation, the XRC20 tokens will be minted and sent to your IoTeX wallet:",
   "complete.tx_broadcast_network.xrc20": "After 1 IoTeX network confirmation and 2/3 witnesses' confirmation, your XRC20 token will be burnt and ${tokenName} will be sent to your ETH wallet:",
-  "complete.your_tx": "Your TX hash",
+  "complete.your_tx_eth": "Your TX hash",
+  "complete.your_tx_iotx": "Your action hash",
   "approve": "Approve",
   "contract.install": "Please use ioPay desktop, import & unlock your wallet, and then refresh this page to continue.",
   "copied_to_clipboard": "Copied!",
@@ -30,5 +32,6 @@
   "xrc_20": "XRC-20",
   "address_copied": "Address Copied!",
   "transaction_link_copied": "Transaction Link Copied!",
-  "beta_notice": "THIS PRODUCT IS IN BETA. USE AT YOUR OWN RISK."
+  "beta_notice": "THIS PRODUCT IS IN BETA. USE AT YOUR OWN RISK.",
+  "iotx_Address": "IoTeX address"
 }

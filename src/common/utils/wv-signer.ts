@@ -89,7 +89,7 @@ export class WvSigner implements SignerPlugin {
       type: "SIGN_AND_SEND",
     };
 
-    return new Promise<string>((resolve) =>
+    return new Promise<any>((resolve) =>
       window.WebViewJavascriptBridge.callHandler(
         "sign_and_send",
         JSON.stringify(req),
@@ -101,7 +101,7 @@ export class WvSigner implements SignerPlugin {
             return;
           }
           if (resp.reqId === id) {
-            resolve(responseData);
+            resolve(resp);
           }
         }
       )

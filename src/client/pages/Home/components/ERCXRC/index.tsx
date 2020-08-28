@@ -431,7 +431,7 @@ export const ERCXRC = () => {
           <AddressInput
             readOnly
             address={getReceiptAddress()}
-            label="IOTX Address"
+            label={lang.t("iotx_Address")}
           />
         </div>
       )}

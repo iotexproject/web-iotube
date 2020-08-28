@@ -12,8 +12,7 @@ import {
 import {
   DEFAULT_IOTEX_CHAIN_ID,
   IOTEX_CASHIER_CONTRACT_ADDRESS,
-  IOTEX,
-  IOTX_ETH_PRICE,
+  IOTEX, IOTEXSCAN_URL,
 } from "../../../../constants/index";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -306,9 +305,10 @@ export const XRCERC = () => {
           store.toggleConfirmModalVisible();
           message.success(" IoTeX action broadcasted successfully.");
           setBeConverted(true);
+          const link = `${(response.network&&response.network.url)||IOTEXSCAN_URL[DEFAULT_IOTEX_CHAIN_ID]}action/${response.actionHash}`;
           base.toggleComplete(
-            response.actionHash,
-            `${response.network.url}action/${response.actionHash}`,
+            response.actionHash||response,
+            link,
             fromString(account).stringEth(),
             token.name
           );

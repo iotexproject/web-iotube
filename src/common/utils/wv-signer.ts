@@ -101,7 +101,7 @@ export class WvSigner implements SignerPlugin {
             return;
           }
           if (resp.reqId === id) {
-            resolve(resp.actionHash);
+            resolve(responseData);
           }
         }
       )

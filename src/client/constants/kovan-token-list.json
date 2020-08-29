@@ -1,0 +1,18 @@
+{
+  "HTT": {
+    "eth": {
+      "address": "0xd729d37c7157a49d94efeb10c2af12ad2e3782bf",
+      "name": "HTT token",
+      "decimals": 18,
+      "symbol": "HTT",
+      "logoURI": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/whatsapp/238/cat-face_1f431.png"
+    },
+    "iotx": {
+      "address": "io1cx6pq7w7vgfgfs46av5kh3z9gcxglq3vf4263s",
+      "name": "xHTT Token",
+      "decimals": 18,
+      "symbol": "xHTT",
+      "logoURI": "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/docomo/205/cat-face_1f431.png"
+    }
+  }
+}

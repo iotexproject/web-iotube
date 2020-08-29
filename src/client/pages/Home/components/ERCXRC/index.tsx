@@ -454,11 +454,9 @@ export const ERCXRC = () => {
         )}
         {account && (
           <div className="page__home__component__erc_xrc__button_group flex items-center">
-            <SubmitButton
-              title={lang.t("approve")}
-              onClick={onApprove}
-              disabled={!possibleApprove}
-            />
+            {possibleApprove && (
+              <SubmitButton title={lang.t("approve")} onClick={onApprove} />
+            )}
             <SubmitButton
               title={lang.t("convert")}
               onClick={onConvert}

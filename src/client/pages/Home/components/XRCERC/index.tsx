@@ -35,7 +35,6 @@ import {
 } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
-import { TokenInfo } from "@uniswap/token-lists";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -394,13 +393,11 @@ export const XRCERC = () => {
             onClick={wallet.init}
           />
         )}
-        {account && (
+        {wallet.walletConnected && (
           <div className="page__home__component__xrc_erc__button_group flex items-center">
-            <SubmitButton
-              title={lang.t("approve")}
-              onClick={onApprove}
-              disabled={!possibleApprove}
-            />
+            {possibleApprove && (
+              <SubmitButton title={lang.t("approve")} onClick={onApprove} />
+            )}
             <SubmitButton
               title={lang.t("convert")}
               onClick={onConvert}

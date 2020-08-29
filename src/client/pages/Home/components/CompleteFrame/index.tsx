@@ -92,7 +92,7 @@ export const CompleteFrame = (props: IComponentProps) => {
         {lang.t("complete.check_status_comment")}
       </div>
       <div className="text-sm c-gray-30 font-light mb-6">
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center mb-2 c-white text-base font-thin">
           <span>{lang.t("eta")}</span>
           <span>
             ~{props.isERCXRC ? `4 ${lang.t("min")}` : `1 ${lang.t("min")}*`}

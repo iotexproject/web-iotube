@@ -9,6 +9,7 @@ import {
 } from "../connectors";
 import { TokenInfo } from "@uniswap/token-lists";
 import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
+import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
 import { publicConfig } from "../../../configs/public";
 
@@ -70,7 +71,8 @@ export const ETH_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
     publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
   [ChainId.RINKEBY]: "",
   [ChainId.GÖRLI]: "",
-  [ChainId.KOVAN]: "",
+  [ChainId.KOVAN]:
+    publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
 };
 
 export const IOTEX_CASHIER_CONTRACT_ADDRESS: IotexChainContractAddress = {
@@ -99,7 +101,12 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
   }),
   [ChainId.RINKEBY]: [],
   [ChainId.GÖRLI]: [],
-  [ChainId.KOVAN]: [],
+  [ChainId.KOVAN]: Object.values(KOVAN_TOKEN_LIST).map((item) => {
+    return {
+      ETHEREUM: { ...item.eth, chainId: ChainId.KOVAN } as TokenInfo,
+      IOTEX: { ...item.iotx, chainId: ChainId.KOVAN } as TokenInfo,
+    };
+  }),
 };
 
 export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
@@ -109,7 +116,7 @@ export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
       IOTEX: { ...item.iotx, chainId: IotexChainId.MAINNET } as TokenInfo,
     };
   }),
-  [IotexChainId.TESTNET]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
+  [IotexChainId.TESTNET]: Object.values(KOVAN_TOKEN_LIST).map((item) => {
     return {
       ETHEREUM: { ...item.eth, chainId: IotexChainId.TESTNET } as TokenInfo,
       IOTEX: { ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo,

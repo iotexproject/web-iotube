@@ -47,7 +47,6 @@ export const XRCERC = () => {
   const [beConverted, setBeConverted] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
   const [depositFee, setDepositFee] = useState(BigNumber.from(0));
-  const account = wallet.walletAddress;
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
     tokenInfoPair,
   ]);
@@ -67,7 +66,7 @@ export const XRCERC = () => {
       return getIOTXContract(tokenAddress, ERC20_ABI);
     }
     return null;
-  }, [tokenAddress, account]);
+  }, [tokenAddress, wallet.walletAddress]);
 
   const cashierContract = useMemo(() => {
     return cashierContractAddress
@@ -76,11 +75,11 @@ export const XRCERC = () => {
   }, [cashierContractAddress]);
 
   useMemo(() => {
-    if (account && cashierContract) {
+    if (wallet.walletAddress && cashierContract) {
       try {
         cashierContract.methods
           .depositFee({
-            from: account,
+            from: wallet.walletAddress,
           })
           .then((value) => {
             setDepositFee(BigNumber.from(value.toString()));
@@ -93,13 +92,13 @@ export const XRCERC = () => {
         window.console.log(`Failed to get depositFee `, e);
       }
     }
-  }, [cashierContract, account]);
+  }, [cashierContract, wallet.walletAddress]);
 
   useEffect(() => {
-    if (validateAddress(account) && tokenContract) {
+    if (validateAddress(wallet.walletAddress) && tokenContract) {
       try {
         tokenContract.methods
-          .balanceOf(account, account)
+          .balanceOf(wallet.walletAddress, wallet.walletAddress)
           .then((value) => {
             setTokenBalance(BigNumber.from(value.toString()));
             return value;
@@ -114,7 +113,7 @@ export const XRCERC = () => {
       }
     }
     wallet.init();
-  }, [account, tokenContract]);
+  }, [wallet.walletAddress, tokenContract]);
 
   function validateInputs(showMessage: boolean = true): boolean {
     if (!isValidAmount(amount)) {
@@ -160,7 +159,7 @@ export const XRCERC = () => {
       }
       return false;
     }
-    if (!account) {
+    if (!wallet.walletAddress) {
       if (showMessage) {
         message.error(`wallet is not connected`);
       }
@@ -203,10 +202,16 @@ export const XRCERC = () => {
   }, [possibleApprove, allowance, amount, xrc20TokenInfo]);
 
   useEffect(() => {
-    if (isAddress(account) && cashierContractAddress && tokenContract) {
+    if (
+      isAddress(wallet.walletAddress) &&
+      cashierContractAddress &&
+      tokenContract
+    ) {
       try {
         tokenContract.methods
-          .allowance(account, cashierContractAddress, { from: account })
+          .allowance(wallet.walletAddress, cashierContractAddress, {
+            from: wallet.walletAddress,
+          })
           .then((value: BigNumber) => {
             setAllowance(BigNumber.from(value.toString()));
             return value;
@@ -220,7 +225,7 @@ export const XRCERC = () => {
         window.console.log(`Failed to get allowance!`, e);
       }
     }
-  }, [account, tokenContract, beConverted]);
+  }, [wallet.walletAddress, tokenContract, beConverted]);
 
   const store = useLocalStore(() => ({
     showConfirmModal: false,
@@ -251,7 +256,7 @@ export const XRCERC = () => {
     try {
       tokenContract.methods
         .approve(cashierContractAddress, rawAmount, {
-          from: account,
+          from: wallet.walletAddress,
           gasLimit: 1000000,
           gasPrice: toRau("1", "Qev"),
         })
@@ -289,7 +294,7 @@ export const XRCERC = () => {
     const args = [tokenAddress, rawAmount];
     const methodName = "deposit";
     const options = {
-      from: account,
+      from: wallet.walletAddress,
       amount: depositFee.toString(),
       gasLimit: 1000000,
       gasPrice: toRau("1", "Qev"),
@@ -309,7 +314,7 @@ export const XRCERC = () => {
           base.toggleComplete(
             response.actionHash,
             link,
-            fromString(account).stringEth(),
+            fromString(wallet.walletAddress).stringEth(),
             token.name
           );
           return response.hash;
@@ -363,13 +368,13 @@ export const XRCERC = () => {
           )}
         </div>
       )}
-      {amount && account && token && (
+      {amount && wallet.walletAddress && token && (
         <div className="my-6 text-left">
           <div className="text-base c-gray-20">
             You will receive {token.name} tokens at
           </div>
           <AddressInput
-            address={fromString(account).stringEth()}
+            address={fromString(wallet.walletAddress).stringEth()}
             label="Ether Address"
             readOnly
           />
@@ -394,7 +399,7 @@ export const XRCERC = () => {
             onClick={wallet.init}
           />
         )}
-        {account && (
+        {wallet.walletAddress && (
           <div className="page__home__component__xrc_erc__button_group flex items-center">
             <SubmitButton
               title={lang.t("approve")}

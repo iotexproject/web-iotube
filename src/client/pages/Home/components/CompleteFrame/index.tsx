@@ -58,7 +58,7 @@ export const CompleteFrame = (props: IComponentProps) => {
               tokenName: base.tokenName,
             })}
       </div>
-      <div className="c-gray-30 font-normal flex items-center text-base flex-wrap">
+      <div className="c-gray-30 font-normal text-base break-all">
         <span>{base.address}</span>
         &nbsp;&nbsp;
         <img

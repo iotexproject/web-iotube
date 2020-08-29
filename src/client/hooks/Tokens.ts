@@ -14,6 +14,7 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { parseUnits } from "@ethersproject/units";
 import { fromRau } from "iotex-antenna/lib/account/utils";
 import { BigNumber } from "@ethersproject/bignumber";
+import { publicConfig } from "../../../configs/public";
 
 export enum AmountState {
   ZERO,
@@ -47,7 +48,9 @@ export type TokenAddressMap = Readonly<
 >;
 
 export function useTokens(network: string): { [p: string]: TokenInfoPair } {
-  const { chainId = ChainId.ROPSTEN } = useActiveWeb3React();
+  const {
+    chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN,
+  } = useActiveWeb3React();
   return useMemo(() => {
     const tokenList = {};
     if (network === ETHEREUM) {

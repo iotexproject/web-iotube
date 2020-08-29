@@ -75,11 +75,11 @@ export const XRCERC = () => {
   }, [cashierContractAddress]);
 
   useMemo(() => {
-    if (account && cashierContract) {
+    if (cashierContract) {
       try {
         cashierContract.methods
           .depositFee({
-            from: account,
+            from: cashierContract,
           })
           .then((value) => {
             setDepositFee(BigNumber.from(value.toString()));
@@ -92,7 +92,7 @@ export const XRCERC = () => {
         window.console.log(`Failed to get depositFee `, e);
       }
     }
-  }, [cashierContract, account]);
+  }, [cashierContract]);
 
   useEffect(() => {
     if (validateAddress(account) && tokenContract) {

@@ -335,6 +335,7 @@ export const ERCXRC = () => {
     contract.estimateGas[methodName](...args, {})
       .then((gasEstimate) => {
         window.console.log("Gas estimation succeeded.", gasEstimate);
+        options.gasLimit = gasEstimate.toNumber();
         depositTo();
         return {
           gasEstimate,

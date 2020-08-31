@@ -35,7 +35,7 @@ export function shortenAddress(address: string, chars = 4): string {
   const parsed = isAddress(address);
   if (!parsed) {
     window.console.log(`Invalid 'address' parameter '${address}'.`);
-    return `Invalid address ('${address}')`;
+    return address;
   }
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`;
 }

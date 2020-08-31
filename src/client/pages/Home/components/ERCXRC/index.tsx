@@ -4,6 +4,7 @@ import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import {
   ETH_CHAIN_CASHIER_CONTRACT_ADDRESS,
+  ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS,
   ETHEREUM,
   SUPPORTED_WALLETS,
   TRANSACTION_REJECTED,
@@ -29,9 +30,10 @@ import {
   TokenSelectField,
 } from "../../../../components";
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
-import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import { Contract } from "@ethersproject/contracts";
+import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
+import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
 import { fromBytes } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import {
@@ -41,6 +43,8 @@ import {
 } from "../../../../hooks/Tokens";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ChainId } from "@uniswap/sdk";
+import Form from "antd/lib/form";
+import { formatUnits } from "@ethersproject/units";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -51,6 +55,11 @@ export const ERCXRC = () => {
   const [amount, setAmount] = useState("");
   const [hash, setHash] = useState("");
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
+  const [amountRange, setAmountRange] = useState({
+    minAmount: BigNumber.from("1000000000000000000"),
+    maxAmount: BigNumber.from("10000000000000000000000"),
+  });
+
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
     tokenInfoPair,
   ]);
@@ -93,6 +102,43 @@ export const ERCXRC = () => {
     }
     return null;
   }, [tokenAddress, library, account]);
+
+  const tokenListContractAddress = useMemo(
+    () => ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS[chainId],
+    [chainId]
+  );
+
+  const tokenListContract = useMemo(() => {
+    if (isAddress(tokenListContractAddress)) {
+      return getContract(
+        tokenListContractAddress,
+        TOKEN_LIST_ABI,
+        library,
+        account
+      );
+    }
+    return null;
+  }, [tokenListContractAddress, library, account]);
+
+  useEffect(() => {
+    const fetchAmountRange = async () => {
+      if (tokenAddress && tokenListContract) {
+        try {
+          const [minAmount, maxAmount] = await Promise.all([
+            tokenListContract.minAmount(tokenAddress),
+            tokenListContract.maxAmount(tokenAddress),
+          ]);
+          setAmountRange({
+            minAmount,
+            maxAmount,
+          });
+        } catch (e) {
+          window.console.log(`Failed to get amount range `, e);
+        }
+      }
+    };
+    fetchAmountRange();
+  }, [tokenAddress, tokenListContract]);
 
   useEffect(() => {
     if (isAddress(account) && cashierContractValidate && tokenContract) {
@@ -215,10 +261,29 @@ export const ERCXRC = () => {
       return false;
     }
     const amountNumber = getAmountNumber(amount);
-    //TODO: check minimal amount from contract data.
-    if (amountNumber < 1) {
+    if (
+      amountNumber <
+      Number(formatUnits(amountRange.minAmount, token ? token.decimals : 18))
+    ) {
       if (showMessage) {
-        message.error("amount must >= 1");
+        message.error(
+          `amount must >= ${Number(
+            formatUnits(amountRange.minAmount, token ? token.decimals : 18)
+          )}`
+        );
+      }
+      return false;
+    }
+    if (
+      amountNumber >
+      Number(formatUnits(amountRange.maxAmount, token ? token.decimals : 18))
+    ) {
+      if (showMessage) {
+        message.error(
+          `amount must <= ${Number(
+            formatUnits(amountRange.maxAmount, token ? token.decimals : 18)
+          )}`
+        );
       }
       return false;
     }
@@ -373,109 +438,117 @@ export const ERCXRC = () => {
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
-      <div className="my-6">
-        <TokenSelectField network={ETHEREUM} onChange={setTokenInfoPair} />
-      </div>
-      <AmountField
-        amount={amount}
-        label={lang.t("amount")}
-        onChange={setAmount}
-        customAddon={
-          token && (
-            <span
-              onClick={() => {
-                if (tokenBalance) {
-                  setAmount(tokenBalance.toFixed(3));
-                }
-              }}
-              className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
-            >
-              MAX
-            </span>
-          )
-        }
-      />
-      {token && (
-        <div className="font-light text-sm text-right c-gray-30 mt-2">
-          {tokenBalance && (
-            <span>
-              {tokenBalance?.toExact()} {token.symbol}
-            </span>
+      <Form>
+        <div className="my-6">
+          <TokenSelectField network={ETHEREUM} onChange={setTokenInfoPair} />
+        </div>
+        <AmountField
+          amount={amount}
+          label={lang.t("amount")}
+          min={Number(
+            formatUnits(amountRange.minAmount, token ? token.decimals : 18)
           )}
-        </div>
-      )}
-      {amount && account && (
-        <div className="my-6 text-left">
-          {token && (
-            <div className="text-base c-gray-20 font-thin">
-              {lang.t("you_will_recieve_amount_symbol_tokens_at", {
-                amount,
-                symbol: xrc20TokenInfo.symbol,
-              })}
-            </div>
+          max={Number(
+            formatUnits(amountRange.maxAmount, token ? token.decimals : 18)
           )}
-          <AddressInput
-            readOnly
-            address={getReceiptAddress()}
-            label={lang.t("iotx_Address")}
-          />
-        </div>
-      )}
-      <div className="my-6 text-left c-gray-30">
-        <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
-        <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t("fee.tube")}</span>
-          <span>0 ({lang.t("free")})</span>
-        </div>
-        <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t("relay_to_iotex")}</span>
-          <span>0 ({lang.t("free")})</span>
-        </div>
-        {hash && (
-          <div className="font-light text-sm flex items-center justify-between">
-            <a
-              href={getEtherscanLink(chainId, hash, "transaction")}
-              target={"_blank"}
-            >
-              {`view on Etherscan ${hash}`}
-            </a>
+          onChange={setAmount}
+          customAddon={
+            token && (
+              <span
+                onClick={() => {
+                  if (tokenBalance) {
+                    setAmount(tokenBalance.toFixed(3));
+                  }
+                }}
+                className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
+              >
+                MAX
+              </span>
+            )
+          }
+        />
+        {token && (
+          <div className="font-light text-sm text-right c-gray-30 mt-2">
+            {tokenBalance && (
+              <span>
+                {tokenBalance?.toExact()} {token.symbol}
+              </span>
+            )}
           </div>
         )}
-      </div>
-      <div>
-        {!account && (
-          <SubmitButton
-            title={lang.t("connect_metamask")}
-            icon={<img src={IMG_MATAMASK} className="h-6 mr-4" />}
-            onClick={() => {
-              tryActivation(injected).then();
-            }}
-          />
-        )}
-        {account && (
-          <div className="page__home__component__erc_xrc__button_group flex items-center">
-            {possibleApprove && (
-              <SubmitButton title={lang.t("approve")} onClick={onApprove} />
+        {amount && account && (
+          <div className="my-6 text-left">
+            {token && (
+              <div className="text-base c-gray-20 font-thin">
+                {lang.t("you_will_recieve_amount_symbol_tokens_at", {
+                  amount,
+                  symbol: xrc20TokenInfo.symbol,
+                })}
+              </div>
             )}
-            <SubmitButton
-              title={lang.t("convert")}
-              onClick={onConvert}
-              disabled={!possibleConvert}
+            <AddressInput
+              readOnly
+              address={getReceiptAddress()}
+              label={lang.t("iotx_Address")}
             />
           </div>
         )}
-      </div>
-      <ConfirmModal
-        visible={store.showConfirmModal}
-        onConfirm={onConfirm}
-        depositAmount={getAmountNumber(amount)}
-        depositToken={token}
-        mintAmount={getAmountNumber(amount)}
-        mintToken={xrc20TokenInfo}
-        close={store.toggleConfirmModalVisible}
-        middleComment="to ioTube and mint"
-        isERCXRC
-      />
+        <div className="my-6 text-left c-gray-30">
+          <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
+          <div className="font-light text-sm flex items-center justify-between">
+            <span>{lang.t("fee.tube")}</span>
+            <span>0 ({lang.t("free")})</span>
+          </div>
+          <div className="font-light text-sm flex items-center justify-between">
+            <span>{lang.t("relay_to_iotex")}</span>
+            <span>0 ({lang.t("free")})</span>
+          </div>
+          {hash && (
+            <div className="font-light text-sm flex items-center justify-between">
+              <a
+                href={getEtherscanLink(chainId, hash, "transaction")}
+                target={"_blank"}
+              >
+                {`view on Etherscan ${hash}`}
+              </a>
+            </div>
+          )}
+        </div>
+        <div>
+          {!account && (
+            <SubmitButton
+              title={lang.t("connect_metamask")}
+              icon={<img src={IMG_MATAMASK} className="h-6 mr-4" />}
+              onClick={() => {
+                tryActivation(injected).then();
+              }}
+            />
+          )}
+          {account && (
+            <div className="page__home__component__erc_xrc__button_group flex items-center">
+              {possibleApprove && (
+                <SubmitButton title={lang.t("approve")} onClick={onApprove} />
+              )}
+              <SubmitButton
+                title={lang.t("convert")}
+                onClick={onConvert}
+                disabled={!possibleConvert}
+              />
+            </div>
+          )}
+        </div>
+        <ConfirmModal
+          visible={store.showConfirmModal}
+          onConfirm={onConfirm}
+          depositAmount={getAmountNumber(amount)}
+          depositToken={token}
+          mintAmount={getAmountNumber(amount)}
+          mintToken={xrc20TokenInfo}
+          close={store.toggleConfirmModalVisible}
+          middleComment="to ioTube and mint"
+          isERCXRC
+        />
+      </Form>
     </div>
   ));
 };

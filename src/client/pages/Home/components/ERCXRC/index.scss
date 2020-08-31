@@ -13,4 +13,12 @@
     border: 1px solid;
     border-radius: 2px;
   }
+  .ant-form-item-explain {
+    text-align: left;
+  }
+  .ant-form-item-has-error {
+    .ant-input-prefix {
+      color: white !important;
+    }
+  }
 }

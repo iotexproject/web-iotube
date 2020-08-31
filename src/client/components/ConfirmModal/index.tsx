@@ -67,15 +67,15 @@ export const ConfirmModal = (props: IComponentProps) => {
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>{lang.t("fee.tube")}</span>
-          <span>
-            {props.isERCXRC ? `0 (${lang.t("free")})` : props.networkFee}
-          </span>
+          <span>0 ({lang.t("free")})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
           <span>
             {lang.t(props.isERCXRC ? "relay_to_iotex" : "relay_to_ethereum")}
           </span>
-          <span>0 ({lang.t("free")})</span>
+          <span>
+            {props.isERCXRC ? `0 (${lang.t("free")})` : props.networkFee}
+          </span>
         </div>
       </div>
       <div>

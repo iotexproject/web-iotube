@@ -10,4 +10,12 @@
       margin-left: 0.5rem;
     }
   }
+  .ant-form-item-explain {
+    text-align: left;
+  }
+  .ant-form-item-has-error {
+    .ant-input-prefix {
+      color: white !important;
+    }
+  }
 }

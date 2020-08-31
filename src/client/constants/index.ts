@@ -75,6 +75,17 @@ export const ETH_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
     publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
 };
 
+export const ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS: ChainContractAddress = {
+  [ChainId.MAINNET]:
+    publicConfig[`ETH_TOKEN_LIST_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
+  [ChainId.ROPSTEN]:
+    publicConfig[`ETH_TOKEN_LIST_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
+  [ChainId.RINKEBY]: "",
+  [ChainId.GÖRLI]: "",
+  [ChainId.KOVAN]:
+    publicConfig[`ETH_TOKEN_LIST_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
+};
+
 export const IOTEX_CASHIER_CONTRACT_ADDRESS: IotexChainContractAddress = {
   [IotexChainId.MAINNET]:
     publicConfig[
@@ -83,6 +94,17 @@ export const IOTEX_CASHIER_CONTRACT_ADDRESS: IotexChainContractAddress = {
   [IotexChainId.TESTNET]:
     publicConfig[
       `IOTX_CASHIER_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.TESTNET]}`
+    ],
+};
+
+export const IOTEX_TOKEN_LIST_CONTRACT_ADDRESS: IotexChainContractAddress = {
+  [IotexChainId.MAINNET]:
+    publicConfig[
+      `IOTX_TOKEN_LIST_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.MAINNET]}`
+    ],
+  [IotexChainId.TESTNET]:
+    publicConfig[
+      `IOTX_TOKEN_LIST_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.TESTNET]}`
     ],
 };
 

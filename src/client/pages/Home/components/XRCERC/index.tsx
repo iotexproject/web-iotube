@@ -13,6 +13,7 @@ import {
   DEFAULT_IOTEX_CHAIN_ID,
   IOTEX,
   IOTEX_CASHIER_CONTRACT_ADDRESS,
+  IOTEX_TOKEN_LIST_CONTRACT_ADDRESS,
   IOTEXSCAN_URL,
 } from "../../../../constants/index";
 import { fromString } from "iotex-antenna/lib/crypto/address";
@@ -26,7 +27,7 @@ import {
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
 import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
-import { formatUnits, parseUnits } from "@ethersproject/units";
+import { formatUnits } from "@ethersproject/units";
 import {
   amountInAllowance,
   AmountState,
@@ -35,6 +36,8 @@ import {
 } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
+import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
+import Form from "antd/lib/form";
 import { WarnModal } from "../../../../components/WarnModal";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
@@ -47,6 +50,10 @@ export const XRCERC = () => {
   const [beConverted, setBeConverted] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
   const [depositFee, setDepositFee] = useState(BigNumber.from(0));
+  const [amountRange, setAmountRange] = useState({
+    minAmount: BigNumber.from("1000000000000000000"),
+    maxAmount: BigNumber.from("10000000000000000000000"),
+  });
   const account = wallet.walletAddress;
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
     tokenInfoPair,
@@ -95,6 +102,39 @@ export const XRCERC = () => {
     }
   }, [cashierContract]);
 
+  const tokenListContractAddress =
+    IOTEX_TOKEN_LIST_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+
+  const tokenListContract = useMemo(() => {
+    return tokenListContractAddress
+      ? getIOTXContract(tokenListContractAddress, TOKEN_LIST_ABI)
+      : null;
+  }, [tokenListContractAddress]);
+
+  useEffect(() => {
+    const fetchAmountRange = async () => {
+      if (tokenAddress && tokenListContract) {
+        try {
+          const [minAmount, maxAmount] = await Promise.all([
+            tokenListContract.methods.minAmount(tokenAddress, {
+              from: tokenListContractAddress,
+            }),
+            tokenListContract.methods.maxAmount(tokenAddress, {
+              from: tokenListContractAddress,
+            }),
+          ]);
+          setAmountRange({
+            minAmount: BigNumber.from(minAmount.toString()),
+            maxAmount: BigNumber.from(maxAmount.toString()),
+          });
+        } catch (e) {
+          window.console.log(`Failed to get amount range `, e);
+        }
+      }
+    };
+    fetchAmountRange();
+  }, [tokenAddress, tokenListContract]);
+
   useEffect(() => {
     if (validateAddress(account) && tokenContract) {
       try {
@@ -124,10 +164,29 @@ export const XRCERC = () => {
       return false;
     }
     const amountNumber = getAmountNumber(amount);
-    //TODO: check minimal amount from contract data.
-    if (amountNumber < 1) {
+    if (
+      amountNumber <
+      Number(formatUnits(amountRange.minAmount, token ? token.decimals : 18))
+    ) {
       if (showMessage) {
-        message.error("amount must >= 1");
+        message.error(
+          `amount must >= ${Number(
+            formatUnits(amountRange.minAmount, token ? token.decimals : 18)
+          )}`
+        );
+      }
+      return false;
+    }
+    if (
+      amountNumber >
+      Number(formatUnits(amountRange.maxAmount, token ? token.decimals : 18))
+    ) {
+      if (showMessage) {
+        message.error(
+          `amount must <= ${Number(
+            formatUnits(amountRange.maxAmount, token ? token.decimals : 18)
+          )}`
+        );
       }
       return false;
     }
@@ -331,99 +390,109 @@ export const XRCERC = () => {
 
   return useObserver(() => (
     <div className="page__home__component__xrc_erc p-8 pt-6">
-      <div className="my-6">
-        <TokenSelectField network={IOTEX} onChange={setTokenInfoPair} />
-      </div>
-      <AmountField
-        amount={amount}
-        label={lang.t("amount")}
-        onChange={setAmount}
-        customAddon={
-          xrc20TokenInfo && (
-            <span
-              onClick={() => {
-                if (tokenBalance) {
-                  setAmount(formatUnits(tokenBalance, xrc20TokenInfo.decimals));
-                }
-              }}
-              className="page__home__component__xrc_erc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
-            >
-              MAX
-            </span>
-          )
-        }
-      />
-      {xrc20TokenInfo && (
-        <div className="font-light text-sm text-right c-gray-30 mt-2">
-          {tokenBalance && (
-            <span>
-              {formatUnits(tokenBalance, xrc20TokenInfo.decimals)}{" "}
-              {xrc20TokenInfo.symbol}
-            </span>
+      <Form>
+        <div className="my-6">
+          <TokenSelectField network={IOTEX} onChange={setTokenInfoPair} />
+        </div>
+        <AmountField
+          amount={amount}
+          label={lang.t("amount")}
+          min={Number(
+            formatUnits(amountRange.minAmount, token ? token.decimals : 18)
           )}
-        </div>
-      )}
-      {amount && account && token && (
-        <div className="my-6 text-left">
-          <div className="text-base c-gray-20">
-            You will receive {token.name} tokens at
-          </div>
-          <AddressInput
-            address={fromString(account).stringEth()}
-            label="Ether Address"
-            readOnly
-          />
-        </div>
-      )}
-      <div className="my-6 text-left c-gray-30">
-        <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
-        <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t("fee.tube")}</span>
-          <span>0 ({lang.t("free")})</span>
-        </div>
-        <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t("relay_to_ethereum")}</span>
-          <span>{getFeeIOTX(depositFee)}</span>
-        </div>
-      </div>
-      <div>
-        {!wallet.walletConnected && (
-          <SubmitButton
-            title={lang.t("connect_io_pay")}
-            icon={<img src={IMG_IOPAY} className="h-6 mr-4" />}
-            onClick={wallet.init}
-          />
-        )}
-        {wallet.walletConnected && (
-          <div className="page__home__component__xrc_erc__button_group flex items-center">
-            {possibleApprove && (
-              <SubmitButton title={lang.t("approve")} onClick={onApprove} />
+          max={Number(
+            formatUnits(amountRange.maxAmount, token ? token.decimals : 18)
+          )}
+          onChange={setAmount}
+          customAddon={
+            xrc20TokenInfo && (
+              <span
+                onClick={() => {
+                  if (tokenBalance) {
+                    setAmount(
+                      formatUnits(tokenBalance, xrc20TokenInfo.decimals)
+                    );
+                  }
+                }}
+                className="page__home__component__xrc_erc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
+              >
+                MAX
+              </span>
+            )
+          }
+        />
+        {xrc20TokenInfo && (
+          <div className="font-light text-sm text-right c-gray-30 mt-2">
+            {tokenBalance && (
+              <span>
+                {formatUnits(tokenBalance, xrc20TokenInfo.decimals)}{" "}
+                {xrc20TokenInfo.symbol}
+              </span>
             )}
-            <SubmitButton
-              title={lang.t("convert")}
-              onClick={onConvert}
-              disabled={!possibleConvert}
+          </div>
+        )}
+        {amount && account && token && (
+          <div className="my-6 text-left">
+            <div className="text-base c-gray-20">
+              You will receive {token.name} tokens at
+            </div>
+            <AddressInput
+              address={fromString(account).stringEth()}
+              label="Ether Address"
+              readOnly
             />
           </div>
         )}
-      </div>
-      <ConfirmModal
-        visible={store.showConfirmModal}
-        onConfirm={onConfirm}
-        networkFee={getFeeIOTX(depositFee)}
-        depositAmount={getAmountNumber(amount)}
-        depositToken={xrc20TokenInfo}
-        mintAmount={getAmountNumber(amount)}
-        mintToken={token}
-        close={store.toggleConfirmModalVisible}
-        middleComment="to ioTube and withdraw"
-        isERCXRC={false}
-      />
-      <WarnModal
-        visible={wallet.showXRCWarnModal}
-        isERCXRC={false}
-        close={wallet.toggleXRCCWarnModal}
-      />
+        <div className="my-6 text-left c-gray-30">
+          <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
+          <div className="font-light text-sm flex items-center justify-between">
+            <span>{lang.t("fee.tube")}</span>
+            <span>0 ({lang.t("free")})</span>
+          </div>
+          <div className="font-light text-sm flex items-center justify-between">
+            <span>{lang.t("relay_to_ethereum")}</span>
+            <span>{getFeeIOTX(depositFee)}</span>
+          </div>
+        </div>
+        <div>
+          {!wallet.walletConnected && (
+            <SubmitButton
+              title={lang.t("connect_io_pay")}
+              icon={<img src={IMG_IOPAY} className="h-6 mr-4" />}
+              onClick={wallet.init}
+            />
+          )}
+          {wallet.walletConnected && (
+            <div className="page__home__component__xrc_erc__button_group flex items-center">
+              {possibleApprove && (
+                <SubmitButton title={lang.t("approve")} onClick={onApprove} />
+              )}
+              <SubmitButton
+                title={lang.t("convert")}
+                onClick={onConvert}
+                disabled={!possibleConvert}
+              />
+            </div>
+          )}
+        </div>
+        <ConfirmModal
+          visible={store.showConfirmModal}
+          onConfirm={onConfirm}
+          networkFee={getFeeIOTX(depositFee)}
+          depositAmount={getAmountNumber(amount)}
+          depositToken={xrc20TokenInfo}
+          mintAmount={getAmountNumber(amount)}
+          mintToken={token}
+          close={store.toggleConfirmModalVisible}
+          middleComment="to ioTube and withdraw"
+          isERCXRC={false}
+        />
+        <WarnModal
+          visible={wallet.showXRCWarnModal}
+          isERCXRC={false}
+          close={wallet.toggleXRCCWarnModal}
+        />
+      </Form>
     </div>
   ));
 };

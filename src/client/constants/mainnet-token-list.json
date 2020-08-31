@@ -14,5 +14,21 @@
       "symbol": "ioETH",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
     }
+  },
+  "PAXG": {
+    "eth": {
+      "address": "0x45804880de22913dafe09f4980848ece6ecbaf78",
+      "name": "Paxos Gold",
+      "decimals": 18,
+      "symbol": "PAXG",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4705.png"
+    },
+    "iotx": {
+      "address": "io19fsq8e9krrlng4ay5gyq6q5tqfym28yq9ly0fz",
+      "name": "Paxos Gold",
+      "decimals": 18,
+      "symbol": "ioPAXG",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4705.png"
+    }
   }
 }

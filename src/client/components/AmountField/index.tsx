@@ -27,7 +27,6 @@ export const AmountField = (props: IComponentProps) => {
       ]}
     >
       <Input
-        type="number"
         autoComplete="off"
         className="component__amount_field bg-secondary c-white"
         prefix={

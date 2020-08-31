@@ -11,21 +11,21 @@
       "address": "io1jw6eckew7wak75j7vzxldd5ma88n9pxkajecrw",
       "name": "Wrapped ETH",
       "decimals": 18,
-      "symbol": "WETH",
+      "symbol": "ioETH",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
     }
   },
   "PAXG": {
     "eth": {
       "address": "0x8a257b7892b59c251a6b21531cec21b043f54bd3",
-      "name": "Paxos GOLD",
+      "name": "Paxos Gold",
       "decimals": 18,
       "symbol": "PAXG",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4705.png"
     },
     "iotx": {
       "address": "io1cxd42m8j72nmy0mmruww82vnrgukdzuh0m3wm2",
-      "name": "Paxos GOLD",
+      "name": "Paxos Gold",
       "decimals": 18,
       "symbol": "ioPAXG",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4705.png"

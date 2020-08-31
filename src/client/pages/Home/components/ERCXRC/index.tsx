@@ -45,6 +45,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { ChainId } from "@uniswap/sdk";
 import Form from "antd/lib/form";
 import { formatUnits } from "@ethersproject/units";
+import { WarnModal } from "../../../../components/WarnModal";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -174,18 +175,18 @@ export const ERCXRC = () => {
     ) {
       connector.walletConnectProvider = undefined;
     }
-
-    activate(connector, undefined, true)
-      .then(() => {
-        wallet.setMetaMaskConnected();
-      })
-      .catch((error) => {
-        if (error instanceof UnsupportedChainIdError || (error.code = 32002)) {
-          activate(connector);
-        } else {
-          // setPendingError(true)
-        }
-      });
+    try {
+      await activate(connector, undefined, true);
+      wallet.setMetaMaskConnected();
+    } catch (error) {
+      if (error instanceof UnsupportedChainIdError || (error.code = 32002)) {
+        wallet.toggleERCWarnModal();
+        activate(connector);
+      } else {
+        // setPendingError(true)
+        throw error;
+      }
+    }
   };
 
   const onConvert = () => {
@@ -400,6 +401,8 @@ export const ERCXRC = () => {
     contract.estimateGas[methodName](...args, {})
       .then((gasEstimate) => {
         window.console.log("Gas estimation succeeded.", gasEstimate);
+        // gasEstimate.mul(1.1).toNumber() will cause error.
+        options.gasLimit = gasEstimate.mul(11).div(10).toNumber();
         depositTo();
         return {
           gasEstimate,
@@ -547,6 +550,11 @@ export const ERCXRC = () => {
           close={store.toggleConfirmModalVisible}
           middleComment="to ioTube and mint"
           isERCXRC
+        />
+        <WarnModal
+          visible={wallet.showERCWarnModal}
+          isERCXRC
+          close={wallet.toggleERCWarnModal}
         />
       </Form>
     </div>

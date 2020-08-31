@@ -199,6 +199,8 @@ html {
         }
       }
     }
+
+    // popover on header settings
     .component__header__settings__popup {
       .ant-popover-content {
         .ant-popover-arrow {
@@ -208,6 +210,51 @@ html {
         .ant-popover-inner {
           background-color: var(--bg-primary);
           border-radius: 0.4rem;
+        }
+      }
+    }
+
+    // warn modal
+    .modal__warn {
+      width: 400px !important;
+      top: 150px !important;
+
+      &.modal__warn--ercxrc .ant-modal-body {
+        background-color: var(--bg-primary) !important;
+      }
+      &.modal__warn--xrcerc .ant-modal-body {
+        background-color: var(--bg-secondary) !important;
+      }
+
+      .ant-modal-content {
+        border-radius: 0.5rem !important;
+        .ant-modal-close-x {
+          display: none;
+        }
+        .ant-modal-header {
+          display: none;
+        }
+        .ant-modal-body {
+          border-radius: 0.25rem;
+          &.modal__warn__confirm--erc-xrc {
+            background-color: var(--bg-primary) !important;
+          }
+          &.modal__warn__confirm--xrc-erc {
+            background-color: var(--bg-secondary) !important;
+          }
+          .modal__warn__confirm {
+            background-color: var(--c-green);
+            color: var(--bg-primary) !important;
+            font-size: 1.25rem;
+            outline: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 3.125rem !important;
+          }
         }
       }
     }

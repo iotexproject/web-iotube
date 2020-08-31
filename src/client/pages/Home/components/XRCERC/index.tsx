@@ -11,7 +11,6 @@ import {
 } from "../../../../components";
 import {
   DEFAULT_IOTEX_CHAIN_ID,
-  ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS,
   IOTEX,
   IOTEX_CASHIER_CONTRACT_ADDRESS,
   IOTEX_TOKEN_LIST_CONTRACT_ADDRESS,
@@ -21,7 +20,6 @@ import { fromString } from "iotex-antenna/lib/crypto/address";
 import { BigNumber } from "@ethersproject/bignumber";
 import {
   getAmountNumber,
-  getContract,
   getIOTXContract,
   isAddress,
   isValidAmount,
@@ -29,7 +27,7 @@ import {
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
 import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
-import { formatUnits, parseUnits } from "@ethersproject/units";
+import { formatUnits } from "@ethersproject/units";
 import {
   amountInAllowance,
   AmountState,
@@ -40,6 +38,7 @@ import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
 import Form from "antd/lib/form";
+import { WarnModal } from "../../../../components/WarnModal";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -487,6 +486,11 @@ export const XRCERC = () => {
           close={store.toggleConfirmModalVisible}
           middleComment="to ioTube and withdraw"
           isERCXRC={false}
+        />
+        <WarnModal
+          visible={wallet.showXRCWarnModal}
+          isERCXRC={false}
+          close={wallet.toggleXRCCWarnModal}
         />
       </Form>
     </div>

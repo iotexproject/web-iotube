@@ -42,17 +42,18 @@ export const Header = () => {
       connector.walletConnectProvider = undefined;
     }
 
-    activate(connector, undefined, true)
-      .then(() => {
-        wallet.setMetaMaskConnected();
-      })
-      .catch((error) => {
-        if (error instanceof UnsupportedChainIdError || (error.code = 32002)) {
-          activate(connector);
-        } else {
-          // setPendingError(true)
-        }
-      });
+    try {
+      await activate(connector, undefined, true);
+      wallet.setMetaMaskConnected();
+    } catch (error) {
+      if (error instanceof UnsupportedChainIdError || (error.code = 32002)) {
+        wallet.toggleERCWarnModal();
+        activate(connector);
+      } else {
+        // setPendingError(true)
+        throw error;
+      }
+    }
   };
 
   const onConnectWallet = () => {

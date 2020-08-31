@@ -35,6 +35,7 @@ import {
 } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
+import { WarnModal } from "../../../../components/WarnModal";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -417,6 +418,11 @@ export const XRCERC = () => {
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and withdraw"
         isERCXRC={false}
+      />
+      <WarnModal
+        visible={wallet.showXRCWarnModal}
+        isERCXRC={false}
+        close={wallet.toggleXRCCWarnModal}
       />
     </div>
   ));

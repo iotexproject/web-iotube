@@ -13,9 +13,24 @@ export class WalletStore {
   @observable metaMaskConnected = false;
 
   @observable enableConnect = false;
+
+  @observable showERCWarnModal = false;
+  @observable showXRCWarnModal = false;
+
+  @action.bound
+  toggleERCWarnModal() {
+    this.showERCWarnModal = !this.showERCWarnModal;
+  }
+
+  @action.bound
+  toggleXRCCWarnModal() {
+    this.showXRCWarnModal = !this.showXRCWarnModal;
+  }
+
   @action.bound
   async init() {
     this.initEvent();
+
     await this.initWS();
     await this.loadAccount();
   }
@@ -37,6 +52,11 @@ export class WalletStore {
     const [err, accounts] = await utils.helper.promise.runAsync(
       AntennaUtils.getAccounts()
     );
+
+    if (err) {
+      this.showXRCWarnModal = true;
+    }
+
     if (err || !accounts.length) {
       if (this.enableConnect) {
         setTimeout(() => {

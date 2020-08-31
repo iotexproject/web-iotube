@@ -551,11 +551,7 @@ export const ERCXRC = () => {
           middleComment="to ioTube and mint"
           isERCXRC
         />
-        <WarnModal
-          visible={wallet.showERCWarnModal}
-          isERCXRC
-          close={wallet.toggleERCWarnModal}
-        />
+        <WarnModal visible={false} isERCXRC close={wallet.toggleERCWarnModal} />
       </Form>
     </div>
   ));

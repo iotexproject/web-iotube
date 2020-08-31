@@ -488,7 +488,7 @@ export const XRCERC = () => {
           isERCXRC={false}
         />
         <WarnModal
-          visible={wallet.showXRCWarnModal}
+          visible={false}
           isERCXRC={false}
           close={wallet.toggleXRCCWarnModal}
         />

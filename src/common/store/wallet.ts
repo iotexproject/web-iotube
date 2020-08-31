@@ -16,8 +16,11 @@ export class WalletStore {
   @action.bound
   async init() {
     this.initEvent();
-    await this.initWS();
-    await this.loadAccount();
+
+    try {
+      await this.initWS();
+      await this.loadAccount();
+    } catch (error) {}
   }
 
   initEvent() {

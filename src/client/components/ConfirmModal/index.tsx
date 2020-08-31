@@ -23,7 +23,7 @@ export const ConfirmModal = (props: IComponentProps) => {
 
   return (
     <Modal
-      title="You are going to deposit"
+      title={lang.t("you_are_going_to_deposit")}
       visible={props.visible}
       onCancel={props.close}
       footer={null}

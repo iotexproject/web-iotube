@@ -41,5 +41,13 @@
   "witness_confirmation": "Witness confirmations",
   "min": "min",
   "sec": "sec",
-  "may_delay_comment": "* may delay due to ETH network congestion."
+  "may_delay_comment": "* may delay due to ETH network congestion.",
+  "you_are_going_to_deposit": "You are going to deposit",
+  "ok": "OK",
+  "warning": "Warning",
+  "warning.eth.comment": "Please open in a supported browser (Firefox/Chrome/Brave) with metamask installed.",
+  "warning.iotx.comment.mobile": "For mobile users, please open inside ioPay Android/iOS.",
+  "warning.iotx.comment.desktop1": "For desktop users, please open",
+  "warning.iotx.comment.desktop2": "ioPay desktop",
+  "warning.iotx.comment.desktop3": "and unlock wallet."
 }

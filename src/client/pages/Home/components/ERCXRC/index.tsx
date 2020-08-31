@@ -41,6 +41,7 @@ import {
 } from "../../../../hooks/Tokens";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ChainId } from "@uniswap/sdk";
+import { WarnModal } from "../../../../components/WarnModal";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -128,18 +129,18 @@ export const ERCXRC = () => {
     ) {
       connector.walletConnectProvider = undefined;
     }
-
-    activate(connector, undefined, true)
-      .then(() => {
-        wallet.setMetaMaskConnected();
-      })
-      .catch((error) => {
-        if (error instanceof UnsupportedChainIdError || (error.code = 32002)) {
-          activate(connector);
-        } else {
-          // setPendingError(true)
-        }
-      });
+    try {
+      await activate(connector, undefined, true);
+      wallet.setMetaMaskConnected();
+    } catch (error) {
+      if (error instanceof UnsupportedChainIdError || (error.code = 32002)) {
+        base.toggleERCWarnModal();
+        activate(connector);
+      } else {
+        // setPendingError(true)
+        throw error;
+      }
+    }
   };
 
   const onConvert = () => {
@@ -475,6 +476,11 @@ export const ERCXRC = () => {
         close={store.toggleConfirmModalVisible}
         middleComment="to ioTube and mint"
         isERCXRC
+      />
+      <WarnModal
+        visible={base.showERCWarnModal}
+        isERCXRC
+        close={base.toggleERCWarnModal}
       />
     </div>
   ));

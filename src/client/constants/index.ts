@@ -13,7 +13,7 @@ import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
 import { publicConfig } from "../../../configs/public";
 
-export const IMG_LOGO = require("../static/images/logo-iotex.png");
+export const IMG_LOGO = require("../static/images/logo_iotube.svg");
 export const IMG_IOTX = require("../static/images/icon_wallet.png");
 export const IMG_ETHER = require("../static/images/icon-eth.png");
 

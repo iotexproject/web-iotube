@@ -135,7 +135,7 @@ export const Header = () => {
   return useObserver(() => (
     <div className="component__header h-10 sm:h-10 md:h-12 lg:h-16">
       <div className="component__header__content app_header_content flex justify-between items-center h-full py-1">
-        <img alt="logo" className="h-full" src={IMG_LOGO} />
+        <img alt="logo" src={IMG_LOGO} />
         <span className="flex items-center c-white font-thin">
           {renderWalletInfo()}
           &nbsp;

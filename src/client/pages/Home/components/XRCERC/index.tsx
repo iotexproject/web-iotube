@@ -420,9 +420,9 @@ export const XRCERC = () => {
         isERCXRC={false}
       />
       <WarnModal
-        visible={base.showXRCWarnModal}
-        isERCXRC
-        close={base.toggleXRCCWarnModal}
+        visible={wallet.showXRCWarnModal}
+        isERCXRC={false}
+        close={wallet.toggleXRCCWarnModal}
       />
     </div>
   ));

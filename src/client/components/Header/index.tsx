@@ -47,7 +47,7 @@ export const Header = () => {
       wallet.setMetaMaskConnected();
     } catch (error) {
       if (error instanceof UnsupportedChainIdError || (error.code = 32002)) {
-        base.toggleERCWarnModal();
+        wallet.toggleERCWarnModal();
         activate(connector);
       } else {
         // setPendingError(true)

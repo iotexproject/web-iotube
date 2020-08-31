@@ -14,19 +14,6 @@ export class BaseStore {
   @observable address = "";
   @observable tokenName = "";
 
-  @observable showERCWarnModal = false;
-  @observable showXRCWarnModal = false;
-
-  @action.bound
-  toggleERCWarnModal() {
-    this.showERCWarnModal = !this.showERCWarnModal;
-  }
-
-  @action.bound
-  toggleXRCCWarnModal() {
-    this.showXRCWarnModal = !this.showXRCWarnModal;
-  }
-
   @action.bound
   setMode(mode) {
     this.mode = mode;

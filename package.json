@@ -6,7 +6,7 @@
     "dev": "razzle start",
     "build": "razzle build",
     "test": "razzle test",
-    "start": "NODE_ENV=production node build/server.js",
+    "start": "node build/server.js",
     "gen": "generate-graphql-client -e http://localhost:3000/api-gateway -o ./generated/gql",
     "pretty": "pretty-quick",
     "gen:tailwind": "ts-node ./scripts/tailwind",
@@ -142,5 +142,8 @@
   },
   "engines": {
     "node": "11.x"
+  },
+  "prettier": {
+    "printWidth": 200
   }
 }

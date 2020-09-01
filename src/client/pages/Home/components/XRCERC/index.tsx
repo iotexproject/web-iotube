@@ -2,43 +2,22 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
-import {
-  AddressInput,
-  AmountField,
-  ConfirmModal,
-  SubmitButton,
-  TokenSelectField,
-} from "../../../../components";
-import {
-  DEFAULT_IOTEX_CHAIN_ID,
-  IOTEX,
-  IOTEX_CASHIER_CONTRACT_ADDRESS,
-  IOTEX_TOKEN_LIST_CONTRACT_ADDRESS,
-  IOTEXSCAN_URL,
-} from "../../../../constants/index";
+import { AddressInput, AmountField, ConfirmModal, SubmitButton, TokenSelectField } from "../../../../components";
+import { DEFAULT_IOTEX_CHAIN_ID, IOTEX, IOTEX_CASHIER_CONTRACT_ADDRESS, IOTEX_TOKEN_LIST_CONTRACT_ADDRESS, IOTEXSCAN_URL } from "../../../../constants/index";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { BigNumber } from "@ethersproject/bignumber";
-import {
-  getAmountNumber,
-  getIOTXContract,
-  isAddress,
-  isValidAmount,
-} from "../../../../utils/index";
+import { getAmountNumber, getIOTXContract, isAddress, isValidAmount } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
 import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { formatUnits } from "@ethersproject/units";
-import {
-  amountInAllowance,
-  AmountState,
-  getFeeIOTX,
-  tryParseAmount,
-} from "../../../../hooks/Tokens";
+import { amountInAllowance, AmountState, DEFAULT_TOKEN_DECIMAL, getFeeIOTX, tryParseAmount } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
 import Form from "antd/lib/form";
 import { WarnModal } from "../../../../components/WarnModal";
+import { CARD_XRC20_ERC20 } from "../../../../../common/store/base";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -55,19 +34,10 @@ export const XRCERC = () => {
     maxAmount: BigNumber.from("10000000000000000000000"),
   });
   const account = wallet.walletAddress;
-  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [
-    tokenInfoPair,
-  ]);
-  const xrc20TokenInfo = useMemo(
-    () => (tokenInfoPair ? tokenInfoPair.IOTEX : null),
-    [tokenInfoPair]
-  );
-  const cashierContractAddress =
-    IOTEX_CASHIER_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
-  const tokenAddress = useMemo(
-    () => (xrc20TokenInfo ? xrc20TokenInfo.address : ""),
-    [xrc20TokenInfo]
-  );
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
+  const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
+  const cashierContractAddress = IOTEX_CASHIER_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+  const tokenAddress = useMemo(() => (xrc20TokenInfo ? xrc20TokenInfo.address : ""), [xrc20TokenInfo]);
 
   const tokenContract = useMemo(() => {
     if (validateAddress(tokenAddress)) {
@@ -77,9 +47,7 @@ export const XRCERC = () => {
   }, [tokenAddress, account]);
 
   const cashierContract = useMemo(() => {
-    return cashierContractAddress
-      ? getIOTXContract(cashierContractAddress, ERC20_XRC20_ABI)
-      : null;
+    return cashierContractAddress ? getIOTXContract(cashierContractAddress, ERC20_XRC20_ABI) : null;
   }, [cashierContractAddress]);
 
   useMemo(() => {
@@ -102,13 +70,10 @@ export const XRCERC = () => {
     }
   }, [cashierContract]);
 
-  const tokenListContractAddress =
-    IOTEX_TOKEN_LIST_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+  const tokenListContractAddress = IOTEX_TOKEN_LIST_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
 
   const tokenListContract = useMemo(() => {
-    return tokenListContractAddress
-      ? getIOTXContract(tokenListContractAddress, TOKEN_LIST_ABI)
-      : null;
+    return tokenListContractAddress ? getIOTXContract(tokenListContractAddress, TOKEN_LIST_ABI) : null;
   }, [tokenListContractAddress]);
 
   useEffect(() => {
@@ -164,29 +129,15 @@ export const XRCERC = () => {
       return false;
     }
     const amountNumber = getAmountNumber(amount);
-    if (
-      amountNumber <
-      Number(formatUnits(amountRange.minAmount, token ? token.decimals : 18))
-    ) {
+    if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       if (showMessage) {
-        message.error(
-          `amount must >= ${Number(
-            formatUnits(amountRange.minAmount, token ? token.decimals : 18)
-          )}`
-        );
+        message.error(`amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`);
       }
       return false;
     }
-    if (
-      amountNumber >
-      Number(formatUnits(amountRange.maxAmount, token ? token.decimals : 18))
-    ) {
+    if (amountNumber > Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       if (showMessage) {
-        message.error(
-          `amount must <= ${Number(
-            formatUnits(amountRange.maxAmount, token ? token.decimals : 18)
-          )}`
-        );
+        message.error(`amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`);
       }
       return false;
     }
@@ -203,11 +154,7 @@ export const XRCERC = () => {
       }
     }
     try {
-      if (
-        tokenBalance &&
-        amountNumber >
-          Number(formatUnits(tokenBalance, xrc20TokenInfo.decimals))
-      ) {
+      if (tokenBalance && amountNumber > Number(formatUnits(tokenBalance, xrc20TokenInfo.decimals))) {
         if (showMessage) {
           message.error("insufficient balance");
         }
@@ -247,18 +194,12 @@ export const XRCERC = () => {
 
   const possibleApprove = useMemo(() => {
     if (!validateInputs(false)) return false;
-    return (
-      amountInAllowance(allowance, amount, xrc20TokenInfo) ==
-      AmountState.UNAPPROVED
-    );
+    return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.UNAPPROVED;
   }, [allowance, amount, xrc20TokenInfo]);
 
   const possibleConvert = useMemo(() => {
     if (possibleApprove || !validateInputs(false)) return false;
-    return (
-      amountInAllowance(allowance, amount, xrc20TokenInfo) ==
-      AmountState.APPROVED
-    );
+    return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.APPROVED;
   }, [possibleApprove, allowance, amount, xrc20TokenInfo]);
 
   useEffect(() => {
@@ -361,27 +302,13 @@ export const XRCERC = () => {
           store.toggleConfirmModalVisible();
           message.success(" IoTeX action broadcasted successfully.");
           setBeConverted(true);
-          const link = `${
-            (response.network && response.network.url) ||
-            IOTEXSCAN_URL[DEFAULT_IOTEX_CHAIN_ID]
-          }action/${response.actionHash}`;
-          base.toggleComplete(
-            response.actionHash,
-            link,
-            fromString(account).stringEth(),
-            token.name
-          );
+          const link = `${(response.network && response.network.url) || IOTEXSCAN_URL[DEFAULT_IOTEX_CHAIN_ID]}action/${response.actionHash}`;
+          base.toggleComplete(response.actionHash, link, fromString(account).stringEth(), token.name);
           return response.hash;
         })
         .catch((error: any) => {
           const content = `${methodName} failed. please check log for detail`;
-          window.console.error(
-            `${methodName} failed`,
-            error,
-            methodName,
-            args,
-            options
-          );
+          window.console.error(`${methodName} failed`, error, methodName, args, options);
           message.error(content);
         });
     };
@@ -397,21 +324,15 @@ export const XRCERC = () => {
         <AmountField
           amount={amount}
           label={lang.t("amount")}
-          min={Number(
-            formatUnits(amountRange.minAmount, token ? token.decimals : 18)
-          )}
-          max={Number(
-            formatUnits(amountRange.maxAmount, token ? token.decimals : 18)
-          )}
+          min={Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
+          max={Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
           onChange={setAmount}
           customAddon={
             xrc20TokenInfo && (
               <span
                 onClick={() => {
                   if (tokenBalance) {
-                    setAmount(
-                      formatUnits(tokenBalance, xrc20TokenInfo.decimals)
-                    );
+                    setAmount(formatUnits(tokenBalance, xrc20TokenInfo.decimals));
                   }
                 }}
                 className="page__home__component__xrc_erc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
@@ -425,22 +346,15 @@ export const XRCERC = () => {
           <div className="font-light text-sm text-right c-gray-30 mt-2">
             {tokenBalance && (
               <span>
-                {formatUnits(tokenBalance, xrc20TokenInfo.decimals)}{" "}
-                {xrc20TokenInfo.symbol}
+                {formatUnits(tokenBalance, xrc20TokenInfo.decimals)} {xrc20TokenInfo.symbol}
               </span>
             )}
           </div>
         )}
         {amount && account && token && (
           <div className="my-6 text-left">
-            <div className="text-base c-gray-20">
-              You will receive {token.name} tokens at
-            </div>
-            <AddressInput
-              address={fromString(account).stringEth()}
-              label="Ether Address"
-              readOnly
-            />
+            <div className="text-base c-gray-20">You will receive {token.name} tokens at</div>
+            <AddressInput address={fromString(account).stringEth()} label="Ether Address" readOnly />
           </div>
         )}
         <div className="my-6 text-left c-gray-30">
@@ -455,23 +369,11 @@ export const XRCERC = () => {
           </div>
         </div>
         <div>
-          {!wallet.walletConnected && (
-            <SubmitButton
-              title={lang.t("connect_io_pay")}
-              icon={<img src={IMG_IOPAY} className="h-6 mr-4" />}
-              onClick={wallet.init}
-            />
-          )}
+          {!wallet.walletConnected && <SubmitButton title={lang.t("connect_io_pay")} icon={<img src={IMG_IOPAY} className="h-6 mr-4" />} onClick={wallet.init} />}
           {wallet.walletConnected && (
             <div className="page__home__component__xrc_erc__button_group flex items-center">
-              {possibleApprove && (
-                <SubmitButton title={lang.t("approve")} onClick={onApprove} />
-              )}
-              <SubmitButton
-                title={lang.t("convert")}
-                onClick={onConvert}
-                disabled={!possibleConvert}
-              />
+              {possibleApprove && <SubmitButton title={lang.t("approve")} onClick={onApprove} />}
+              <SubmitButton title={lang.t("convert")} onClick={onConvert} disabled={!possibleConvert} />
             </div>
           )}
         </div>
@@ -487,11 +389,7 @@ export const XRCERC = () => {
           middleComment="to ioTube and withdraw"
           isERCXRC={false}
         />
-        <WarnModal
-          visible={false}
-          isERCXRC={false}
-          close={wallet.toggleXRCCWarnModal}
-        />
+        <WarnModal visible={base.mode === CARD_XRC20_ERC20 && wallet.showXRCWarnModal} isERCXRC={false} close={wallet.toggleXRCCWarnModal} />
       </Form>
     </div>
   ));

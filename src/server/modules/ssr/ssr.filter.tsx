@@ -1,9 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  NotFoundException,
-} from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, NotFoundException } from "@nestjs/common";
 import React from "react";
 import App from "../../../client/App";
 import { renderToString } from "react-dom/server";

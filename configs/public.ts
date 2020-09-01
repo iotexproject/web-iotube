@@ -44,7 +44,5 @@ export const publicConfig = {
   IOTX_TOKEN_LIST_CONTRACT_ADDRESS_MAINNET,
   IOTX_TOKEN_LIST_CONTRACT_ADDRESS_TESTNET,
   IOTX_ETH_PRICE,
-  SENTRY_DSN:
-    SENTRY_DSN ||
-    "https://89e3100998d54964b65a16ada1edeabc@sentry.gcap1.iotex.io/3",
+  SENTRY_DSN: SENTRY_DSN,
 };

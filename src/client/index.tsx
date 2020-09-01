@@ -11,10 +11,12 @@ import 'antd/dist/antd.css';
 import App from './App';
 
 utils.env.onBrowser(() => {
-  Sentry.init({
-    dsn: publicConfig.SENTRY_DSN,
-    environment: `client-${publicConfig.NODE_ENV}`,
-  });
+  if(publicConfig.SENTRY_DSN){
+    Sentry.init({
+      dsn: publicConfig.SENTRY_DSN,
+      environment: `client-${publicConfig.NODE_ENV}`,
+    });
+  }
 });
 
 const renderMethod = module.hot ? ReactDOM.render : ReactDOM.hydrate;

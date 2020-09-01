@@ -21,21 +21,13 @@ const Emoji = styled.span<{ size?: string }>`
   margin-bottom: -0.25rem;
 `;
 
-export default function CurrencyLogo({
-  currency,
-  size = "1.5rem",
-  ...rest
-}: {
-  currency?: Currency | TokenInfo;
-  size?: string;
-  style?: React.CSSProperties;
-}) {
+export default function CurrencyLogo({ currency, size = "1.5rem", ...rest }: { currency?: Currency | TokenInfo; size?: string; style?: React.CSSProperties }) {
   if (currency instanceof Token) {
     let uri: string | undefined;
 
     if (currency instanceof WrappedTokenInfo) {
       if (currency.logoURI && currency.logoURI.startsWith("data:image")) {
-        return <Avatar src={currency.logoURI} size="small" />;
+        return <Avatar src={currency.logoURI} size="small" style={{ minWidth: "24px" }} {...rest} />;
       }
 
       if (currency.logoURI && !BAD_URIS[currency.logoURI]) {
@@ -51,16 +43,16 @@ export default function CurrencyLogo({
     }
 
     if (uri) {
-      return <Avatar src={uri} size="small" />;
+      return <Avatar src={uri} size="small" style={{ minWidth: "24px" }} {...rest} />;
     }
   }
 
   if (currency["logoURI"]) {
-    return <Avatar src={currency["logoURI"]} size="small" />;
+    return <Avatar src={currency["logoURI"]} size="small" style={{ minWidth: "24px" }} {...rest} />;
   }
 
   return (
-    <Emoji {...rest} size={size}>
+    <Emoji {...rest} size={size} style={{ minWidth: "24px" }}>
       <span role="img" aria-label="Thinking" />
     </Emoji>
   );

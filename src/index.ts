@@ -9,7 +9,7 @@ import { redirectToHTTPS } from "express-http-to-https";
 import { SSRFilter } from "./server/modules/ssr/ssr.filter";
 import wildcard from "@wildcard-api/server/express";
 import cookieParser from "cookie-parser";
-import { publicConfig } from '../configs/public';
+import { publicConfig } from "../configs/public";
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

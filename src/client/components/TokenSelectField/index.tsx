@@ -30,15 +30,9 @@ export const TokenSelectField = (props: IComponentProps) => {
     >
       {tokenList &&
         Object.values(tokenList).map((tokenInfoPair: TokenInfoPair) => (
-          <Option
-            key={tokenInfoPair[network].address}
-            value={tokenInfoPair[network].address}
-            className="flex bg-secondary c-white items-center"
-          >
+          <Option key={tokenInfoPair[network].address} value={tokenInfoPair[network].address} className="flex bg-secondary c-white items-center">
             <CurrencyLogo currency={tokenInfoPair[network]} />
-            <span className="flex-1 text-xl text-left ml-4 font-thin">
-              {`${tokenInfoPair[network].name}(${tokenInfoPair[network].symbol})`}
-            </span>
+            <span className="flex-1 text-xl text-left ml-4 font-thin">{`${tokenInfoPair[network].name}(${tokenInfoPair[network].symbol})`}</span>
           </Option>
         ))}
     </Select>

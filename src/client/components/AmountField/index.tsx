@@ -1,7 +1,8 @@
 import React from "react";
 import "./index.scss";
-import Form from "antd/lib/form";
+import Form, { FormItemProps } from "antd/lib/form";
 import Input from "antd/lib/input";
+import { useLocalStore } from "mobx-react";
 
 interface IComponentProps {
   amount: string;
@@ -14,18 +15,27 @@ interface IComponentProps {
 
 export const AmountField = (props: IComponentProps) => {
   const { min = 1, max = 10000 } = props;
+  const store = useLocalStore(
+    (props) => ({
+      get validate(): { status: FormItemProps["validateStatus"], errMsg?: string } {
+        if (Number(props.amount) == 0) {
+          return {status:"success"}
+        }
+        if (Number(props.amount) > max || Number(props.amount) < min) {
+          return {
+            status: "error",
+            errMsg: `Amount must be between ${min} and ${max}`,
+          };
+        }
+        return {
+          status: "success",
+        };
+      },
+    }),
+    props
+  );
   return (
-    <Form.Item
-      name={"amount"}
-      rules={[
-        {
-          min,
-          max,
-          message: `Amount must be between ${min} and ${max}`,
-          validator: inputNumberValidator,
-        },
-      ]}
-    >
+    <Form.Item validateStatus={store.validate.status} help={store.validate.errMsg}>
       <Input
         autoComplete="off"
         className="component__amount_field bg-secondary c-white"

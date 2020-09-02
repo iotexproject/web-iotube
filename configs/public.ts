@@ -20,16 +20,13 @@ const {
   IOTX_TOKEN_LIST_CONTRACT_ADDRESS_TESTNET,
   IOTX_ETH_PRICE,
   SENTRY_DSN,
+  FORCE_HTTPS,
 } = utils.env.getEnv();
 
 export const publicConfig = {
   IS_PROD,
   NODE_ENV,
-  IOTEX_CORE_ENDPOPINT:
-    IOTEX_CORE_ENDPOPINT ||
-    (IS_PROD
-      ? "https://api.iotex.one:443"
-      : "https://api.testnet.iotex.one:443"),
+  IOTEX_CORE_ENDPOPINT: IOTEX_CORE_ENDPOPINT || (IS_PROD ? "https://api.iotex.one:443" : "https://api.testnet.iotex.one:443"),
   APP_NETWORK_URL,
   APP_FORTMATIC_KEY,
   APP_PORTIS_ID,
@@ -45,4 +42,5 @@ export const publicConfig = {
   IOTX_TOKEN_LIST_CONTRACT_ADDRESS_TESTNET,
   IOTX_ETH_PRICE,
   SENTRY_DSN: SENTRY_DSN,
+  FORCE_HTTPS: utils.env.getBoolean(FORCE_HTTPS),
 };

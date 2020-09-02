@@ -38,4 +38,12 @@ export class Env {
     }
     return false;
   }
+  getBoolean(val: string | boolean) {
+    if (typeof val == "string") {
+      return val == "true";
+    } else if (typeof val == "boolean") {
+      return val;
+    }
+    return false;
+  }
 }

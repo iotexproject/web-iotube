@@ -17,7 +17,7 @@ export async function bootstrap() {
   });
   app.disable("x-powered-by");
   app.use(compression());
-  if(publicConfig.IS_PROD){
+  if (publicConfig.FORCE_HTTPS) {
     app.use(redirectToHTTPS([/localhost:(\d{4})/], [/\/insecure/], 301));
   }
   app.useStaticAssets(process.env.RAZZLE_PUBLIC_DIR, {

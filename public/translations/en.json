@@ -45,8 +45,8 @@
   "you_are_going_to_deposit": "You are going to deposit",
   "ok": "OK",
   "warning": "Warning",
-  "warning.eth.comment": "Please open in a supported browser (Firefox/Chrome/Brave) with metamask installed.",
-  "warning.iotx.comment.mobile": "For mobile users, please open inside ioPay Android/iOS.",
+  "warning.eth.comment": "To convert from ERC20 to XRC20, please open in a supported browser (Firefox/Chrome/Brave) with metamask installed.",
+  "warning.iotx.comment.mobile": "To convert from XRC20 to ERC20, please open inside ioPay Android/iOS for mobile users.",
   "warning.iotx.comment.desktop1": "For desktop users, please open",
   "warning.iotx.comment.desktop2": "ioPay desktop",
   "warning.iotx.comment.desktop3": "and unlock wallet."

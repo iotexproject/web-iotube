@@ -275,7 +275,7 @@ export const ERCXRC = () => {
 
           store.toggleConfirmModalVisible();
 
-          base.toggleComplete(response.hash, getEtherscanLink(chainId, response.hash, "transaction"), getReceiptAddress());
+          base.toggleComplete(response.hash, getEtherscanLink(chainId, response.hash, "transaction"), getReceiptAddress(), token.name, tokenInfoPair, amount);
           message.success(" Ethereum transaction broadcasted successfully.");
           return response.hash;
         })

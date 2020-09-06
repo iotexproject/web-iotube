@@ -49,5 +49,13 @@
   "warning.iotx.comment.mobile": "To convert from XRC20 to ERC20, please open inside ioPay Android/iOS for mobile users.",
   "warning.iotx.comment.desktop1": "For desktop users, please open",
   "warning.iotx.comment.desktop2": "ioPay desktop",
-  "warning.iotx.comment.desktop3": "and unlock wallet."
+  "warning.iotx.comment.desktop3": "and unlock wallet.",
+  "input.wallet.not_connected": "Wallet is not connected",
+  "input.token.unselected": "Please select token",
+  "input.cashier.invalid": "Invalid cashier contract address",
+  "input.token.invalid": "Invalid token contract",
+  "input.amount.invalid": "Invalid amount",
+  "input.balance.insufficient": "Insufficient ${symbol} balance",
+  "input.balance.invalid": "Invalid ${symbol} balance",
+  "input.depositfee.error": "Deposit Fee error"
 }

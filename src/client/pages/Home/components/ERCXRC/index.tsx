@@ -35,6 +35,7 @@ export const ERCXRC = () => {
   const [amount, setAmount] = useState("");
   const [hash, setHash] = useState("");
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
+  const [fillState, setFillSate] = useState("");
   const [amountRange, setAmountRange] = useState({
     minAmount: BigNumber.from("1000000000000000000"),
     maxAmount: BigNumber.from("10000000000000000000000"),
@@ -145,16 +146,13 @@ export const ERCXRC = () => {
   };
 
   const onConvert = () => {
-    if (!validateInputs()) {
-      return;
-    }
+    if (Boolean(inputError)) return;
     store.toggleConfirmModalVisible();
   };
 
   const onApprove = async () => {
-    if (!validateInputs()) {
-      return;
-    }
+    if (Boolean(inputError)) return;
+
     const rawAmount = tryParseAmount(amount, token).toString();
     if (!rawAmount) {
       message.error(`Could not parse amount for token ${token.name}`);
@@ -200,66 +198,54 @@ export const ERCXRC = () => {
     return account ? fromBytes(Buffer.from(String(account).replace(/^0x/, ""), "hex")).string() : "";
   }
 
-  function validateInputs(showMessage: boolean = true): boolean {
-    if (!isValidAmount(amount)) {
-      if (showMessage) {
-        message.error("invalid amount");
-      }
-      return false;
+  const inputError = useMemo(() => {
+    if (!account) {
+      return lang.t("input.wallet.not_connected");
+    }
+    if (!tokenAddress) {
+      return lang.t("input.token.unselected");
+    }
+
+    if (!cashierContractAddress) {
+      return lang.t("input.cashier.invalid");
+    }
+
+    if (!tokenContract) {
+      return lang.t("input.token.invalid");
+    }
+
+    if (isNaN(Number(amount))) {
+      return lang.t("input.amount.invalid");
     }
     const amountNumber = getAmountNumber(amount);
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
-      if (showMessage) {
-        message.error(`amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`);
-      }
-      return false;
+      return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
     if (amountNumber > Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
-      if (showMessage) {
-        message.error(`amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`);
-      }
-      return false;
+      return `Amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
     try {
       if (tokenBalance && amountNumber > Number(tokenBalance.toFixed(10))) {
-        if (showMessage) {
-          message.error("insufficient balance");
-        }
-        return false;
+        return lang.t("input.balance.insufficient", { symbol: token.symbol });
       }
     } catch (e) {
-      if (showMessage) {
-        message.error("invalid amount");
-      }
-      return false;
+      return lang.t("input.balance.invalid", { symbol: token.symbol });
     }
-    if (!account) {
-      if (showMessage) {
-        message.error(`wallet is not connected`);
-      }
-      return false;
-    }
-    if (!tokenAddress) {
-      if (showMessage) message.error("could not get token address");
-      return false;
-    }
-    return true;
-  }
+    return "";
+  }, [amount, tokenBalance, account, tokenAddress, cashierContractAddress]);
 
   const possibleApprove = useMemo(() => {
-    if (!validateInputs(false)) return false;
+    if (Boolean(inputError)) return false;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.UNAPPROVED;
   }, [allowance, amount, xrc20TokenInfo, chainId, account]);
 
   const possibleConvert = useMemo(() => {
-    if (possibleApprove || !validateInputs(false)) return false;
+    if (possibleApprove || Boolean(inputError)) return false;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.APPROVED;
   }, [possibleApprove, allowance, amount, xrc20TokenInfo, chainId, account]);
 
   const onConfirm = async () => {
-    if (!validateInputs()) {
-      return;
-    }
+    if (Boolean(inputError)) return false;
 
     const rawAmount = tryParseAmount(amount, token).toString();
     if (!rawAmount) {
@@ -339,14 +325,23 @@ export const ERCXRC = () => {
     <div className="page__home__component__erc_xrc p-8 pt-6">
       <Form>
         <div className="my-6">
-          <TokenSelectField network={ETHEREUM} onChange={setTokenInfoPair} />
+          <TokenSelectField
+            network={ETHEREUM}
+            onChange={(tokenPair) => {
+              setTokenInfoPair(tokenPair);
+              setFillSate("TOKEN");
+            }}
+          />
         </div>
         <AmountField
           amount={amount}
           label={lang.t("amount")}
           min={Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
           max={Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
-          onChange={setAmount}
+          onChange={(value) => {
+            setAmount(value);
+            setFillSate("AMOUNT");
+          }}
           customAddon={
             token && (
               <span
@@ -414,8 +409,8 @@ export const ERCXRC = () => {
           )}
           {account && (
             <div className="page__home__component__erc_xrc__button_group flex items-center">
-              {possibleApprove && <SubmitButton title={lang.t("approve")} onClick={onApprove} />}
-              <SubmitButton title={lang.t("convert")} onClick={onConvert} disabled={!possibleConvert} />
+              {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
+              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert} />
             </div>
           )}
         </div>

@@ -29,6 +29,7 @@ export const XRCERC = () => {
   const [beConverted, setBeConverted] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
   const [depositFee, setDepositFee] = useState(BigNumber.from(0));
+  const [fillState, setFillSate] = useState("");
   const [amountRange, setAmountRange] = useState({
     minAmount: BigNumber.from("1000000000000000000"),
     maxAmount: BigNumber.from("10000000000000000000000"),
@@ -121,84 +122,59 @@ export const XRCERC = () => {
     wallet.init();
   }, [account, tokenContract]);
 
-  function validateInputs(showMessage: boolean = true): boolean {
-    if (!isValidAmount(amount)) {
-      if (showMessage) {
-        message.error("invalid amount");
-      }
-      return false;
+  const inputError = useMemo(() => {
+    if (!account) {
+      return lang.t("input.wallet.not_connected");
+    }
+    if (!tokenAddress) {
+      return lang.t("input.token.unselected");
+    }
+
+    if (!cashierContractAddress) {
+      return lang.t("input.cashier.invalid");
+    }
+
+    if (!tokenContract) {
+      return lang.t("input.token.invalid");
+    }
+
+    if (isNaN(Number(amount))) {
+      return lang.t("input.amount.invalid");
     }
     const amountNumber = getAmountNumber(amount);
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
-      if (showMessage) {
-        message.error(`amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`);
-      }
-      return false;
+      return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
     if (amountNumber > Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
-      if (showMessage) {
-        message.error(`amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`);
+      return `Amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
+    }
+    try {
+      if (tokenBalance && amountNumber > Number(formatUnits(tokenBalance, xrc20TokenInfo.decimals))) {
+        return lang.t("input.balance.insufficient", { symbol: xrc20TokenInfo.symbol });
       }
-      return false;
+    } catch (e) {
+      return lang.t("input.balance.invalid", { symbol: xrc20TokenInfo.symbol });
     }
     if (depositFee.gt(BigNumber.from(0))) {
       try {
         if (Number(depositFee.toString()) > wallet.walletBalance) {
-          if (showMessage) {
-            message.error("insufficient IOTX balance");
-          }
-          return false;
+          return lang.t("input.balance.insufficient", { symbol: "IOTX" });
         }
       } catch (error) {
         console.debug(`could not get deposit fee in iotx`, error);
+        return lang.t("input.depositfee.error");
       }
     }
-    try {
-      if (tokenBalance && amountNumber > Number(formatUnits(tokenBalance, xrc20TokenInfo.decimals))) {
-        if (showMessage) {
-          message.error("insufficient balance");
-        }
-        return false;
-      }
-    } catch (e) {
-      if (showMessage) {
-        message.error("invalid amount");
-      }
-      return false;
-    }
-    if (!account) {
-      if (showMessage) {
-        message.error(`wallet is not connected`);
-      }
-      return false;
-    }
-    if (!tokenAddress) {
-      if (showMessage) message.error("could not get token address");
-      return false;
-    }
-
-    if (!cashierContractAddress) {
-      if (showMessage) message.error("invalidate cashier contract address!");
-      return false;
-    }
-    if (!tokenAddress) {
-      if (showMessage) message.error("could not get token address");
-      return false;
-    }
-    if (!tokenContract) {
-      if (showMessage) message.error("could not get token contract");
-      return false;
-    }
-    return true;
-  }
+    return "";
+  }, [amount, depositFee, tokenBalance, account, tokenAddress, cashierContractAddress]);
 
   const possibleApprove = useMemo(() => {
-    if (!validateInputs(false)) return false;
+    if (Boolean(inputError)) return false;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.UNAPPROVED;
   }, [allowance, amount, xrc20TokenInfo]);
 
   const possibleConvert = useMemo(() => {
-    if (possibleApprove || !validateInputs(false)) return false;
+    if (possibleApprove || Boolean(inputError)) return false;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.APPROVED;
   }, [possibleApprove, allowance, amount, xrc20TokenInfo]);
 
@@ -238,7 +214,7 @@ export const XRCERC = () => {
   };
 
   const onApprove = async () => {
-    if (!validateInputs()) {
+    if (Boolean(inputError)) {
       return;
     }
 
@@ -271,7 +247,7 @@ export const XRCERC = () => {
   };
 
   const onConfirm = async () => {
-    if (!validateInputs()) {
+    if (Boolean(inputError)) {
       return;
     }
 
@@ -319,14 +295,23 @@ export const XRCERC = () => {
     <div className="page__home__component__xrc_erc p-8 pt-6">
       <Form>
         <div className="my-6">
-          <TokenSelectField network={IOTEX} onChange={setTokenInfoPair} />
+          <TokenSelectField
+            network={IOTEX}
+            onChange={(tokenPair) => {
+              setTokenInfoPair(tokenPair);
+              setFillSate("TOKEN");
+            }}
+          />
         </div>
         <AmountField
           amount={amount}
           label={lang.t("amount")}
           min={Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
           max={Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
-          onChange={setAmount}
+          onChange={(value) => {
+            setAmount(value);
+            setFillSate("AMOUNT");
+          }}
           customAddon={
             xrc20TokenInfo && (
               <span
@@ -372,8 +357,8 @@ export const XRCERC = () => {
           {!wallet.walletConnected && <SubmitButton title={lang.t("connect_io_pay")} icon={<img src={IMG_IOPAY} className="h-6 mr-4" />} onClick={wallet.init} />}
           {wallet.walletConnected && (
             <div className="page__home__component__xrc_erc__button_group flex items-center">
-              {possibleApprove && <SubmitButton title={lang.t("approve")} onClick={onApprove} />}
-              <SubmitButton title={lang.t("convert")} onClick={onConvert} disabled={!possibleConvert} />
+              {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
+              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert} />
             </div>
           )}
         </div>

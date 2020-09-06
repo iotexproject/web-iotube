@@ -17,14 +17,14 @@ export const AmountField = (props: IComponentProps) => {
   const { min = 1, max = 10000 } = props;
   const store = useLocalStore(
     (props) => ({
-      get validate(): { status: FormItemProps["validateStatus"], errMsg?: string } {
+      get validate(): { status: FormItemProps["validateStatus"]; errMsg?: string } {
         if (Number(props.amount) == 0) {
-          return {status:"success"}
+          return { status: "success" };
         }
-        if (Number(props.amount) > max || Number(props.amount) < min) {
+        if (Number(props.amount) > props.max || Number(props.amount) < props.min) {
           return {
             status: "error",
-            errMsg: `Amount must be between ${min} and ${max}`,
+            errMsg: `Amount must be between ${props.min} and ${props.max}`,
           };
         }
         return {

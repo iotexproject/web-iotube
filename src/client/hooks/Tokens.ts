@@ -91,7 +91,9 @@ export function amountInAllowance(allowance: BigNumber, amount: string, token: T
     try {
       const amountBN = parseUnits(amount, token.decimals);
       return allowance.gte(amountBN) ? AmountState.APPROVED : AmountState.UNAPPROVED;
-    } catch (error) {}
+    } catch (error) {
+      console.debug(`amountInAllowance: Failed to parseUnits ${amount} ${token.decimals}`, error);
+    }
   }
   return AmountState.ZERO;
 }

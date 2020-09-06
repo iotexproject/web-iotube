@@ -20,7 +20,7 @@
   "broadcast_transaction_successfully_iotx": "Action submitted successfully",
   "broadcast_transaction_successfully_eth": "Transaction submitted successfully",
   "complete.check_status_comment": "You can check the status right now by clicking the link.",
-  "complete.tx_broadcast_network": "After 12 confirmations of Ethereum network and 2/3 + 1 confirmations from witnesses, the XRC20 tokens will be minted and sent to your IoTeX address:",
+  "complete.tx_broadcast_network": "After 12 confirmations of Ethereum network and 2/3 + 1 confirmations from witnesses, ${amount} ${token} will be minted and sent to your IoTeX address:",
   "complete.tx_broadcast_network.xrc20": "After 1 confirmation of IoTeX network and 2/3 + 1 confirmations from witnesses, your XRC20 token will be burnt and ${tokenName} will be sent to your ETH wallet:",
   "complete.your_tx_eth": "Your ETH TX hash",
   "complete.your_tx_iotx": "Your action hash",

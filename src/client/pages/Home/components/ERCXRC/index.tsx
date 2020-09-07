@@ -218,6 +218,9 @@ export const ERCXRC = () => {
       return lang.t("input.amount.invalid");
     }
     const amountNumber = getAmountNumber(amount);
+    if (amountNumber == 0) {
+      return lang.t("input.amount.enter_value");
+    }
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }

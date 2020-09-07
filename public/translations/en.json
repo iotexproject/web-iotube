@@ -55,6 +55,7 @@
   "input.cashier.invalid": "Invalid cashier contract address",
   "input.token.invalid": "Invalid token contract",
   "input.amount.invalid": "Invalid amount",
+  "input.amount.enter_value": "Enter amount",
   "input.balance.insufficient": "Insufficient ${symbol} balance",
   "input.balance.invalid": "Invalid ${symbol} balance",
   "input.depositfee.error": "Deposit Fee error"

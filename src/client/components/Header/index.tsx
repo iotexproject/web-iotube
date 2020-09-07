@@ -1,3 +1,4 @@
+import { Link, useLocation } from "react-router-dom";
 import { Avatar, Button, notification, Popover } from "antd";
 import { useObserver } from "mobx-react";
 import { CARD_ERC20_XRC20 } from "../../../common/store/base";
@@ -12,20 +13,19 @@ import { fromRau } from "iotex-antenna/lib/account/utils";
 import { IMG_ETHER, IMG_IOTX, IMG_LOGO } from "../../constants/index";
 import React from "react";
 import "./index.scss";
-import {
-  CopyOutlined,
-  EllipsisOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
+import { CopyOutlined, EllipsisOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { useStore } from "../../../common/store";
 import { shortenAddress } from "../../utils";
 import copy from "copy-to-clipboard";
 
 export const Header = () => {
+  const location = useLocation();
   const { wallet, lang, base } = useStore();
   const { account, activate, chainId } = useWeb3React<Web3Provider>();
   const { ENSName } = useENSName(account);
   const userEthBalance = useETHBalances([account])[account];
+
+  const isTutorialPage = location.pathname === "/tutorial";
 
   const tryActivation = async (connector) => {
     let name = "";
@@ -35,10 +35,7 @@ export const Header = () => {
       }
       return true;
     });
-    if (
-      connector instanceof WalletConnectConnector &&
-      connector.walletConnectProvider?.wc?.uri
-    ) {
+    if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
       connector.walletConnectProvider = undefined;
     }
 
@@ -77,24 +74,17 @@ export const Header = () => {
     });
   };
 
+  const onClickFAQ = () => {};
+
   const renderWalletInfo = () => {
-    const walletConnected =
-      base.mode === CARD_ERC20_XRC20
-        ? wallet.metaMaskConnected
-        : wallet.walletConnected;
-    const walletAddress = walletConnected
-      ? base.mode === CARD_ERC20_XRC20
-        ? ENSName || account
-        : wallet.walletAddress
-      : "";
+    const walletConnected = base.mode === CARD_ERC20_XRC20 ? wallet.metaMaskConnected : wallet.walletConnected;
+    const walletAddress = walletConnected ? (base.mode === CARD_ERC20_XRC20 ? ENSName || account : wallet.walletAddress) : "";
     const walletBalance =
       base.mode === CARD_ERC20_XRC20
         ? userEthBalance?.toFixed(2)
         : fromRau(`${wallet.walletBalance}`, "iotx")
             .split(" ")
-            .map((value, index) =>
-              index === 1 ? value : Number(value).toFixed(2)
-            )
+            .map((value, index) => (index === 1 ? value : Number(value).toFixed(2)))
             .join(" ");
     const balanceUnit = base.mode === CARD_ERC20_XRC20 ? "ETH" : wallet.token;
 
@@ -102,9 +92,7 @@ export const Header = () => {
       <>
         {chainId !== 1 && base.mode === CARD_ERC20_XRC20 && (
           <>
-            <span className="capitalize inline-block rounded bg-primary c-green px-2">
-              {ETH_NETWORK_NAMES[chainId]}
-            </span>
+            <span className="capitalize inline-block rounded bg-primary c-green px-2">{ETH_NETWORK_NAMES[chainId]}</span>
             &nbsp;
           </>
         )}
@@ -112,19 +100,11 @@ export const Header = () => {
           {walletBalance}&nbsp;{balanceUnit}
         </span>
         &nbsp;&nbsp;
-        <span className="component__header__content__wallet_address ">
-          {shortenAddress(walletAddress)}
-        </span>
+        <span className="component__header__content__wallet_address ">{shortenAddress(walletAddress)}</span>
         &nbsp;
-        <CopyOutlined
-          className="text-lg cursor-pointer"
-          onClick={onCopyAddress(walletAddress)}
-        />
+        <CopyOutlined className="text-lg cursor-pointer" onClick={onCopyAddress(walletAddress)} />
         &nbsp;
-        <Avatar
-          src={base.mode === CARD_ERC20_XRC20 ? IMG_ETHER : IMG_IOTX}
-          size="small"
-        />
+        <Avatar src={base.mode === CARD_ERC20_XRC20 ? IMG_ETHER : IMG_IOTX} size="small" />
       </>
     ) : (
       <Button className="c-white" type="text" onClick={onConnectWallet}>
@@ -136,37 +116,40 @@ export const Header = () => {
   return useObserver(() => (
     <div className="component__header h-16">
       <div className="component__header__content app_header_content flex justify-between items-center h-full py-1">
-        <img alt="logo" src={IMG_LOGO} />
-        <span className="flex items-center c-white font-thin">
-          {renderWalletInfo()}
-          &nbsp;
-          <Popover
-            placement="bottomRight"
-            title={null}
-            trigger="click"
-            overlayClassName="component__header__settings__popup"
-            content={
-              <div>
-                <a
-                  href="https://github.com/iotexproject/iotube"
-                  target="_blank"
-                  className="c-gray-30 flex items-center font-light w-24"
-                >
-                  <InfoCircleOutlined />
-                  <span className="ml-2 text-base">{lang.t("about")}</span>
-                </a>
-              </div>
-            }
-          >
-            <Button
-              type="text"
-              shape="circle"
-              className="component__header__content__more c-white"
-            >
-              <EllipsisOutlined className="text-lg" />
+        <Link to="/">
+          <img alt="logo" src={IMG_LOGO} />
+        </Link>
+
+        {!isTutorialPage && (
+          <span className="flex items-center c-white font-thin">
+            <Link className="c-white" to="/tutorial">
+              {lang.t("header.tutorial")}
+            </Link>
+            <Button className="c-white" type="text" onClick={onClickFAQ}>
+              {lang.t("header.faq")}
             </Button>
-          </Popover>
-        </span>
+            {renderWalletInfo()}
+            &nbsp;
+            <Popover
+              placement="bottomRight"
+              title={null}
+              trigger="click"
+              overlayClassName="component__header__settings__popup"
+              content={
+                <div>
+                  <a href="https://github.com/iotexproject/iotube" target="_blank" className="c-gray-30 flex items-center font-light w-24">
+                    <InfoCircleOutlined />
+                    <span className="ml-2 text-base">{lang.t("about")}</span>
+                  </a>
+                </div>
+              }
+            >
+              <Button type="text" shape="circle" className="component__header__content__more c-white">
+                <EllipsisOutlined className="text-lg" />
+              </Button>
+            </Popover>
+          </span>
+        )}
       </div>
     </div>
   ));

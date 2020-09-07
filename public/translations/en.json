@@ -1,6 +1,8 @@
 {
   "HELLO_MESSAGE": "Hello ${message}",
   "count": "count",
+  "header.tutorial": "Tutorial",
+  "header.faq": "FAQ",
   "header.connect_wallet": "Connect Wallet",
   "flip": "FLIP",
   "token.ethereum": "Ethereum",

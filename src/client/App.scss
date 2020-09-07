@@ -21,6 +21,7 @@ html {
     --c-gray-20: rgb(147, 147, 153);
     --c-gray-30: #bac0cc;
     --c-gray-40: rgb(141, 147, 153);
+    --c-white-10: rgb(240, 244, 247);
     #root {
       margin: 0 auto;
     }
@@ -95,6 +96,10 @@ html {
 
     .c-gray-40 {
       color: var(--c-gray-40);
+    }
+
+    .c-white-10 {
+      color: var(--c-white-10);
     }
 
     .c-primary {

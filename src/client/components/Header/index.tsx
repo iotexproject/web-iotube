@@ -134,7 +134,7 @@ export const Header = () => {
   };
 
   return useObserver(() => (
-    <div className="component__header h-16">
+    <div className="component__header bg-body h-16">
       <div className="component__header__content app_header_content flex justify-between items-center h-full py-1">
         <img alt="logo" src={IMG_LOGO} />
         <span className="flex items-center c-white font-thin">

@@ -72,7 +72,7 @@
   "tutorial.one.title": "1. Make sure you have Metamask Plugin installed in your browser",
   "tutorial.one.body": "The purpose of this operation is to lock a certain amount of an ERC20 token on Ethereum, and create an equivalent amount of IoTeX version (XRC20) of the same token on the IoTeX blockchain.",
   "tutorial.two.title": "2. Open and connect to ioTube dApp",
-  "tutorial.two.body.one": "Open https://tube.iotex.io 4",
+  "tutorial.two.body.one": "Open https://tube.iotex.io",
   "tutorial.two.body.two": "Click the “Ethereum” Tab to select Ethereum Blockchain as the source network",
   "tutorial.two.body.three": "Click “Connect Wallet” link to allow IoTube to connect to your Metamask wallet",
   "tutorial.two.body.four": "Confirm the connection in Metamask",

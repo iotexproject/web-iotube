@@ -73,9 +73,9 @@ export const Tutorial = () => {
               <li>{lang.t("tutorial.four.body.one")}</li>
               <li>
                 {lang.t("tutorial.four.body.click")}
-                {`"`}
+                {` "`}
                 <strong>{lang.t("approve")}</strong>
-                {`"`}
+                {`" `}
               </li>
               <li>{lang.t("tutorial.four.body.three")}</li>
             </ul>
@@ -88,9 +88,9 @@ export const Tutorial = () => {
               </li>
               <li>
                 {lang.t("tutorial.four.body.click")}
-                {`"`}
+                {` "`}
                 <strong>{lang.t("convert")}</strong>
-                {`"`}
+                {`" `}
                 {lang.t("tutorial.four.body.five")}
               </li>
             </ul>

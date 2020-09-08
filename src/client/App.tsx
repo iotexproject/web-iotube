@@ -2,6 +2,7 @@ import window from "global/window";
 import React, { useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { Home } from "./pages/Home";
+import { Tutorial } from "./pages/Tutorial";
 import "./App.scss";
 import { useStore } from "../common/store/index";
 import { MainLayout } from "./layouts";
@@ -49,11 +50,8 @@ const App = () => {
             <Switch>
               <Route exact={true} path="/eth" component={Home} />
               <Route exact={true} path="/iotx" component={Home} />
-              {utils.env.isIoPayMobile() ? (
-                <Redirect to="/iotx" />
-              ) : (
-                <Redirect to="/eth" />
-              )}
+              <Route exact={true} path="/tutorial" component={Tutorial} />
+              {utils.env.isIoPayMobile() ? <Redirect to="/iotx" /> : <Redirect to="/eth" />}
             </Switch>
           </MainLayout>
         </Provider>

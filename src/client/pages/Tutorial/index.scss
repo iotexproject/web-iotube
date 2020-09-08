@@ -1,0 +1,24 @@
+.page__tutorial {
+  .page__tutorial__content {
+    width: 80%;
+    padding: 4.58rem 6.25rem;
+
+    ul {
+      list-style-type: circle;
+      list-style-position: outside;
+    }
+
+    img {
+      width: fit-content;
+    }
+
+    @media screen and (max-width: 500px) {
+      width: 90%;
+      padding-left: 0;
+      padding-right: 0;
+      ul {
+        list-style-position: inside;
+      }
+    }
+  }
+}

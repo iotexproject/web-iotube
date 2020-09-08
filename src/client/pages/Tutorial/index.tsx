@@ -27,11 +27,9 @@ export const Tutorial = () => {
           <div className="mb-24">
             <p className="text-xl c-white-10 leading-loose">
               <strong>{lang.t("tutorial.ioTube")}</strong>
-              {` `}
-              {lang.t("tutorial.summary")}
+              {` ${lang.t("tutorial.summary")}`}
               <br /> <br />
-              {lang.t("tutorial.convert_ERC20")}
-              {` `}
+              {`${lang.t("tutorial.convert_ERC20")} `}
               <a className="c-green-20" href="https://tube.iotex.io">
                 https://tube.iotex.io
               </a>
@@ -59,8 +57,7 @@ export const Tutorial = () => {
           <div className="mb-24">
             <h4 className="text-2xl c-white-10 mb-3">{lang.t("tutorial.three.title")}</h4>
             <p className="text-xl c-white-10 leading-loose md:ml-16">
-              {lang.t("tutorial.three.body")}
-              {` `}
+              {`${lang.t("tutorial.three.body")} `}
               <a className="c-green-20" href="#">
                 {lang.t("tutorial.three.body.submit")}
               </a>
@@ -73,9 +70,7 @@ export const Tutorial = () => {
               <li>{lang.t("tutorial.four.body.one")}</li>
               <li>
                 {lang.t("tutorial.four.body.click")}
-                {` "`}
-                <strong>{lang.t("approve")}</strong>
-                {`" `}
+                <strong>{` "${lang.t("approve")}" `}</strong>
               </li>
               <li>{lang.t("tutorial.four.body.three")}</li>
             </ul>
@@ -83,14 +78,11 @@ export const Tutorial = () => {
             <ul className="text-xl c-white-10 leading-loose md:ml-16">
               <li>
                 <strong>{lang.t("tutorial.four.body.four.please_note")}</strong>
-                {` `}
-                {lang.t("tutorial.four.body.four")}
+                {` ${lang.t("tutorial.four.body.four")}`}
               </li>
               <li>
                 {lang.t("tutorial.four.body.click")}
-                {` "`}
-                <strong>{lang.t("convert")}</strong>
-                {`" `}
+                <strong>{` "${lang.t("convert")}" `}</strong>
                 {lang.t("tutorial.four.body.five")}
               </li>
             </ul>
@@ -101,17 +93,13 @@ export const Tutorial = () => {
           <div className="mb-24">
             <h4 className="text-2xl c-white-10 mb-3">{lang.t("tutorial.five.title")}</h4>
             <p className="text-xl c-white-10 leading-loose md:ml-16">
-              {lang.t("tutorial.five.body.start")}
-              {` `}
+              {`${lang.t("tutorial.five.body.start")} `}
               <strong>{lang.t("tutorial.five.body.unlock_xrc20")}</strong>
-              {` `}
-              {lang.t("tutorial.five.body.can_use")}
-              {` `}
+              {` ${lang.t("tutorial.five.body.can_use")} `}
               <a className="c-green-20" href="#">
                 {lang.t("tutorial.five.body.ioPay")}
               </a>
-              {` `}
-              {lang.t("tutorial.five.body.end")}
+              {` ${lang.t("tutorial.five.body.end")}`}
             </p>
             <img className="md:pl-16 mt-6" src={IMG_TUTORIAL_CHECK_DESTINATION} alt="tutorial metamask" />
           </div>
@@ -120,31 +108,24 @@ export const Tutorial = () => {
             <p className="text-xl c-white-10 leading-loose">{lang.t("tutorial.convert_XRC20.operation")}</p>
             <ul className="text-xl c-white-10 leading-loose md:ml-16">
               <li>
-                {lang.t("tutorial.convert_XRC20.one")}
-                {` `}
+                {`${lang.t("tutorial.convert_XRC20.one")} `}
                 <a className="c-green-20" href="https://tube.iotex.io">
                   tube.iotex.io
                 </a>
               </li>
               <li>
-                {lang.t("tutorial.convert_XRC20.two.start")}
-                {` `}
+                {`${lang.t("tutorial.convert_XRC20.two.start")} `}
                 <a className="c-green-20" href="https://tube.iotex.io">
                   tube.iotex.io
                 </a>
-                {` `}
-                {lang.t("tutorial.convert_XRC20.two.end")}
+                {` ${lang.t("tutorial.convert_XRC20.two.end")}`}
               </li>
               <li>
-                {lang.t("tutorial.convert_XRC20.three.start")}
-                {` `}
+                {`${lang.t("tutorial.convert_XRC20.three.start")} `}
                 <strong>{lang.t("iotex")}</strong>
-                {` `}
-                {lang.t("tutorial.convert_XRC20.three.middle")}
+                {` ${lang.t("tutorial.convert_XRC20.three.middle")}`}
                 <strong>{lang.t("approve")}</strong>
-                {` `}
-                {lang.t("and")}
-                {` `}
+                {` ${lang.t("and")} `}
                 {lang.t("tutorial.convert_XRC20.three.end")}
               </li>
             </ul>
@@ -153,8 +134,7 @@ export const Tutorial = () => {
           <div className="mb-24">
             <h3 className="text-3xl c-white-10 leading-tight mb-3">{lang.t("tutorial.questions.title")}</h3>
             <p className="text-xl c-white-10 leading-loose">
-              {lang.t("tutorial.questions.body")}
-              {` `}
+              {`${lang.t("tutorial.questions.body")} `}
               <a className="c-green-20" href="https://t.me/IoTeXGroup">
                 https://t.me/IoTeXGroup
               </a>

@@ -1,8 +1,61 @@
 html {
   font-size: 16px;
-  @media screen and (max-width: 600px) {
+
+  @media (min-width: 1281px) {
+    //CSS
+    font-size: 18px;
+  }
+
+  /* 
+  ##Device = Laptops, Desktops
+  ##Screen = B/w 1025px to 1280px
+*/
+
+  @media (min-width: 1025px) and (max-width: 1280px) {
+    //CSS
+    font-size: 16px;
+  }
+
+  /* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    //CSS
     font-size: 14px;
   }
+
+  /* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+  @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    //CSS
+    font-size: 12px;
+  }
+
+  /* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    //CSS
+    font-size: 10px;
+  }
+
+  /* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    //CSS
+    font-size: 10px;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -124,6 +177,10 @@ html {
 
     .border-green-20 {
       border-color: var(--c-green-20);
+    }
+
+    .z--1 {
+      z-index: -1;
     }
 
     // token select dropdown

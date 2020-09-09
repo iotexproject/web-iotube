@@ -15,6 +15,22 @@
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
     }
   },
+  "BUSD": {
+    "eth": {
+      "address": "0x4Fabb145d64652a948d72533023f6E7A623C7C53",
+      "name": "Binance USD",
+      "decimals": 18,
+      "symbol": "BUSD",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png"
+    },
+    "iotx": {
+      "address": "io14nhfkywdfvl40evgsqnh43ev33q6he8yez8c8a",
+      "name": "Binance USD",
+      "decimals": 18,
+      "symbol": "ioBUSD",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png"
+    }
+  },
   "PAXG": {
     "eth": {
       "address": "0x45804880de22913dafe09f4980848ece6ecbaf78",

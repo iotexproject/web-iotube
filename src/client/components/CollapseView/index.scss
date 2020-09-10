@@ -3,15 +3,25 @@
 
   blockquote {
     position: relative;
+    p {
+      margin: 0;
+    }
+    a {
+      color: rgb(51, 254, 153);
+      word-break: break-word;
+    }
+    ul {
+      list-style-type: circle;
+      list-style-position: inside;
+    }
   }
 
   blockquote::before {
     content: "";
     position: absolute;
     width: 2px;
-    height: 90%;
+    height: 100%;
     left: -1.25rem;
-    top: 5%;
     background-color: rgb(51, 254, 153);
   }
 }

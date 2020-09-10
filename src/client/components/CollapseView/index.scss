@@ -1,0 +1,17 @@
+.collapse__view {
+  border-bottom: 1px solid rgb(147, 152, 162);
+
+  blockquote {
+    position: relative;
+  }
+
+  blockquote::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 90%;
+    left: -1.25rem;
+    top: 5%;
+    background-color: rgb(51, 254, 153);
+  }
+}

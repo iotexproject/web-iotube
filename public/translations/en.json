@@ -103,5 +103,9 @@
   "tutorial.convert_XRC20.three.middle": "as the source network (i.e., IoTeX will be listed on the left as shown below). You will be asked to sign the",
   "tutorial.convert_XRC20.three.end": "transactions which you will do in ioPay (not Metamask)!",
   "tutorial.questions.title": "Questions?",
-  "tutorial.questions.body": "Please reach out to us on Telegram with any questions:"
+  "tutorial.questions.body": "Please reach out to us on Telegram with any questions:",
+  "info.features": "DECENTRALIZED. MULTI一ASSET. CROSS CHAIN BRIDGE.",
+  "info.summary.start": "Connecting IoTeX to",
+  "info.summary.end": "the Blockchain Universe",
+  "info.how_iotex_work": "How Does ioTube Work"
 }

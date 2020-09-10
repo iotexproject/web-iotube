@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Avatar, Button, notification, Popover } from "antd";
 import { useObserver } from "mobx-react";
+import { BrowserView, MobileView } from "react-device-detect";
 import { CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import useENSName from "../../hooks/useENSName";
@@ -74,7 +75,12 @@ export const Header = () => {
     });
   };
 
-  const onClickFAQ = () => {};
+  const onClickFAQ = () => {
+    window.scrollTo({
+      top: window.innerHeight * 2,
+      behavior: "smooth",
+    });
+  };
 
   const renderWalletInfo = () => {
     const walletConnected = base.mode === CARD_ERC20_XRC20 ? wallet.metaMaskConnected : wallet.walletConnected;
@@ -114,7 +120,7 @@ export const Header = () => {
   };
 
   return useObserver(() => (
-    <div className="component__header bg-body h-16">
+    <div className="component__header h-16">
       <div className="component__header__content app_header_content flex justify-between items-center h-full py-1">
         <Link to="/">
           <img alt="logo" src={IMG_LOGO} />
@@ -122,12 +128,14 @@ export const Header = () => {
 
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
-            <Link className="c-white" to="/tutorial">
-              {lang.t("header.tutorial")}
-            </Link>
-            <Button className="c-white" type="text" onClick={onClickFAQ}>
-              {lang.t("header.faq")}
-            </Button>
+            <BrowserView>
+              <Link className="c-white" to="/tutorial">
+                {lang.t("header.tutorial")}
+              </Link>
+              <Button className="c-white" type="text" onClick={onClickFAQ}>
+                {lang.t("header.faq")}
+              </Button>
+            </BrowserView>
             {renderWalletInfo()}
             &nbsp;
             <Popover
@@ -137,10 +145,20 @@ export const Header = () => {
               overlayClassName="component__header__settings__popup"
               content={
                 <div>
-                  <a href="https://github.com/iotexproject/iotube" target="_blank" className="c-gray-30 flex items-center font-light w-24">
+                  <a href="https://github.com/iotexproject/iotube" target="_blank" className="c-gray-30 flex items-center font-light w-24 py-1">
                     <InfoCircleOutlined />
                     <span className="ml-2 text-base">{lang.t("about")}</span>
                   </a>
+                  <MobileView>
+                    <Link className="c-gray-30 text-base py-1" to="/tutorial">
+                      {lang.t("header.tutorial")}
+                    </Link>
+                  </MobileView>
+                  <MobileView>
+                    <div className="text-base c-gray-30 py-1" onClick={onClickFAQ}>
+                      {lang.t("header.faq")}
+                    </div>
+                  </MobileView>
                 </div>
               }
             >

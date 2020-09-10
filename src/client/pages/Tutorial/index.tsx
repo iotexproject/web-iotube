@@ -3,8 +3,6 @@ import { useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { ClientOnly } from "../../components";
 import { useStore } from "../../../common/store";
-import { CARD_XRC20_ERC20, CARD_ERC20_XRC20 } from "../../../common/store/base";
-import { matchPath, useHistory } from "react-router-dom";
 
 const IMG_BG_TUTORIAL = require("../../static/images/bg-tutorial.png");
 const IMG_TUTORIAL_CHECK_DESTINATION = require("../../static/images/tutorial-check-destination.png");
@@ -20,9 +18,9 @@ export const Tutorial = () => {
 
   return useObserver(() => (
     <ClientOnly>
-      <div className="page__tutorial h-full">
+      <div className="page__tutorial bg-dark pt-16">
         <div className="page__tutorial__content mx-auto text-left">
-          <img className="fixed top-0 right-0 z--1" src={IMG_BG_TUTORIAL} alt="bg tutorial" />
+          <img className="fixed top-0 right-0 w-7/12" src={IMG_BG_TUTORIAL} alt="bg tutorial" />
           <h1 className="text-6xl c-green-20 leading-tight mb-32">{lang.t("tutorial.tutorial")}</h1>
           <div className="mb-24">
             <p className="text-xl c-white-10 leading-loose">

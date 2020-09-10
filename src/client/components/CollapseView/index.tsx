@@ -8,7 +8,7 @@ const IMG_SHOW = require("../../static/images/icon_show.png");
 
 interface IComponentProps {
   title: string;
-  body: string;
+  body: Array<JSX.Element> | JSX.Element;
 }
 
 export const CollapseView = (props: IComponentProps) => {

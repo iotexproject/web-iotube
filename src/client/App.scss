@@ -56,6 +56,10 @@ html {
     font-size: 10px;
   }
 
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -74,7 +78,10 @@ html {
     --c-gray-20: rgb(147, 147, 153);
     --c-gray-30: #bac0cc;
     --c-gray-40: rgb(141, 147, 153);
+    --c-gray-50: rgb(145, 150, 160);
     --c-white-10: rgb(240, 244, 247);
+    --c-dark-10: rgb(38, 38, 38);
+
     #root {
       margin: 0 auto;
     }
@@ -119,6 +126,14 @@ html {
       background-color: var(--c-green-10) !important;
     }
 
+    .bg-dark {
+      background-color: var(--c-dark-10);
+    }
+
+    .bg-dark-20 {
+      background-color: var(--c-dark-20);
+    }
+
     .c-white {
       color: white !important;
     }
@@ -155,6 +170,10 @@ html {
       color: var(--c-gray-40);
     }
 
+    .c-gray-50 {
+      color: var(--c-gray-50);
+    }
+
     .c-white-10 {
       color: var(--c-white-10);
     }
@@ -181,10 +200,6 @@ html {
 
     .border-green-20 {
       border-color: var(--c-green-20);
-    }
-
-    .z--1 {
-      z-index: -1;
     }
 
     // token select dropdown

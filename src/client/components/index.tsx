@@ -6,3 +6,4 @@ export * from "./AddressInput";
 export * from "./TokenSelectField";
 export * from "./ConfirmModal";
 export * from "./Footer";
+export * from "./CollapseView";

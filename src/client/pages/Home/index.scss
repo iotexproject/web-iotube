@@ -1,26 +1,77 @@
+@import "node_modules/react-modal-video/scss/modal-video.scss";
+
 .page__home {
   text-align: center;
-  padding-top: 5vh;
   margin: auto;
-  .page__home__content {
+
+  .page__home__exchange__container {
     position: relative;
-    .page__home__content__frame {
+    padding-top: 10vh;
+    height: 100vh;
+    min-height: 30rem;
+
+    .page__home__exchange__container__frame {
       overflow: hidden;
       position: absolute;
       transition: all 0.7s;
-      margin-bottom: 5rem;
 
-      &.page__home__content__frame--active {
+      &.page__home__exchange__container__frame--active {
         left: 0;
         width: 100%;
         opacity: 1;
         z-index: 1;
       }
-      &.page__home__content__frame--inactive {
+      &.page__home__exchange__container__frame--inactive {
         opacity: 0;
         width: 100%;
         z-index: -1;
       }
+    }
+
+    .page__home__exchange__container__beta-notice {
+      margin-top: 30rem;
+    }
+  }
+
+  .page__home__info__container {
+    height: 100vh;
+    margin: auto;
+    position: relative;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4.25rem !important;
+      font-size: 1.25rem !important;
+      background-color: #33ff99 !important;
+      color: #262525 !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      height: 3.75rem !important;
+      border-radius: 2px;
+      z-index: 99;
+    }
+  }
+
+  .page__home__faq__container {
+    text-align: left;
+    margin: auto;
+    width: 80%;
+    padding: 4.58rem 6.25rem;
+
+    .page__home__faq__container__youtube {
+      min-width: 10rem;
+      right: 20%;
+      top: -7rem;
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 500px) {
+      width: 90%;
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 }

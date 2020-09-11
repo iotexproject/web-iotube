@@ -20,7 +20,6 @@ export const Tutorial = () => {
     <ClientOnly>
       <div className="page__tutorial bg-dark pt-16">
         <div className="page__tutorial__content mx-auto text-left">
-          <img className="fixed top-0 right-0 w-7/12" src={IMG_BG_TUTORIAL} alt="bg tutorial" />
           <h1 className="text-6xl c-green-20 leading-tight mb-32">{lang.t("tutorial.tutorial")}</h1>
           <div className="mb-24">
             <p className="text-xl c-white-10 leading-loose">

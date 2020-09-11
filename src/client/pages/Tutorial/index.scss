@@ -1,4 +1,9 @@
 .page__tutorial {
+  background-image: url("../../static/images/bg-tutorial.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: right top;
+  background-size: 58%;
   .page__tutorial__content {
     width: 80%;
     padding: 4.58rem 6.25rem;

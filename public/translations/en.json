@@ -146,7 +146,7 @@
   "faq.fee.from_iotex_to_eth.desc.one": "You will not pay for the Proxy-Token burn transaction on the IoTeX blockchain",
   "faq.fee.from_iotex_to_eth.desc.two": "You will pay 4000 IOTX to cover the fees for the unlock transaction on the Ethereum blockchain",
   "faq.is_there_is_a_tutorial": "Is there a tutorial explaining how to use IoTube?",
-  "faq.tutorial_community": "check out this IoTube tutorial on the IoTeX community forum:",
+  "faq.tutorial_community": "Yes: check out this IoTube tutorial on the IoTeX community forum:",
   "faq.is_iotube_open_source": "Is IoTube open source?",
-  "faq.iotube_github": "IoTube code is open source, you can find it on GitHub:"
+  "faq.iotube_github": "Yes: IoTube code is open source, you can find it on GitHub:"
 }

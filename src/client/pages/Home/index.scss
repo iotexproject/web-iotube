@@ -58,8 +58,9 @@
   .page__home__faq__container {
     text-align: left;
     margin: auto;
-    width: 80%;
-    padding: 4.58rem 6.25rem;
+    width: 90%;
+    padding: 4.58rem 0;
+    max-width: 1300px;
 
     .page__home__faq__container__youtube {
       width: 15rem;

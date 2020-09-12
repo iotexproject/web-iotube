@@ -20,7 +20,7 @@ export const Tutorial = () => {
     <ClientOnly>
       <div className="page__tutorial bg-dark pt-16">
         <div className="page__tutorial__content mx-auto text-left">
-          <h1 className="text-6xl c-green-20 leading-tight mb-32">{lang.t("tutorial.tutorial")}</h1>
+          <h1 className="text-5xl c-green-20 leading-tight mb-32">{lang.t("tutorial.tutorial")}</h1>
           <div className="mb-24">
             <p className="text-xl c-white-10 leading-loose">
               <strong>{lang.t("tutorial.ioTube")}</strong>

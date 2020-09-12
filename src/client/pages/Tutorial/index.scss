@@ -5,8 +5,9 @@
   background-position: right top;
   background-size: 58%;
   .page__tutorial__content {
-    width: 80%;
-    padding: 4.58rem 6.25rem;
+    width: 90%;
+    padding: 4.58rem 0;
+    max-width: 1000px;
 
     ul {
       list-style-type: circle;

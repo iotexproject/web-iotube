@@ -64,8 +64,8 @@ export const Home = () => {
           <div className="page__home__exchange__container__beta-notice c-gray-40 text-base font-light">{lang.t("beta_notice")}</div>
         </div>
         <div className="page__home__info__container bg-dark">
-          <img alt="info background" src={IMG_INFO_BACKGROUND} className="w-screen h-screen absolute top-0 left-0" />
-          <div className="w-10/12 h-screen m-auto flex flex-col justify-center items-center">
+          <img alt="info background" src={IMG_INFO_BACKGROUND} className="h-full absolute top-0 left-0" />
+          <div className="w-10/12 h-full m-auto flex flex-col justify-center items-center">
             <img alt="iotube logo" src={IMG_IOTUBE_LOGO} className="w-64 mb-12" />
             <p className="text-xl c-gray-20 leading-loose mb-12">{lang.t("info.features")}</p>
             <h1 className="text-5xl c-white-10 leading-tight mb-20">
@@ -73,7 +73,7 @@ export const Home = () => {
               <br />
               {lang.t("info.summary.end")}
             </h1>
-            <a href="https://medium.com/@iotex/iotube-cross-chain-bridge-to-connect-iotex-with-the-blockchain-universe-b0f5b08c1943" target={"_blank"}>
+            <a className="font-medium" href="https://medium.com/@iotex/iotube-cross-chain-bridge-to-connect-iotex-with-the-blockchain-universe-b0f5b08c1943" target={"_blank"}>
               {lang.t("info.how_iotex_work")}
             </a>
           </div>

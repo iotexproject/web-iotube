@@ -22,7 +22,7 @@ export const CollapseView = (props: IComponentProps) => {
         <h5 className="c-white-10 text-3xl flex-1 mb-0">{title}</h5>
       </div>
       <Collapse isOpened={isOpen}>
-        <blockquote className="c-gray-50 text-2xl ml-24 mb-0 px-5">{body}</blockquote>
+        <blockquote className="c-gray-50 text-2xl ml-12 md:ml-24 mb-0 px-3 md:px-5">{body}</blockquote>
       </Collapse>
     </div>
   );

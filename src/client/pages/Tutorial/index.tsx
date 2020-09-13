@@ -20,7 +20,7 @@ export const Tutorial = () => {
     <ClientOnly>
       <div className="page__tutorial bg-dark pt-16">
         <div className="page__tutorial__content mx-auto text-left">
-          <h1 className="text-5xl c-green-20 leading-tight mb-24">{lang.t("tutorial.tutorial")}</h1>
+          <div className="text-5xl c-green-20 leading-tight mb-24">{lang.t("tutorial.tutorial")}</div>
           <div className="font-plex-sans">
             <div className="mb-24">
               <p className="c-white-10 leading-loose">

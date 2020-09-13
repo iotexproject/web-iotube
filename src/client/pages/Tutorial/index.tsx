@@ -23,7 +23,7 @@ export const Tutorial = () => {
           <h1 className="text-5xl c-green-20 leading-tight mb-24">{lang.t("tutorial.tutorial")}</h1>
           <div className="font-plex-sans">
             <div className="mb-24">
-              <p className="text-xl c-white-10 leading-loose">
+              <p className="c-white-10 leading-loose">
                 <a className="font-bold c-white-10">{lang.t("tutorial.ioTube")}</a>
                 {` ${lang.t("tutorial.summary")}`}
                 <br /> <br />
@@ -35,16 +35,16 @@ export const Tutorial = () => {
             </div>
             <div className="mb-24">
               <h3 className="text-3xl c-white-10 leading-tight mb-3 font-bold">{lang.t("tutorial.send_from_ethereum_to_iotex")}</h3>
-              <p className="text-xl c-white-10 leading-loose">{lang.t("tutorial.purpose_of_operation")}</p>
+              <p className="c-white-10 leading-loose">{lang.t("tutorial.purpose_of_operation")}</p>
             </div>
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.one.title")}</h4>
-              <p className="text-xl c-white-10 leading-loose md:ml-16">{lang.t("tutorial.one.body")}</p>
+              <p className="c-white-10 leading-loose md:ml-16">{lang.t("tutorial.one.body")}</p>
               <img className="md:pl-16 mt-6" src={IMG_TUTORIAL_METAMASK} alt="tutorial metamask" />
             </div>
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.two.title")}</h4>
-              <ul className="text-xl c-white-10 leading-loose md:ml-16">
+              <ul className="c-white-10 leading-loose md:ml-16">
                 <li>{lang.t("tutorial.two.body.one")}</li>
                 <li>{lang.t("tutorial.two.body.two")}</li>
                 <li>{lang.t("tutorial.two.body.three")}</li>
@@ -54,7 +54,7 @@ export const Tutorial = () => {
             </div>
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.three.title")}</h4>
-              <p className="text-xl c-white-10 leading-loose md:ml-16">
+              <p className="c-white-10 leading-loose md:ml-16">
                 {`${lang.t("tutorial.three.body")} `}
                 <a className="c-green-20" href="#">
                   {lang.t("tutorial.three.body.submit")}
@@ -64,7 +64,7 @@ export const Tutorial = () => {
             </div>
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.four.title")}</h4>
-              <ul className="text-xl c-white-10 leading-loose md:ml-16">
+              <ul className="c-white-10 leading-loose md:ml-16">
                 <li>{lang.t("tutorial.four.body.one")}</li>
                 <li>
                   {lang.t("tutorial.four.body.click")}
@@ -73,7 +73,7 @@ export const Tutorial = () => {
                 <li>{lang.t("tutorial.four.body.three")}</li>
               </ul>
               <img className="md:pl-16 mt-6" src={IMG_TUTORIAL_SELECT_AMOUNT} alt="tutorial metamask" />
-              <ul className="text-xl c-white-10 leading-loose md:ml-16">
+              <ul className="c-white-10 leading-loose md:ml-16">
                 <li>
                   <a className="font-bold c-white-10">{lang.t("tutorial.four.body.four.please_note")}</a>
                   {` ${lang.t("tutorial.four.body.four")}`}
@@ -85,12 +85,12 @@ export const Tutorial = () => {
                 </li>
               </ul>
               <img className="md:pl-16 mt-6" src={IMG_TUTORIAL_CLICK_CONVERT} alt="tutorial metamask" />
-              <p className="text-xl c-white-10 leading-loose">{lang.t("tutorial.four.body.final")}</p>
-              <p className="text-xl c-white-10 leading-loose">{lang.t("tutorial.four.body.congratulation")}</p>
+              <p className="c-white-10 leading-loose">{lang.t("tutorial.four.body.final")}</p>
+              <p className="c-white-10 leading-loose">{lang.t("tutorial.four.body.congratulation")}</p>
             </div>
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.five.title")}</h4>
-              <p className="text-xl c-white-10 leading-loose md:ml-16">
+              <p className="c-white-10 leading-loose md:ml-16">
                 {`${lang.t("tutorial.five.body.start")} `}
                 <a className="font-bold c-white-10">{lang.t("tutorial.five.body.unlock_xrc20")}</a>
                 {` ${lang.t("tutorial.five.body.can_use")} `}
@@ -103,8 +103,8 @@ export const Tutorial = () => {
             </div>
             <div className="mb-24">
               <h3 className="text-3xl c-white-10 leading-tight mb-3 font-bold">{lang.t("tutorial.convert_XRC20.title")}</h3>
-              <p className="text-xl c-white-10 leading-loose">{lang.t("tutorial.convert_XRC20.operation")}</p>
-              <ul className="text-xl c-white-10 leading-loose md:ml-16">
+              <p className="c-white-10 leading-loose">{lang.t("tutorial.convert_XRC20.operation")}</p>
+              <ul className="c-white-10 leading-loose md:ml-16">
                 <li>
                   {`${lang.t("tutorial.convert_XRC20.one")} `}
                   <a className="c-green-20" href="https://tube.iotex.io">
@@ -131,7 +131,7 @@ export const Tutorial = () => {
             </div>
             <div className="mb-24">
               <h3 className="text-3xl c-white-10 leading-tight mb-3 font-bold">{lang.t("tutorial.questions.title")}</h3>
-              <p className="text-xl c-white-10 leading-loose">
+              <p className="c-white-10 leading-loose">
                 {`${lang.t("tutorial.questions.body")} `}
                 <a className="c-green-20" href="https://t.me/IoTeXGroup">
                   https://t.me/IoTeXGroup

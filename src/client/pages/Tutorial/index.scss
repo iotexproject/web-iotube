@@ -9,9 +9,17 @@
     padding: 4.58rem 0;
     max-width: 1000px;
 
+    p {
+      font-size: 1.125rem;
+    }
+
     ul {
       list-style-type: circle;
       list-style-position: outside;
+
+      li {
+        font-size: 1.125rem;
+      }
     }
 
     @media screen and (max-width: 500px) {

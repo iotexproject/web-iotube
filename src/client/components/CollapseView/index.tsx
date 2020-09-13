@@ -24,7 +24,7 @@ export const CollapseView = (props: IComponentProps) => {
         </span>
       </div>
       <Collapse isOpened={isOpen}>
-        <blockquote className="c-gray-50 text-2xl ml-12 md:ml-24 mb-0 px-3 md:px-5">{body}</blockquote>
+        <blockquote className="c-gray-50 ml-12 md:ml-24 mb-0 px-3 md:px-5">{body}</blockquote>
       </Collapse>
     </div>
   );

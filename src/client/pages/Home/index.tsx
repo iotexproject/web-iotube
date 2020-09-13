@@ -68,11 +68,11 @@ export const Home = () => {
           <div className="w-10/12 h-full m-auto flex flex-col justify-center items-center">
             <img alt="iotube logo" src={IMG_IOTUBE_LOGO} className="w-64 mb-12" />
             <p className="text-xl c-gray-20 leading-loose mb-12">{lang.t("info.features")}</p>
-            <h1 className="text-5xl c-white-10 leading-tight mb-20">
+            <div className="text-5xl c-white-10 leading-tight mb-20">
               {lang.t("info.summary.start")}
               <br />
               {lang.t("info.summary.end")}
-            </h1>
+            </div>
             <a className="font-medium" href="https://medium.com/@iotex/iotube-cross-chain-bridge-to-connect-iotex-with-the-blockchain-universe-b0f5b08c1943" target={"_blank"}>
               {lang.t("info.how_iotex_work")}
             </a>
@@ -80,7 +80,7 @@ export const Home = () => {
         </div>
         <div className="page__home__faq__container relative">
           <img alt="youtube" src={IMG_YOUTUBE} className="page__home__faq__container__youtube absolute" onClick={() => setShowVideo(true)} />
-          <div className="c-green-20 text-5xl">{lang.t("header.faq")}</div>
+          <div className="c-green-20 page__home__faq__container__header">{lang.t("header.faq")}</div>
           <CollapseView
             title={lang.t("faq.what_is_iotube_bridge")}
             body={

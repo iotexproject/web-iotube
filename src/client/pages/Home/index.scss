@@ -77,13 +77,13 @@
     text-align: left;
     margin: auto;
     width: 90%;
-    padding: 6.2rem 0;
+    padding: 12.3rem 0;
     max-width: 1300px;
 
     .page__home__faq__container__youtube {
-      width: 15rem;
+      width: 20rem;
       right: 20%;
-      top: -5rem;
+      top: -7rem;
       cursor: pointer;
     }
 
@@ -93,10 +93,10 @@
 
     @media screen and (max-width: 500px) {
       width: 90%;
-      padding-left: 0;
-      padding-right: 0;
+      padding: 7rem 0;
       .page__home__faq__container__youtube {
         width: 12rem;
+        top: -4rem;
         right: 5%;
       }
     }

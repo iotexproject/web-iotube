@@ -17,7 +17,7 @@ export const CollapseView = (props: IComponentProps) => {
 
   return (
     <div className="collapse__view pt-12 pb-6">
-      <div className="flex flex-row items-center w-full pb-10">
+      <div className="collapse__view__title flex flex-row items-center w-full pb-10">
         <img className="w-6 mr-6" src={isOpen ? IMG_HIDE : IMG_SHOW} alt="show hide" onClick={() => setOpen(!isOpen)} />
         <span className="c-white-10 text-2xl mb-0" onClick={() => setOpen(!isOpen)}>
           {title}

@@ -80,7 +80,7 @@ export const Home = () => {
         </div>
         <div className="page__home__faq__container relative">
           <img alt="youtube" src={IMG_YOUTUBE} className="page__home__faq__container__youtube absolute" onClick={() => setShowVideo(true)} />
-          <h1 className="c-green-20 text-5xl">{lang.t("header.faq")}</h1>
+          <div className="c-green-20 text-5xl">{lang.t("header.faq")}</div>
           <CollapseView
             title={lang.t("faq.what_is_iotube_bridge")}
             body={

@@ -148,5 +148,6 @@
   "faq.is_there_is_a_tutorial": "Is there a tutorial explaining how to use ioTube?",
   "faq.tutorial_community": "Yes: check out this ioTube tutorial on the IoTeX community forum:",
   "faq.is_iotube_open_source": "Is ioTube open source?",
-  "faq.iotube_github": "Yes: ioTube code is open source, you can find it on GitHub:"
+  "faq.iotube_github": "Yes: ioTube code is open source, you can find it on GitHub:",
+  "launch_app": "Launch App"
 }

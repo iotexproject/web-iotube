@@ -128,7 +128,7 @@ export const Header = () => {
 
         {isTutorialPage && (
           <a className="component__header__content__app font-medium" href="/">
-            Launch App
+            {lang.t("launch_app")}
           </a>
         )}
 

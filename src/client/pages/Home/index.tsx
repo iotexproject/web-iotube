@@ -10,6 +10,7 @@ import { CARD_XRC20_ERC20, CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { matchPath, useHistory } from "react-router-dom";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
+const IMG_FAQ_BACKGROUND = require("../../static/images/faq-background.png");
 const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
 const IMG_YOUTUBE = require("../../static/images/info-youtube.png");
 
@@ -64,7 +65,7 @@ export const Home = () => {
           <div className="page__home__exchange__container__beta-notice c-gray-40 text-base font-light">{lang.t("beta_notice")}</div>
         </div>
         <div className="page__home__info__container bg-dark">
-          <img alt="info background" src={IMG_INFO_BACKGROUND} className="h-full absolute top-0 left-0" />
+          <img alt="info background" src={IMG_INFO_BACKGROUND} className="absolute h-full top-0 left-0" />
           <div className="w-10/12 h-full m-auto flex flex-col justify-center items-center">
             <img alt="iotube logo" src={IMG_IOTUBE_LOGO} className="w-64 mb-12" />
             <p className="text-xl c-gray-20 leading-loose mb-12">{lang.t("info.features")}</p>

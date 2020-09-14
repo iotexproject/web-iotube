@@ -6,9 +6,9 @@
 
   .page__home__exchange__container {
     position: relative;
-    padding-top: 10vh;
+    padding-top: 20vh;
     height: 100vh;
-    min-height: 30rem;
+    min-height: 1080px;
 
     .page__home__exchange__container__frame {
       overflow: hidden;
@@ -29,14 +29,28 @@
     }
 
     .page__home__exchange__container__beta-notice {
-      margin-top: 30rem;
+      margin-top: 35rem;
+    }
+
+    @media screen and (max-width: 500px) {
+      min-height: auto;
+      height: auto;
+      padding: 4rem 0;
+      padding-top: 10vh;
+
+      .page__home__exchange__container__beta-notice {
+        margin-top: 28rem;
+      }
     }
   }
 
   .page__home__info__container {
-    height: 100vh;
     margin: auto;
+    height: 100vh;
+    min-height: 1080px;
+    padding: 10rem 0;
     position: relative;
+    display: flex;
 
     a {
       display: flex;
@@ -53,26 +67,44 @@
       border-radius: 2px;
       z-index: 99;
     }
+
+    img {
+      object-fit: contain;
+      max-height: 100vh;
+    }
+
+    @media screen and (max-width: 500px) {
+      min-height: auto;
+      height: auto;
+    }
   }
 
   .page__home__faq__container {
     text-align: left;
     margin: auto;
     width: 90%;
-    padding: 4.58rem 0;
+    padding: 12.3rem 0;
     max-width: 1300px;
 
     .page__home__faq__container__youtube {
-      width: 15rem;
+      width: 20rem;
       right: 20%;
-      top: -5rem;
+      top: -7rem;
       cursor: pointer;
+    }
+
+    .page__home__faq__container__header {
+      font-size: 3.75rem;
     }
 
     @media screen and (max-width: 500px) {
       width: 90%;
-      padding-left: 0;
-      padding-right: 0;
+      padding: 7rem 0;
+      .page__home__faq__container__youtube {
+        width: 12rem;
+        top: -4rem;
+        right: 5%;
+      }
     }
   }
 }

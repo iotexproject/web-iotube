@@ -10,6 +10,7 @@ import { CARD_XRC20_ERC20, CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { matchPath, useHistory } from "react-router-dom";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
+const IMG_FAQ_BACKGROUND = require("../../static/images/faq-background.png");
 const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
 const IMG_YOUTUBE = require("../../static/images/info-youtube.png");
 
@@ -64,23 +65,23 @@ export const Home = () => {
           <div className="page__home__exchange__container__beta-notice c-gray-40 text-base font-light">{lang.t("beta_notice")}</div>
         </div>
         <div className="page__home__info__container bg-dark">
-          <img alt="info background" src={IMG_INFO_BACKGROUND} className="w-screen h-screen absolute top-0 left-0" />
-          <div className="w-10/12 h-screen m-auto flex flex-col justify-center items-center">
+          <img alt="info background" src={IMG_INFO_BACKGROUND} className="absolute h-full top-0 left-0" />
+          <div className="w-10/12 h-full m-auto flex flex-col justify-center items-center">
             <img alt="iotube logo" src={IMG_IOTUBE_LOGO} className="w-64 mb-12" />
             <p className="text-xl c-gray-20 leading-loose mb-12">{lang.t("info.features")}</p>
-            <h1 className="text-5xl c-white-10 leading-tight mb-20">
+            <div className="text-5xl c-white-10 leading-tight mb-20">
               {lang.t("info.summary.start")}
               <br />
               {lang.t("info.summary.end")}
-            </h1>
-            <a href="https://medium.com/@iotex/iotube-cross-chain-bridge-to-connect-iotex-with-the-blockchain-universe-b0f5b08c1943" target={"_blank"}>
+            </div>
+            <a className="font-medium" href="https://medium.com/@iotex/iotube-cross-chain-bridge-to-connect-iotex-with-the-blockchain-universe-b0f5b08c1943" target={"_blank"}>
               {lang.t("info.how_iotex_work")}
             </a>
           </div>
         </div>
         <div className="page__home__faq__container relative">
           <img alt="youtube" src={IMG_YOUTUBE} className="page__home__faq__container__youtube absolute" onClick={() => setShowVideo(true)} />
-          <h1 className="c-green-20 text-5xl">{lang.t("header.faq")}</h1>
+          <div className="c-green-20 page__home__faq__container__header">{lang.t("header.faq")}</div>
           <CollapseView
             title={lang.t("faq.what_is_iotube_bridge")}
             body={

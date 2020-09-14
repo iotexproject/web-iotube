@@ -126,6 +126,12 @@ export const Header = () => {
           <img alt="logo" src={IMG_LOGO} />
         </Link>
 
+        {isTutorialPage && (
+          <a className="component__header__content__app font-medium" href="/">
+            {lang.t("launch_app")}
+          </a>
+        )}
+
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>

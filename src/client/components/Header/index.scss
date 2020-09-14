@@ -8,6 +8,21 @@
     width: 90%;
     max-width: 1300px;
 
+    .component__header__content__app {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.43rem 1.25rem !important;
+      font-size: 1.25rem !important;
+      background-color: #33ff99 !important;
+      color: rgb(5, 26, 15) !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      border-radius: 2px;
+      z-index: 99;
+    }
+
     .component__header__content__more {
       display: flex;
       justify-content: center;

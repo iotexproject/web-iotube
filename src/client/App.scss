@@ -36,6 +36,7 @@ html {
     --c-gray-50: rgb(145, 150, 160);
     --c-white-10: rgb(240, 244, 247);
     --c-dark-10: rgb(38, 38, 38);
+    --c-dark-20: rgb(5, 26, 15);
 
     #root {
       margin: 0 auto;
@@ -93,6 +94,10 @@ html {
 
     .bg-dark-20 {
       background-color: var(--c-dark-20);
+    }
+
+    .c-dark-20 {
+      color: var(--c-dark-20);
     }
 
     .c-white {

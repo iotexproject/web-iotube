@@ -68,15 +68,16 @@
       z-index: 99;
     }
 
-    img {
-      object-fit: contain;
-      max-height: 100vh;
-    }
-
     @media screen and (max-width: 500px) {
       min-height: auto;
       height: auto;
     }
+  }
+
+  .page__home__faq__container__background {
+    width: 50vw;
+    height: 1px;
+    margin-top: 5.5rem;
   }
 
   .page__home__faq__container {
@@ -84,12 +85,13 @@
     margin: auto;
     width: 90%;
     padding: 12.3rem 0;
+    margin-top: -5.5rem;
     max-width: 1300px;
 
     .page__home__faq__container__youtube {
       width: 20rem;
-      right: 20%;
       top: -7rem;
+      left: calc(50% + 3rem);
       cursor: pointer;
     }
 
@@ -103,7 +105,7 @@
       .page__home__faq__container__youtube {
         width: 12rem;
         top: -4rem;
-        right: 5%;
+        left: calc(50%);
       }
     }
   }

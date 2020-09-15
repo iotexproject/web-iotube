@@ -65,7 +65,7 @@ export const Home = () => {
           <div className="page__home__exchange__container__beta-notice c-gray-40 text-base font-light">{lang.t("beta_notice")}</div>
         </div>
         <div className="page__home__info__container bg-dark">
-          <img alt="info background" src={IMG_INFO_BACKGROUND} className="absolute h-full top-0 left-0" />
+          <img alt="info background" src={IMG_INFO_BACKGROUND} className="absolute h-full top-0 right-0" />
           <div className="w-10/12 h-full m-auto flex flex-col justify-center items-center">
             <img alt="iotube logo" src={IMG_IOTUBE_LOGO} className="w-64 mb-12" />
             <p className="text-xl c-gray-20 leading-loose mb-12">{lang.t("info.features")}</p>
@@ -79,6 +79,7 @@ export const Home = () => {
             </a>
           </div>
         </div>
+        <div className="page__home__faq__container__background bg-green"></div>
         <div className="page__home__faq__container relative">
           <img alt="youtube" src={IMG_YOUTUBE} className="page__home__faq__container__youtube absolute" onClick={() => setShowVideo(true)} />
           <div className="c-green-20 page__home__faq__container__header">{lang.t("header.faq")}</div>

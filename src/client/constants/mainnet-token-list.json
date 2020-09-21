@@ -31,6 +31,22 @@
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png"
     }
   },
+  "UNI": {
+    "eth": {
+      "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+      "name": "UNISWAP",
+      "decimals": 18,
+      "symbol": "UNI",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png"
+    },
+    "iotx": {
+      "address": "io1ahh04jn2zkqlug6feh7rpq75a75p3rj42hp4ch",
+      "name": "UNISWAP",
+      "decimals": 18,
+      "symbol": "ioUNI",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png"
+    }
+  },
   "PAXG": {
     "eth": {
       "address": "0x45804880de22913dafe09f4980848ece6ecbaf78",

@@ -47,6 +47,38 @@
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png"
     }
   },
+  "LINK": {
+    "eth": {
+      "address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+      "name": "ChainLink Token",
+      "decimals": 18,
+      "symbol": "LINK",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png"
+    },
+    "iotx": {
+      "address": "io1acu830g37t6ktzgh762lz8ff3xg39r0tv4enge",
+      "name": "ChainLink Token",
+      "decimals": 18,
+      "symbol": "ioLINK",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png"
+    }
+  },
+  "WBTC": {
+    "eth": {
+      "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "name": "Wrapped BTC",
+      "decimals": 18,
+      "symbol": "WBTC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
+    },
+    "iotx": {
+      "address": "io1fygqrjj7n8sy9lr2jdlky6cam7v7p0mx8s7mmh",
+      "name": "Wrapped BTC",
+      "decimals": 18,
+      "symbol": "ioWBTC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
+    }
+  },
   "PAXG": {
     "eth": {
       "address": "0x45804880de22913dafe09f4980848ece6ecbaf78",

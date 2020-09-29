@@ -140,11 +140,15 @@ export class WvSigner implements SignerPlugin {
         sec = 48;
       }
     }
+    const timer = setTimeout(() => {
+      location.reload();
+    }, 5000);
     return new Promise<Array<Account>>((resolve) =>
       window.WebViewJavascriptBridge.callHandler(
         "get_account",
         JSON.stringify(req),
         (responseData: string) => {
+        clearTimeout(timer);
           window.console.log(
             "getIoAddressFromIoPay get_account responseData: ",
             responseData

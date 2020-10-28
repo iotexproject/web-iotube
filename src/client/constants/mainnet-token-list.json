@@ -62,5 +62,21 @@
       "symbol": "ioPAXG",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4705.png"
     }
+  },
+  "WBTC": {
+    "eth": {
+      "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "name": "Wrapped BTC",
+      "decimals": 8,
+      "symbol": "WBTC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
+    },
+    "iotx": {
+      "address": "io1c7unwg8h8vph89xwqru4f7zfa4yy5002wxvlrm",
+      "name": "ioWBTC",
+      "decimals": 8,
+      "symbol": "ioWBTC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
+    }
   }
 }

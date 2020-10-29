@@ -227,7 +227,7 @@ export const ERCXRC = () => {
       return `Amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
     try {
-      if (tokenBalance && amountNumber > Number(tokenBalance.toFixed(10))) {
+      if (tokenBalance && amountNumber > Number(tokenBalance.toExact())) {
         return lang.t("input.balance.insufficient", { symbol: token.symbol });
       }
     } catch (e) {

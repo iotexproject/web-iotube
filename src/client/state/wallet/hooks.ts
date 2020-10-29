@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI } from "@uniswap/sdk";
+import { Currency, CurrencyAmount, JSBI, Token, TokenAmount } from "@uniswap/sdk";
 import { useMemo } from "react";
 import {
   useMulticallContract,
@@ -49,8 +49,10 @@ export function useETHBalances(
 
 export function useTokenBalances(
   tokenAddress: string | undefined,
+  token: Token,
   uncheckedAddresses?: (string | undefined)[]
 ): { [address: string]: CurrencyAmount | undefined } {
+
   const tokenContract = useTokenContract(tokenAddress || "");
 
   const addresses: string[] = useMemo(
@@ -75,8 +77,9 @@ export function useTokenBalances(
       addresses.reduce<{ [address: string]: CurrencyAmount }>(
         (memo, address, i) => {
           const value = results?.[i]?.result?.[0];
-          if (value)
-            memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()));
+          if (value){
+            memo[address] = new TokenAmount(token, JSBI.BigInt(value.toString()))
+          }
           return memo;
         },
         {}

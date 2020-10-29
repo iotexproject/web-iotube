@@ -44,7 +44,8 @@ export const ERCXRC = () => {
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const cashierContractAddress = useMemo(() => ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId], [chainId]);
-  const tokenBalance = useTokenBalances(token ? token.address : undefined, [account])[account];
+  const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
+  const tokenBalance = useTokenBalances(tokenAddress, token, [account])[account];
 
   const store = useLocalStore(() => ({
     showConfirmModal: false,
@@ -64,8 +65,6 @@ export const ERCXRC = () => {
     }
     return true;
   }, [cashierContractAddress]);
-
-  const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
 
   const tokenContract = useMemo(() => {
     if (isAddress(tokenAddress)) {

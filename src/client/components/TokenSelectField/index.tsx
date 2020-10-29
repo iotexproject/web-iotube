@@ -1,10 +1,11 @@
 import React from "react";
 import "./index.scss";
 import { Select } from "antd";
-import { RightOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined, RightOutlined } from "@ant-design/icons";
 import CurrencyLogo from "../CurrencyLogo/index";
 import { useTokens } from "../../hooks/Tokens";
 import { ETHEREUM, TokenInfoPair } from "../../constants/index";
+import { getTokenLink } from "../../utils/index";
 
 interface IComponentProps {
   onChange: Function;
@@ -16,7 +17,6 @@ const { Option } = Select;
 export const TokenSelectField = (props: IComponentProps) => {
   const { network = ETHEREUM, onChange } = props;
   const tokenList = useTokens(network);
-
   return (
     <Select
       className="component__token_select w-full c-white"
@@ -33,6 +33,9 @@ export const TokenSelectField = (props: IComponentProps) => {
           <Option key={tokenInfoPair[network].address} value={tokenInfoPair[network].address} className="flex bg-secondary c-white items-center">
             <CurrencyLogo currency={tokenInfoPair[network]} />
             <span className="flex-1 text-xl text-left ml-2 font-thin">{`${tokenInfoPair[network].name}(${tokenInfoPair[network].symbol})`}</span>
+            <a href={getTokenLink(network,tokenInfoPair[network].address )} target="_blank">
+              <InfoCircleOutlined style={{ color: "#9398A2" }} />
+            </a>
           </Option>
         ))}
     </Select>

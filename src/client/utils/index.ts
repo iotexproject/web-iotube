@@ -7,6 +7,9 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { ChainId } from "@uniswap/sdk";
 import { Contract as IOTXContract } from "iotex-antenna/lib/contract/contract";
 import { AntennaUtils } from "../../common/utils/antenna";
+import { DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX, IOTEXSCAN_URL } from "../constants/index";
+import { useWeb3React } from "@web3-react/core";
+import { publicConfig } from "../../../configs/public";
 
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: "",
@@ -116,6 +119,20 @@ export function getEtherscanLink(
     }
   }
 }
+export function getTokenLink(
+  network: string,
+  data: string
+): string {
+  if(network===ETHEREUM) {
+    const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useWeb3React<Web3Provider>();
+    return getEtherscanLink(chainId, data, "token");
+  } else if(network===IOTEX) {
+    const prefix = IOTEXSCAN_URL[DEFAULT_IOTEX_CHAIN_ID];
+    return `${prefix}address/${data}`;
+  }
+  return "";
+}
+
 
 export default function uriToHttp(uri: string): string[] {
   try {

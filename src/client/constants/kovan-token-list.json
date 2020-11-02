@@ -2,6 +2,22 @@
   "ETH": {
     "eth": {
       "address": "0x8807a4ab2342412adb97a170a7d2b677e7829f6b",
+      "name": "ETH",
+      "decimals": 18,
+      "symbol": "ETH",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
+    },
+    "iotx": {
+      "address": "io1jw6eckew7wak75j7vzxldd5ma88n9pxkajecrw",
+      "name": "Wrapped ETH",
+      "decimals": 18,
+      "symbol": "ioETH",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
+    }
+  },
+  "WETH": {
+    "eth": {
+      "address": "0x8807a4ab2342412adb97a170a7d2b677e7829f6b",
       "name": "Wrapped ETH",
       "decimals": 18,
       "symbol": "WETH",

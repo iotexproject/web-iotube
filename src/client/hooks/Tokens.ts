@@ -42,7 +42,7 @@ export function useTokens(network: string): { [p: string]: TokenInfoPair } {
     if (network === ETHEREUM) {
       if (chainId) {
         CHAIN_TOKEN_LIST[chainId].forEach((aToken) => {
-          tokenList[aToken.ETHEREUM.address.toLowerCase()] = {
+          tokenList[`${aToken.ETHEREUM.name.toLowerCase()}_${aToken.ETHEREUM.address.toLowerCase()}`] = {
             ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
             IOTEX: aToken.IOTEX,
           };

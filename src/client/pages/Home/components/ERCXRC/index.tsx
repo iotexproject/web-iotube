@@ -1,20 +1,28 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
-import { ETH_CHAIN_CASHIER_CONTRACT_ADDRESS, ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS, ETHEREUM, SUPPORTED_WALLETS, TRANSACTION_REJECTED } from "../../../../constants/index";
+import {
+  ETH_CHAIN_CASHIER_CONTRACT_ADDRESS,
+  ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS,
+  ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS,
+  ETHEREUM,
+  SUPPORTED_WALLETS,
+  TRANSACTION_REJECTED,
+} from "../../../../constants/index";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { injected } from "../../../../connectors/index";
 import { TransactionResponse, Web3Provider } from "@ethersproject/providers";
 import { calculateGasMargin, getAmountNumber, getContract, getEtherscanLink, isAddress, isValidAmount } from "../../../../utils/index";
-import { useTokenBalances } from "../../../../state/wallet/hooks";
+import { useETHBalances, useTokenBalances } from "../../../../state/wallet/hooks";
 import "./index.scss";
 import { AddressInput, AmountField, SubmitButton, TokenSelectField } from "../../../../components";
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
 import { Contract } from "@ethersproject/contracts";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
+import ETH_CASHIER_ABI from "../../../../constants/abis/eth_cashier.json";
 import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
 import { fromBytes } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
@@ -43,9 +51,18 @@ export const ERCXRC = () => {
 
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
-  const cashierContractAddress = useMemo(() => ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId], [chainId]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
+  const cashierContractAddress = useMemo(() => {
+    if (isAddress(ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId])) {
+      return ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
+    }
+    return null;
+  }, [chainId]);
+
+  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH" && isAddress(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair]);
   const tokenBalance = useTokenBalances(tokenAddress, token, [account])[account];
+  const userEthBalance = useETHBalances([account])[account];
+  const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency]);
 
   const store = useLocalStore(() => ({
     showConfirmModal: false,
@@ -58,13 +75,12 @@ export const ERCXRC = () => {
     if (!cashierContractAddress || !isAddress(cashierContractAddress)) {
       if (chainId) {
         let content = `please set correctly ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[chainId]} in env for chain ${ChainId[chainId]}`;
-        message.error(content);
         window.console.log(content);
       }
       return false;
     }
     return true;
-  }, [cashierContractAddress]);
+  }, [chainId, cashierContractAddress]);
 
   const tokenContract = useMemo(() => {
     if (isAddress(tokenAddress)) {
@@ -81,6 +97,16 @@ export const ERCXRC = () => {
     }
     return null;
   }, [tokenListContractAddress, library, account]);
+
+  const cashierContract = useMemo(() => {
+    if (isAddress(cashierContractAddress)) {
+      if (isETHCurrency) {
+        return getContract(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId], ETH_CASHIER_ABI, library, account);
+      }
+      return getContract(cashierContractAddress, ERC20_XRC20_ABI, library, account);
+    }
+    return null;
+  }, [cashierContractAddress, library, account, isETHCurrency]);
 
   useEffect(() => {
     const fetchAmountRange = async () => {
@@ -227,26 +253,26 @@ export const ERCXRC = () => {
       return `Amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
     try {
-      if (tokenBalance && amountNumber > Number(tokenBalance.toExact())) {
+      if (balance && amountNumber > Number(balance.toExact())) {
         return lang.t("input.balance.insufficient", { symbol: token.symbol });
       }
     } catch (e) {
       return lang.t("input.balance.invalid", { symbol: token.symbol });
     }
     return "";
-  }, [amount, tokenBalance, account, tokenAddress, cashierContractAddress]);
+  }, [amount, balance, account, tokenAddress, cashierContractAddress]);
 
   const possibleApprove = useMemo(() => {
     if (Boolean(inputError)) return false;
-    return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.UNAPPROVED;
-  }, [allowance, amount, xrc20TokenInfo, chainId, account]);
+    return amountInAllowance(allowance, amount, token) == AmountState.UNAPPROVED;
+  }, [allowance, amount, token, chainId, account]);
 
   const possibleConvert = useMemo(() => {
     if (possibleApprove || Boolean(inputError)) return false;
-    return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.APPROVED;
-  }, [possibleApprove, allowance, amount, xrc20TokenInfo, chainId, account]);
+    return amountInAllowance(allowance, amount, token) == AmountState.APPROVED;
+  }, [possibleApprove, allowance, amount, token, chainId, account]);
 
-  const onConfirm = async () => {
+  const onConfirm = useCallback(async () => {
     if (Boolean(inputError)) return false;
 
     const rawAmount = tryParseAmount(amount, token).toString();
@@ -255,22 +281,25 @@ export const ERCXRC = () => {
       return;
     }
 
-    const contract: Contract | null = getContract(cashierContractAddress, ERC20_XRC20_ABI, library, account);
-    if (!contract) {
-      message.error("could not get cashier contract");
-      return;
-    }
     const tokenAddress = token ? token.address : "";
     if (!tokenAddress) {
       message.error("could not get token address");
       return;
     }
-    const toAddress = account;
-    const args = [tokenAddress, toAddress, rawAmount];
-    const methodName = "depositTo";
+
+    if (!cashierContract) {
+      message.error("could not get cashier contract");
+      return;
+    }
+
+    const args = isETHCurrency ? [] : [tokenAddress, rawAmount];
+    const methodName = "deposit";
     const options = { from: account, gasLimit: 1000000 };
+    if (isETHCurrency) {
+      options["value"] = rawAmount;
+    }
     const depositTo = () => {
-      contract[methodName](...args, options)
+      cashierContract[methodName](...args, options)
         .then((response: any) => {
           window.console.log(`${methodName} action hash`, response.hash, response);
           setHash(response.hash);
@@ -293,7 +322,7 @@ export const ERCXRC = () => {
           message.error(content);
         });
     };
-    contract.estimateGas[methodName](...args, {})
+    cashierContract.estimateGas[methodName](...args, {})
       .then((gasEstimate) => {
         window.console.log("Gas estimation succeeded.", gasEstimate);
         // gasEstimate.mul(1.1).toNumber() will cause error.
@@ -305,7 +334,7 @@ export const ERCXRC = () => {
       })
       .catch((gasError) => {
         window.console.log("Gas estimation failed. Trying eth_call to extract error.", gasError);
-        return contract.callStatic[methodName](...args, options)
+        return cashierContract.callStatic[methodName](...args, options)
           .then((result) => {
             window.console.log("Be possible unexpected successful call after failed estimate gas. Let's try", gasError, result);
             depositTo();
@@ -313,7 +342,7 @@ export const ERCXRC = () => {
           .catch((callError) => {
             window.console.log("Call threw error", callError);
             let errorMessage: string;
-            if (callError.reason.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0 || callError.reason.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0) {
+            if ((callError.reason && callError.reason.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0) || callError.reason.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0) {
               errorMessage = "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
             } else {
               errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
@@ -321,7 +350,7 @@ export const ERCXRC = () => {
             message.error(errorMessage);
           });
       });
-  };
+  }, [inputError, amount, token, cashierContract, isETHCurrency]);
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
@@ -348,8 +377,8 @@ export const ERCXRC = () => {
             token && (
               <span
                 onClick={() => {
-                  if (tokenBalance) {
-                    setAmount(tokenBalance.toFixed(3));
+                  if (balance) {
+                    setAmount(balance.toFixed(3));
                   }
                 }}
                 className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
@@ -361,16 +390,16 @@ export const ERCXRC = () => {
         />
         {token && (
           <div className="font-light text-sm text-right c-gray-30 mt-2">
-            {tokenBalance && (
+            {balance && (
               <span>
-                {tokenBalance?.toExact()} {token.symbol}
+                {balance?.toExact()} {token.symbol}
               </span>
             )}
           </div>
         )}
         {amount && account && (
           <div className="my-6 text-left">
-            {token && (
+            {token && xrc20TokenInfo && (
               <div className="text-base c-gray-20 font-thin">
                 {lang.t("you_will_recieve_amount_symbol_tokens_at", {
                   amount,

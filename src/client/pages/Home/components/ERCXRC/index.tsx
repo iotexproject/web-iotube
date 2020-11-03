@@ -126,7 +126,7 @@ export const ERCXRC = () => {
   }, [tokenAddress, tokenListContract]);
 
   useEffect(() => {
-    if (isAddress(account) && cashierContractValidate && tokenContract) {
+    if (isAddress(account) && cashierContractValidate && tokenContract && !isETHCurrency) {
       try {
         tokenContract
           .allowance(account, cashierContractAddress)
@@ -143,7 +143,7 @@ export const ERCXRC = () => {
         window.console.log(`Failed to get allowance!`, e);
       }
     }
-  }, [account, cashierContractValidate, tokenContract]);
+  }, [account, cashierContractValidate, tokenContract, isETHCurrency]);
 
   const tryActivation = async (connector) => {
     let name = "";
@@ -263,14 +263,15 @@ export const ERCXRC = () => {
   }, [amount, balance, account, tokenAddress, cashierContractAddress]);
 
   const possibleApprove = useMemo(() => {
-    if (Boolean(inputError)) return false;
+    if (Boolean(inputError) || isETHCurrency) return false;
     return amountInAllowance(allowance, amount, token) == AmountState.UNAPPROVED;
-  }, [allowance, amount, token, chainId, account]);
+  }, [allowance, amount, token, chainId, account, isETHCurrency]);
 
   const possibleConvert = useMemo(() => {
     if (possibleApprove || Boolean(inputError)) return false;
+    if (isETHCurrency) return true;
     return amountInAllowance(allowance, amount, token) == AmountState.APPROVED;
-  }, [possibleApprove, allowance, amount, token, chainId, account]);
+  }, [possibleApprove, allowance, amount, token, chainId, account, isETHCurrency]);
 
   const onConfirm = useCallback(async () => {
     if (Boolean(inputError)) return false;

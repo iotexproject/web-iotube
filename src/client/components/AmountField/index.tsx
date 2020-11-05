@@ -18,7 +18,7 @@ export const AmountField = (props: IComponentProps) => {
   const store = useLocalStore(
     (props) => ({
       get validate(): { status: FormItemProps["validateStatus"]; errMsg?: string } {
-        if (Number(props.amount) == 0) {
+        if (Number(props.amount) == 0 || props.min >= props.max) {
           return { status: "success" };
         }
         if (Number(props.amount) > props.max || Number(props.amount) < props.min) {

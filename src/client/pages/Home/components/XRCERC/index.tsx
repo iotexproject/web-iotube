@@ -31,8 +31,8 @@ export const XRCERC = () => {
   const [depositFee, setDepositFee] = useState(BigNumber.from(0));
   const [fillState, setFillSate] = useState("");
   const [amountRange, setAmountRange] = useState({
-    minAmount: BigNumber.from("1000000000000000000"),
-    maxAmount: BigNumber.from("10000000000000000000000"),
+    minAmount: BigNumber.from("0"),
+    maxAmount: BigNumber.from("0"),
   });
   const account = wallet.walletAddress;
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);

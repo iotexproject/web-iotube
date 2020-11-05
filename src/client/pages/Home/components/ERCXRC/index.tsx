@@ -19,7 +19,6 @@ import { useETHBalances, useTokenBalances } from "../../../../state/wallet/hooks
 import "./index.scss";
 import { AddressInput, AmountField, SubmitButton, TokenSelectField } from "../../../../components";
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
-import { Contract } from "@ethersproject/contracts";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import ETH_CASHIER_ABI from "../../../../constants/abis/eth_cashier.json";
@@ -33,20 +32,21 @@ import Form from "antd/lib/form";
 import { formatUnits } from "@ethersproject/units";
 import { WarnModal } from "../../../../components/WarnModal";
 import { CARD_ERC20_XRC20 } from "../../../../../common/store/base";
+import { publicConfig } from "../../../../../../configs/public";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
 export const ERCXRC = () => {
   const { lang, wallet, base } = useStore();
-  const { account, activate, chainId, library } = useWeb3React<Web3Provider>();
+  const { account, activate, chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN, library } = useWeb3React<Web3Provider>();
   const [tokenInfoPair, setTokenInfoPair] = useState(null);
   const [amount, setAmount] = useState("");
   const [hash, setHash] = useState("");
   const [allowance, setAllowance] = useState(BigNumber.from(-1));
   const [fillState, setFillSate] = useState("");
   const [amountRange, setAmountRange] = useState({
-    minAmount: BigNumber.from("1000000000000000000"),
-    maxAmount: BigNumber.from("10000000000000000000000"),
+    minAmount: BigNumber.from("0"),
+    maxAmount: BigNumber.from("0"),
   });
 
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
@@ -59,10 +59,10 @@ export const ERCXRC = () => {
     return null;
   }, [chainId]);
 
-  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH" && isAddress(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair]);
+  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH" && isAddress(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair, account]);
   const tokenBalance = useTokenBalances(tokenAddress, token, [account])[account];
   const userEthBalance = useETHBalances([account])[account];
-  const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency]);
+  const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency, userEthBalance, tokenBalance]);
 
   const store = useLocalStore(() => ({
     showConfirmModal: false,
@@ -92,7 +92,7 @@ export const ERCXRC = () => {
   const tokenListContractAddress = useMemo(() => ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS[chainId], [chainId]);
 
   const tokenListContract = useMemo(() => {
-    if (isAddress(tokenListContractAddress)) {
+    if (isAddress(tokenListContractAddress) && library) {
       return getContract(tokenListContractAddress, TOKEN_LIST_ABI, library, account);
     }
     return null;
@@ -108,9 +108,9 @@ export const ERCXRC = () => {
     return null;
   }, [cashierContractAddress, library, account, isETHCurrency]);
 
-  useEffect(() => {
-    const fetchAmountRange = async () => {
-      if (tokenAddress && tokenListContract) {
+  useMemo(() => {
+    if (tokenAddress && tokenListContract) {
+      const fetchAmountRange = async () => {
         try {
           const [minAmount, maxAmount] = await Promise.all([tokenListContract.minAmount(tokenAddress), tokenListContract.maxAmount(tokenAddress)]);
           setAmountRange({
@@ -120,9 +120,9 @@ export const ERCXRC = () => {
         } catch (e) {
           window.console.log(`Failed to get amount range `, e);
         }
-      }
-    };
-    fetchAmountRange();
+      };
+      fetchAmountRange();
+    }
   }, [tokenAddress, tokenListContract]);
 
   useEffect(() => {

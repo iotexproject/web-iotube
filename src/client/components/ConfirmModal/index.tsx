@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import React, { MouseEventHandler, useMemo } from "react";
 import { Button, Modal } from "antd";
 import { useStore } from "../../../common/store";
 import { Token } from "@uniswap/sdk";
@@ -20,6 +20,7 @@ interface IComponentProps {
 export const ConfirmModal = (props: IComponentProps) => {
   const { lang } = useStore();
   if (!props.visible) return null;
+  const isETHCurrency = props.depositToken && props.depositToken.name === "ETH";
 
   return (
     <Modal
@@ -39,8 +40,8 @@ export const ConfirmModal = (props: IComponentProps) => {
           <>
             <CurrencyLogo currency={props.depositToken} />
             <span className="text-xl ml-2 font-light">
-              {props.depositToken.name}&nbsp;&nbsp;(
-              {lang.t(props.isERCXRC ? "erc_20" : "xrc_20")})
+              {props.depositToken.name}&nbsp;&nbsp;
+              {!isETHCurrency && `(${lang.t(props.isERCXRC ? "erc_20" : "xrc_20")})`}
             </span>
           </>
         )}

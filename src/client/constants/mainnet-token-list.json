@@ -2,9 +2,9 @@
   "ETH": {
     "eth": {
       "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      "name": "Wrapped ETH",
+      "name": "ETH",
       "decimals": 18,
-      "symbol": "WETH",
+      "symbol": "ETH",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
     },
     "iotx": {

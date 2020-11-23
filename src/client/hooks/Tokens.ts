@@ -42,18 +42,22 @@ export function useTokens(network: string): { [p: string]: TokenInfoPair } {
     if (network === ETHEREUM) {
       if (chainId) {
         CHAIN_TOKEN_LIST[chainId].forEach((aToken) => {
-          tokenList[`${chainId}-${aToken.ETHEREUM.name.toLowerCase()}_${aToken.ETHEREUM.address.toLowerCase()}`] = {
-            ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
-            IOTEX: aToken.IOTEX,
-          };
+          if (aToken.ETHEREUM.address) {
+            tokenList[`${chainId}-${aToken.ETHEREUM.name.toLowerCase()}_${aToken.ETHEREUM.address.toLowerCase()}`] = {
+              ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
+              IOTEX: aToken.IOTEX,
+            };
+          }
         });
       }
     } else if (network === IOTEX) {
       (IOTEX_TOKEN_LIST[DEFAULT_IOTEX_CHAIN_ID] || []).forEach((aToken) => {
-        tokenList[aToken.IOTEX.address.toLowerCase()] = {
-          ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
-          IOTEX: aToken.IOTEX,
-        };
+        if (aToken.IOTEX.address) {
+          tokenList[aToken.IOTEX.address.toLowerCase()] = {
+            ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
+            IOTEX: aToken.IOTEX,
+          };
+        }
       });
     }
     return tokenList;

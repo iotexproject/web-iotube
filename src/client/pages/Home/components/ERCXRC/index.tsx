@@ -7,6 +7,7 @@ import {
   ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS,
   ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS,
   ETHEREUM,
+  IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS,
   SUPPORTED_WALLETS,
   TRANSACTION_REJECTED,
 } from "../../../../constants/index";
@@ -33,6 +34,7 @@ import { formatUnits } from "@ethersproject/units";
 import { WarnModal } from "../../../../components/WarnModal";
 import { CARD_ERC20_XRC20 } from "../../../../../common/store/base";
 import { publicConfig } from "../../../../../../configs/public";
+import { toRau } from "iotex-antenna/lib/account/utils";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -52,12 +54,16 @@ export const ERCXRC = () => {
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
+  const isIOTXECurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.symbol === "IOTX-E" && isAddress(IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair, account]);
   const cashierContractAddress = useMemo(() => {
+    if (isIOTXECurrency) {
+      return IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
+    }
     if (isAddress(ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId])) {
       return ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
     }
     return null;
-  }, [chainId]);
+  }, [chainId, isIOTXECurrency]);
 
   const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH" && isAddress(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair, account]);
   const tokenBalance = useTokenBalances(tokenAddress, token, [account])[account];
@@ -84,10 +90,10 @@ export const ERCXRC = () => {
 
   const tokenContract = useMemo(() => {
     if (isAddress(tokenAddress)) {
-      return getContract(tokenAddress, ERC20_ABI, library, account);
+      return isIOTXECurrency ? getContract(tokenAddress, ERC20_ABI, library, account) : getContract(tokenAddress, ERC20_ABI, library, account);
     }
     return null;
-  }, [tokenAddress, library, account]);
+  }, [tokenAddress, library, account, isIOTXECurrency]);
 
   const tokenListContractAddress = useMemo(() => ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS[chainId], [chainId]);
 
@@ -109,6 +115,15 @@ export const ERCXRC = () => {
   }, [cashierContractAddress, library, account, isETHCurrency]);
 
   useMemo(() => {
+    if (isIOTXECurrency) {
+      const minAmount = BigNumber.from(toRau("100", "iotx"));
+      const maxAmount = BigNumber.from(toRau("10000000", "iotx"));
+      setAmountRange({
+        minAmount,
+        maxAmount,
+      });
+      return;
+    }
     if (tokenAddress && tokenListContract) {
       const fetchAmountRange = async () => {
         try {
@@ -123,7 +138,7 @@ export const ERCXRC = () => {
       };
       fetchAmountRange();
     }
-  }, [tokenAddress, tokenListContract]);
+  }, [tokenAddress, tokenListContract, isIOTXECurrency]);
 
   useEffect(() => {
     if (isAddress(account) && cashierContractValidate && tokenContract && !isETHCurrency) {

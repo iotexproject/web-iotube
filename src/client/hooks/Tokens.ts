@@ -41,8 +41,8 @@ export function useTokens(network: string): { [p: string]: TokenInfoPair } {
     const tokenList = {};
     if (network === ETHEREUM) {
       if (chainId) {
-        CHAIN_TOKEN_LIST[chainId].forEach((aToken) => {
-          tokenList[`${chainId}-${aToken.ETHEREUM.name.toLowerCase()}_${aToken.ETHEREUM.address.toLowerCase()}`] = {
+        CHAIN_TOKEN_LIST[chainId].forEach((aToken, index) => {
+          tokenList[`${index}_${chainId}_${aToken.ETHEREUM.symbol.toLowerCase()}_${aToken.ETHEREUM.address.toLowerCase()}`] = {
             ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
             IOTEX: aToken.IOTEX,
           };

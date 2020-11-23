@@ -34,19 +34,18 @@ export const TokenSelectField = (props: IComponentProps) => {
       }}
     >
       {tokenList &&
-        Object.values(tokenList).map((tokenInfoPair: TokenInfoPair) => (
-          <Option
-            key={`${chainId}-${tokenInfoPair[network].name.toLowerCase()}_${tokenInfoPair[network].address.toLowerCase()}`}
-            value={`${chainId}-${tokenInfoPair[network].name.toLowerCase()}_${tokenInfoPair[network].address.toLowerCase()}`}
-            className="flex bg-secondary c-white items-center"
-          >
-            <CurrencyLogo currency={tokenInfoPair[network]} />
-            <span className="flex-1 text-xl text-left ml-2 font-thin">{`${tokenInfoPair[network].name}(${tokenInfoPair[network].symbol})`}</span>
-            <a href={getTokenLink(network, tokenInfoPair[network].address)} target="_blank">
-              <InfoCircleOutlined style={{ color: "#9398A2" }} />
-            </a>
-          </Option>
-        ))}
+        Object.keys(tokenList).map((key: string, index) => {
+          const tokenInfoPair: TokenInfoPair = tokenList[key];
+          return (
+            <Option key={key} value={key} className="flex bg-secondary c-white items-center">
+              <CurrencyLogo currency={tokenInfoPair[network]} />
+              <span className="flex-1 text-xl text-left ml-2 font-thin">{`${tokenInfoPair[network].name}(${tokenInfoPair[network].symbol})`}</span>
+              <a href={getTokenLink(network, tokenInfoPair[network].address)} target="_blank">
+                <InfoCircleOutlined style={{ color: "#9398A2" }} />
+              </a>
+            </Option>
+          );
+        })}
     </Select>
   );
 };

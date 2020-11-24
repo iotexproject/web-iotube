@@ -24,6 +24,7 @@ import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import ETH_CASHIER_ABI from "../../../../constants/abis/eth_cashier.json";
 import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
+import E2N_ABI from "../../../../constants/abis/e2n_abi.json";
 import { fromBytes } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import { amountInAllowance, AmountState, DEFAULT_TOKEN_DECIMAL, tryParseAmount } from "../../../../hooks/Tokens";
@@ -35,6 +36,7 @@ import { WarnModal } from "../../../../components/WarnModal";
 import { CARD_ERC20_XRC20 } from "../../../../../common/store/base";
 import { publicConfig } from "../../../../../../configs/public";
 import { toRau } from "iotex-antenna/lib/account/utils";
+import { Contract as EthContract } from "@ethersproject/contracts";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -109,36 +111,40 @@ export const ERCXRC = () => {
       if (isETHCurrency) {
         return getContract(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId], ETH_CASHIER_ABI, library, account);
       }
+      if (isIOTXECurrency) {
+        return getContract(cashierContractAddress, E2N_ABI, library, account);
+      }
       return getContract(cashierContractAddress, ERC20_XRC20_ABI, library, account);
     }
     return null;
-  }, [cashierContractAddress, library, account, isETHCurrency]);
+  }, [cashierContractAddress, library, account, isETHCurrency, isIOTXECurrency]);
 
   useMemo(() => {
-    if (isIOTXECurrency) {
-      const minAmount = BigNumber.from(toRau("100", "iotx"));
-      const maxAmount = BigNumber.from(toRau("10000000", "iotx"));
-      setAmountRange({
-        minAmount,
-        maxAmount,
-      });
-      return;
-    }
-    if (tokenAddress && tokenListContract) {
-      const fetchAmountRange = async () => {
+    const contract = isIOTXECurrency&&cashierContract?cashierContract:(tokenListContract?tokenListContract:null);
+    if (tokenAddress&&contract) {
+      const fetchAmountRange = async (contract: EthContract) => {
         try {
-          const [minAmount, maxAmount] = await Promise.all([tokenListContract.minAmount(tokenAddress), tokenListContract.maxAmount(tokenAddress)]);
-          setAmountRange({
-            minAmount,
-            maxAmount,
-          });
+          if(contract===tokenListContract){
+            const [minAmount, maxAmount] = await Promise.all([contract.minAmount(tokenAddress), contract.maxAmount(tokenAddress)]);
+            setAmountRange({
+              minAmount,
+              maxAmount,
+            });
+          } else if(contract===cashierContract){
+            const [minAmount, maxAmount] = await Promise.all([contract.minAmount(), contract.maxAmount()]);
+            setAmountRange({
+              minAmount,
+              maxAmount,
+            });
+          }
         } catch (e) {
           window.console.log(`Failed to get amount range `, e);
+          message.error(`Failed to get amount range!\n${e.message}`);
         }
       };
-      fetchAmountRange();
+      fetchAmountRange(contract);
     }
-  }, [tokenAddress, tokenListContract, isIOTXECurrency]);
+  }, [tokenAddress, tokenListContract, isIOTXECurrency, cashierContract]);
 
   useEffect(() => {
     if (isAddress(account) && cashierContractValidate && tokenContract && !isETHCurrency) {
@@ -260,6 +266,9 @@ export const ERCXRC = () => {
     const amountNumber = getAmountNumber(amount);
     if (amountNumber == 0) {
       return lang.t("input.amount.enter_value");
+    }
+    if(amountRange.maxAmount.eq(0)){
+      return lang.t("input.amount.range_error");
     }
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;

@@ -131,11 +131,14 @@ export const ERCXRC = () => {
               maxAmount,
             });
           } else if (contract === cashierContract) {
-            const [minAmount, maxAmount] = await Promise.all([contract.minAmount(), contract.maxAmount()]);
-            setAmountRange({
-              minAmount,
-              maxAmount,
-            });
+            const signerOrProvider = (contract.signer || contract.provider);
+            if(signerOrProvider){
+              const [minAmount, maxAmount] = await Promise.all([contract.minAmount(), contract.maxAmount()]);
+              setAmountRange({
+                minAmount,
+                maxAmount,
+              });
+            }
           }
         } catch (e) {
           window.console.log(`Failed to get amount range `, e);

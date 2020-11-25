@@ -154,15 +154,14 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "token",
-    "outputs": [{ "name": "", "type": "address" }],
+    "name": "gasLimit",
+    "outputs": [{ "name": "", "type": "uint256" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "name": "_tokenAddr", "type": "address" },
       { "name": "_safe", "type": "address" },
       { "name": "_fee", "type": "uint256" },
       { "name": "_minAmount", "type": "uint256" },
@@ -172,6 +171,7 @@
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
+  { "payable": true, "stateMutability": "payable", "type": "fallback" },
   {
     "anonymous": false,
     "inputs": [
@@ -196,7 +196,7 @@
   },
   {
     "constant": false,
-    "inputs": [{ "name": "_amount", "type": "uint256" }],
+    "inputs": [],
     "name": "deposit",
     "outputs": [],
     "payable": true,
@@ -205,10 +205,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      { "name": "_to", "type": "address" },
-      { "name": "_amount", "type": "uint256" }
-    ],
+    "inputs": [{ "name": "_to", "type": "address" }],
     "name": "depositTo",
     "outputs": [],
     "payable": true,
@@ -217,8 +214,8 @@
   },
   {
     "constant": false,
-    "inputs": [],
-    "name": "withdrawToken",
+    "inputs": [{ "name": "_gasLimit", "type": "uint256" }],
+    "name": "setGasLimit",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",

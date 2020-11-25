@@ -1,23 +1,31 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import { AddressInput, AmountField, ConfirmModal, SubmitButton, TokenSelectField } from "../../../../components";
-import { DEFAULT_IOTEX_CHAIN_ID, IOTEX, IOTEX_CASHIER_CONTRACT_ADDRESS, IOTEX_TOKEN_LIST_CONTRACT_ADDRESS, IOTEXSCAN_URL } from "../../../../constants/index";
+import {
+  DEFAULT_IOTEX_CHAIN_ID,
+  IOTEX,
+  IOTEX_CASHIER_CONTRACT_ADDRESS,
+  IOTEX_TOKEN_LIST_CONTRACT_ADDRESS,
+  IOTEXSCAN_URL,
+} from "../../../../constants/index";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { BigNumber } from "@ethersproject/bignumber";
-import { getAmountNumber, getIOTXContract, isAddress, isValidAmount } from "../../../../utils/index";
+import { getAmountNumber, getIOTXContract, isAddress } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
 import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { formatUnits } from "@ethersproject/units";
 import { amountInAllowance, AmountState, DEFAULT_TOKEN_DECIMAL, getFeeIOTX, tryParseAmount } from "../../../../hooks/Tokens";
 import { TransactionResponse } from "@ethersproject/providers";
+import N2E_ABI from "../../../../constants/abis/n2e_abi.json";
 import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
 import Form from "antd/lib/form";
 import { WarnModal } from "../../../../components/WarnModal";
 import { CARD_XRC20_ERC20 } from "../../../../../common/store/base";
+import { Contract as IOTXContract } from "iotex-antenna/lib/contract/contract";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -28,8 +36,8 @@ export const XRCERC = () => {
   const [amount, setAmount] = useState("");
   const [beConverted, setBeConverted] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
-  const [depositFee, setDepositFee] = useState(BigNumber.from(0));
   const [fillState, setFillSate] = useState("");
+  const [depositFee, setDepositFee] = useState(BigNumber.from(0));
   const [amountRange, setAmountRange] = useState({
     minAmount: BigNumber.from("0"),
     maxAmount: BigNumber.from("0"),
@@ -37,8 +45,14 @@ export const XRCERC = () => {
   const account = wallet.walletAddress;
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
-  const cashierContractAddress = IOTEX_CASHIER_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+  const isIOTXCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.IOTEX.symbol === "IOTX", [tokenInfoPair, account]);
   const tokenAddress = useMemo(() => (xrc20TokenInfo ? xrc20TokenInfo.address : ""), [xrc20TokenInfo]);
+  const cashierContractAddress = useMemo(() => {
+    if (isIOTXCurrency) {
+      return tokenAddress;
+    }
+    return IOTEX_CASHIER_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+  }, [isIOTXCurrency, tokenAddress]);
 
   const tokenContract = useMemo(() => {
     if (validateAddress(tokenAddress)) {
@@ -48,8 +62,14 @@ export const XRCERC = () => {
   }, [tokenAddress, account]);
 
   const cashierContract = useMemo(() => {
-    return cashierContractAddress ? getIOTXContract(cashierContractAddress, ERC20_XRC20_ABI) : null;
-  }, [cashierContractAddress]);
+    if (isAddress(cashierContractAddress)) {
+      if (isIOTXCurrency) {
+        return getIOTXContract(cashierContractAddress, N2E_ABI);
+      }
+      return getIOTXContract(cashierContractAddress, ERC20_XRC20_ABI);
+    }
+    return null;
+  }, [cashierContractAddress, isIOTXCurrency]);
 
   useMemo(() => {
     if (cashierContract) {
@@ -77,32 +97,40 @@ export const XRCERC = () => {
     return tokenListContractAddress ? getIOTXContract(tokenListContractAddress, TOKEN_LIST_ABI) : null;
   }, [tokenListContractAddress]);
 
-  useEffect(() => {
-    const fetchAmountRange = async () => {
-      if (tokenAddress && tokenListContract) {
+  useMemo(() => {
+    const contract = isIOTXCurrency && cashierContract ? cashierContract : tokenListContract ? tokenListContract : null;
+    if (tokenAddress && contract) {
+      const fetchAmountRange = async (contract: IOTXContract) => {
         try {
-          const [minAmount, maxAmount] = await Promise.all([
-            tokenListContract.methods.minAmount(tokenAddress, {
-              from: tokenListContractAddress,
-            }),
-            tokenListContract.methods.maxAmount(tokenAddress, {
-              from: tokenListContractAddress,
-            }),
-          ]);
-          setAmountRange({
-            minAmount: BigNumber.from(minAmount.toString()),
-            maxAmount: BigNumber.from(maxAmount.toString()),
-          });
+          if (contract === tokenListContract) {
+            const [minAmount, maxAmount] = await Promise.all([
+              contract.methods.minAmount(tokenAddress, { from: tokenListContractAddress }),
+              contract.methods.maxAmount(tokenAddress, { from: tokenListContractAddress }),
+            ]);
+            setAmountRange({
+              minAmount: BigNumber.from(minAmount.toString()),
+              maxAmount: BigNumber.from(maxAmount.toString()),
+            });
+          } else if (contract === cashierContract) {
+            const [minAmount, maxAmount] = await Promise.all([contract.methods.minAmount({ from: tokenAddress }), contract.methods.maxAmount({ from: tokenAddress })]);
+            setAmountRange({
+              minAmount: BigNumber.from(minAmount.toString()),
+              maxAmount: BigNumber.from(maxAmount.toString()),
+            });
+          }
         } catch (e) {
+          message.error(`Failed to get amount range!\n${e.message}`);
           window.console.log(`Failed to get amount range `, e);
         }
-      }
-    };
-    fetchAmountRange();
-  }, [tokenAddress, tokenListContract]);
+      };
+      fetchAmountRange(contract);
+    }
+  }, [tokenAddress, tokenListContract, isIOTXCurrency]);
 
   useEffect(() => {
-    if (validateAddress(account) && tokenContract) {
+    if (isIOTXCurrency) {
+      setTokenBalance(BigNumber.from(wallet.walletBalance.toLocaleString("fullwide", { useGrouping: false })));
+    } else if (validateAddress(account) && tokenContract) {
       try {
         tokenContract.methods
           .balanceOf(account, account)
@@ -120,7 +148,7 @@ export const XRCERC = () => {
       }
     }
     wallet.init();
-  }, [account, tokenContract]);
+  }, [account, tokenContract, isIOTXCurrency, wallet.walletBalance]);
 
   const inputError = useMemo(() => {
     if (!account) {
@@ -172,17 +200,18 @@ export const XRCERC = () => {
   }, [amount, depositFee, tokenBalance, account, tokenAddress, cashierContractAddress]);
 
   const possibleApprove = useMemo(() => {
-    if (Boolean(inputError)) return false;
+    if (Boolean(inputError) || isIOTXCurrency) return false;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.UNAPPROVED;
-  }, [allowance, amount, xrc20TokenInfo]);
+  }, [allowance, amount, xrc20TokenInfo, isIOTXCurrency]);
 
   const possibleConvert = useMemo(() => {
     if (possibleApprove || Boolean(inputError)) return false;
+    if (isIOTXCurrency) return true;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.APPROVED;
-  }, [possibleApprove, allowance, amount, xrc20TokenInfo]);
+  }, [possibleApprove, allowance, amount, xrc20TokenInfo, isIOTXCurrency]);
 
   useEffect(() => {
-    if (isAddress(account) && cashierContractAddress && tokenContract) {
+    if (isAddress(account) && cashierContractAddress && tokenContract && !isIOTXCurrency) {
       try {
         tokenContract.methods
           .allowance(account, cashierContractAddress, { from: account })
@@ -199,7 +228,7 @@ export const XRCERC = () => {
         window.console.log(`Failed to get allowance!`, e);
       }
     }
-  }, [account, tokenContract, beConverted]);
+  }, [account, tokenContract, beConverted, isIOTXCurrency]);
 
   const store = useLocalStore(() => ({
     showConfirmModal: false,
@@ -249,7 +278,7 @@ export const XRCERC = () => {
     }
   };
 
-  const onConfirm = async () => {
+  const onConfirm = useCallback(async () => {
     if (Boolean(inputError)) {
       return;
     }
@@ -265,7 +294,7 @@ export const XRCERC = () => {
       message.error("could not get token address");
       return;
     }
-    const args = [tokenAddress, rawAmount];
+    const args = isIOTXCurrency ? [] : [tokenAddress, rawAmount];
     const methodName = "deposit";
     const options = {
       from: account,
@@ -273,7 +302,10 @@ export const XRCERC = () => {
       gasLimit: 1000000,
       gasPrice: toRau("1", "Qev"),
     };
-    const depositTo = () => {
+    if (isIOTXCurrency) {
+      options["amount"] = rawAmount;
+    }
+    const deposit = () => {
       cashierContract.methods
         .deposit(...args, options)
         .then((response: any) => {
@@ -291,8 +323,8 @@ export const XRCERC = () => {
           message.error(content);
         });
     };
-    depositTo();
-  };
+    deposit();
+  }, [inputError, amount, token, cashierContract, isIOTXCurrency]);
 
   return useObserver(() => (
     <div className="page__home__component__xrc_erc p-8 pt-6">

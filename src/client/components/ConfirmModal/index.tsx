@@ -3,8 +3,6 @@ import { Button, Modal } from "antd";
 import { useStore } from "../../../common/store";
 import { Token } from "@uniswap/sdk";
 import CurrencyLogo from "../CurrencyLogo/index";
-import { isAddress } from "../../utils/index";
-import { IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS } from "../../constants/index";
 
 interface IComponentProps {
   visible: boolean;
@@ -24,6 +22,7 @@ export const ConfirmModal = (props: IComponentProps) => {
   if (!props.visible) return null;
   const isETHCurrency = props.depositToken && props.depositToken.name === "ETH";
   const isIOTXECurrency = props.depositToken && props.depositToken.symbol === "IOTX-E";
+  const isIOTXCurrency = props.depositToken && props.depositToken.symbol === "IOTX";
 
   return (
     <Modal
@@ -31,11 +30,7 @@ export const ConfirmModal = (props: IComponentProps) => {
       visible={props.visible}
       onCancel={props.close}
       footer={null}
-      className={`modal__confirm_deposit ${
-        props.isERCXRC
-          ? "modal__confirm_deposit--ercxrc"
-          : "modal__confirm_deposit--xrcerc"
-      }`}
+      className={`modal__confirm_deposit ${props.isERCXRC ? "modal__confirm_deposit--ercxrc" : "modal__confirm_deposit--xrcerc"}`}
     >
       <div className="c-white flex items-center">
         <span className="font-normal text-3xl mr-3">{props.depositAmount}</span>
@@ -43,15 +38,13 @@ export const ConfirmModal = (props: IComponentProps) => {
           <>
             <CurrencyLogo currency={props.depositToken} />
             <span className="text-xl ml-2 font-light">
-              {props.depositToken.name}&nbsp;&nbsp;
-              {!isETHCurrency && `(${lang.t(props.isERCXRC ? "erc_20" : "xrc_20")})`}
+              {props.depositToken.symbol}&nbsp;&nbsp;
+              {!isETHCurrency && !isIOTXCurrency && `(${lang.t(props.isERCXRC ? "erc_20" : "xrc_20")})`}
             </span>
           </>
         )}
       </div>
-      <div className="c-gray font-thin text-base mt-2 mb-5">
-        {props.middleComment}
-      </div>
+      <div className="c-gray font-thin text-base mt-2 mb-5">{props.middleComment}</div>
       <div className="c-white flex items-center">
         <span className="font-normal text-3xl mr-3">{props.mintAmount}</span>
         {props.mintToken && (
@@ -59,14 +52,12 @@ export const ConfirmModal = (props: IComponentProps) => {
             <CurrencyLogo currency={props.mintToken} />
             <span className="text-xl ml-2 font-light">
               {props.mintToken.symbol}&nbsp;&nbsp;
-              {!isIOTXECurrency&&`(${lang.t(!props.isERCXRC ? "erc_20" : "xrc_20")})`}
+              {!isIOTXECurrency && `(${lang.t(!props.isERCXRC ? "erc_20" : "xrc_20")})`}
             </span>
           </>
         )}
       </div>
-      <div className="c-gray font-thin text-base mt-2 mb-5">
-        on {props.isERCXRC ? lang.t("token.iotex") : lang.t("token.ethereum")}
-      </div>
+      <div className="c-gray font-thin text-base mt-2 mb-5">on {props.isERCXRC ? lang.t("token.iotex") : lang.t("token.ethereum")}</div>
       <div className="my-6 text-left c-gray">
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
         <div className="font-light text-sm flex items-center justify-between">
@@ -74,22 +65,14 @@ export const ConfirmModal = (props: IComponentProps) => {
           <span>0 ({lang.t("free")})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>
-            {lang.t(props.isERCXRC ? "relay_to_iotex" : "relay_to_ethereum")}
-          </span>
-          <span>
-            {props.isERCXRC ? `0 (${lang.t("free")})` : props.networkFee}
-          </span>
+          <span>{lang.t(props.isERCXRC ? "relay_to_iotex" : "relay_to_ethereum")}</span>
+          <span>{props.isERCXRC ? `0 (${lang.t("free")})` : props.networkFee}</span>
         </div>
       </div>
       <div>
         <Button
           onClick={props.onConfirm}
-          className={`modal__confirm_deposit__confirm ${
-            props.isERCXRC
-              ? "modal__confirm_deposit__confirm--erc-xrc"
-              : "modal__confirm_deposit__confirm--xrc-erc"
-          } w-full c-white`}
+          className={`modal__confirm_deposit__confirm ${props.isERCXRC ? "modal__confirm_deposit__confirm--erc-xrc" : "modal__confirm_deposit__confirm--xrc-erc"} w-full c-white`}
           type="primary"
         >
           {lang.t("confirm")}

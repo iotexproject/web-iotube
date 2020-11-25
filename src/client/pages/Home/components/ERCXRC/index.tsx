@@ -92,10 +92,10 @@ export const ERCXRC = () => {
 
   const tokenContract = useMemo(() => {
     if (isAddress(tokenAddress)) {
-      return isIOTXECurrency ? getContract(tokenAddress, ERC20_ABI, library, account) : getContract(tokenAddress, ERC20_ABI, library, account);
+      return getContract(tokenAddress, ERC20_ABI, library, account);
     }
     return null;
-  }, [tokenAddress, library, account, isIOTXECurrency]);
+  }, [tokenAddress, library, account]);
 
   const tokenListContractAddress = useMemo(() => ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS[chainId], [chainId]);
 
@@ -120,17 +120,17 @@ export const ERCXRC = () => {
   }, [cashierContractAddress, library, account, isETHCurrency, isIOTXECurrency]);
 
   useMemo(() => {
-    const contract = isIOTXECurrency&&cashierContract?cashierContract:(tokenListContract?tokenListContract:null);
-    if (tokenAddress&&contract) {
+    const contract = isIOTXECurrency && cashierContract ? cashierContract : tokenListContract ? tokenListContract : null;
+    if (tokenAddress && contract) {
       const fetchAmountRange = async (contract: EthContract) => {
         try {
-          if(contract===tokenListContract){
+          if (contract === tokenListContract) {
             const [minAmount, maxAmount] = await Promise.all([contract.minAmount(tokenAddress), contract.maxAmount(tokenAddress)]);
             setAmountRange({
               minAmount,
               maxAmount,
             });
-          } else if(contract===cashierContract){
+          } else if (contract === cashierContract) {
             const [minAmount, maxAmount] = await Promise.all([contract.minAmount(), contract.maxAmount()]);
             setAmountRange({
               minAmount,
@@ -267,7 +267,7 @@ export const ERCXRC = () => {
     if (amountNumber == 0) {
       return lang.t("input.amount.enter_value");
     }
-    if(amountRange.maxAmount.eq(0)){
+    if (amountRange.maxAmount.eq(0)) {
       return lang.t("input.amount.range_error");
     }
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {

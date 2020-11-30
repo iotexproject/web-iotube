@@ -15,6 +15,7 @@ interface IComponentProps {
   mintToken: Token | null;
   middleComment: string;
   isERCXRC: boolean;
+  toAddress: string;
 }
 
 export const ConfirmModal = (props: IComponentProps) => {
@@ -57,7 +58,11 @@ export const ConfirmModal = (props: IComponentProps) => {
           </>
         )}
       </div>
-      <div className="c-gray font-thin text-base mt-2 mb-5">on {props.isERCXRC ? lang.t("token.iotex") : lang.t("token.ethereum")}</div>
+      <div className="c-gray font-thin text-base mt-2 mb-5">on {props.isERCXRC ? lang.t("token.iotex") : lang.t("token.ethereum")} at&nbsp;
+        <span className="c-white font-light">
+          {props.toAddress}
+        </span>
+        </div>
       <div className="my-6 text-left c-gray">
         <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
         <div className="font-light text-sm flex items-center justify-between">

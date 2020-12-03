@@ -333,7 +333,7 @@ export const ERCXRC = () => {
       return;
     }
 
-    const args = isETHCurrency ? [toEthAddress] : [tokenAddress, toEthAddress, rawAmount];
+    const args = isETHCurrency ? [toEthAddress] : isIOTXECurrency?[toEthAddress, rawAmount]:[tokenAddress, toEthAddress, rawAmount];
     const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
     if (isETHCurrency) {

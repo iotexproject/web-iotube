@@ -172,11 +172,9 @@ export const ERCXRC = () => {
             return value;
           })
           .catch((error: Error) => {
-            message.error(`Failed to get allowance! ${error.message}`);
             window.console.log(`Failed to get allowance!`, error);
           });
       } catch (e) {
-        message.error(`Failed to get allowance!`);
         window.console.log(`Failed to get allowance!`, e);
       }
     }

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import "./index.scss";
 import { Select } from "antd";
 import { InfoCircleOutlined, RightOutlined } from "@ant-design/icons";

@@ -1,4 +1,20 @@
 {
+  "IOTX": {
+    "eth": {
+      "address": "",
+      "name": "IoTeX",
+      "decimals": 18,
+      "symbol": "IOTX-E",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    },
+    "iotx": {
+      "address": "",
+      "name": "IoTeX",
+      "decimals": 18,
+      "symbol": "IOTX",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    }
+  },
   "ETH": {
     "eth": {
       "address": "0x8807a4ab2342412adb97a170a7d2b677e7829f6b",

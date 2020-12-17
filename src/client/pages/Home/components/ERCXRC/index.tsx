@@ -7,6 +7,7 @@ import {
   ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS,
   ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS,
   ETHEREUM,
+  IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS,
   SUPPORTED_WALLETS,
   TRANSACTION_REJECTED,
 } from "../../../../constants/index";
@@ -23,7 +24,8 @@ import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import ETH_CASHIER_ABI from "../../../../constants/abis/eth_cashier.json";
 import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
-import { fromBytes } from "iotex-antenna/lib/crypto/address";
+import E2N_ABI from "../../../../constants/abis/e2n_abi.json";
+import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import { amountInAllowance, AmountState, DEFAULT_TOKEN_DECIMAL, tryParseAmount } from "../../../../hooks/Tokens";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -33,6 +35,9 @@ import { formatUnits } from "@ethersproject/units";
 import { WarnModal } from "../../../../components/WarnModal";
 import { CARD_ERC20_XRC20 } from "../../../../../common/store/base";
 import { publicConfig } from "../../../../../../configs/public";
+import { Contract as EthContract } from "@ethersproject/contracts";
+import { isAddress as isEthAddress } from "@ethersproject/address";
+import { validateAddress } from "iotex-antenna/lib/account/utils";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -49,15 +54,31 @@ export const ERCXRC = () => {
     maxAmount: BigNumber.from("0"),
   });
 
+  const [changedToAddress, setChangedToAddress] = useState(undefined);
+  const toEthAddress = useMemo(() => {
+    if(changedToAddress!==undefined){
+      if(validateAddress(changedToAddress)) {
+        return fromString(changedToAddress).stringEth();
+      }
+      return "";
+    }
+    return account;
+  }, [account, changedToAddress]);
+  const accountIoAddress = useMemo(() => account?fromBytes(Buffer.from(String(account).replace(/^0x/, ""), "hex")).string():"", [account]);
+  const toIoAddress = useMemo(() => toEthAddress?fromBytes(Buffer.from(String(toEthAddress).replace(/^0x/, ""), "hex")).string():"", [toEthAddress]);
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
+  const isIOTXECurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.symbol === "IOTX-E" && isAddress(IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair, account]);
   const cashierContractAddress = useMemo(() => {
+    if (isIOTXECurrency) {
+      return IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
+    }
     if (isAddress(ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId])) {
       return ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
     }
     return null;
-  }, [chainId]);
+  }, [chainId, isIOTXECurrency]);
 
   const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH" && isAddress(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair, account]);
   const tokenBalance = useTokenBalances(tokenAddress, token, [account])[account];
@@ -103,27 +124,43 @@ export const ERCXRC = () => {
       if (isETHCurrency) {
         return getContract(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId], ETH_CASHIER_ABI, library, account);
       }
+      if (isIOTXECurrency) {
+        return getContract(cashierContractAddress, E2N_ABI, library, account);
+      }
       return getContract(cashierContractAddress, ERC20_XRC20_ABI, library, account);
     }
     return null;
-  }, [cashierContractAddress, library, account, isETHCurrency]);
+  }, [cashierContractAddress, library, account, isETHCurrency, isIOTXECurrency]);
 
   useMemo(() => {
-    if (tokenAddress && tokenListContract) {
-      const fetchAmountRange = async () => {
+    const contract = isIOTXECurrency && cashierContract ? cashierContract : tokenListContract ? tokenListContract : null;
+    if (tokenAddress && contract) {
+      const fetchAmountRange = async (contract: EthContract) => {
         try {
-          const [minAmount, maxAmount] = await Promise.all([tokenListContract.minAmount(tokenAddress), tokenListContract.maxAmount(tokenAddress)]);
-          setAmountRange({
-            minAmount,
-            maxAmount,
-          });
+          if (contract === tokenListContract) {
+            const [minAmount, maxAmount] = await Promise.all([contract.minAmount(tokenAddress), contract.maxAmount(tokenAddress)]);
+            setAmountRange({
+              minAmount,
+              maxAmount,
+            });
+          } else if (contract === cashierContract) {
+            const signerOrProvider = (contract.signer || contract.provider);
+            if(signerOrProvider){
+              const [minAmount, maxAmount] = await Promise.all([contract.minAmount(), contract.maxAmount()]);
+              setAmountRange({
+                minAmount,
+                maxAmount,
+              });
+            }
+          }
         } catch (e) {
           window.console.log(`Failed to get amount range `, e);
+          message.error(`Failed to get amount range!\n${e.message}`);
         }
       };
-      fetchAmountRange();
+      fetchAmountRange(contract);
     }
-  }, [tokenAddress, tokenListContract]);
+  }, [tokenAddress, tokenListContract, isIOTXECurrency, cashierContract]);
 
   useEffect(() => {
     if (isAddress(account) && cashierContractValidate && tokenContract && !isETHCurrency) {
@@ -135,11 +172,9 @@ export const ERCXRC = () => {
             return value;
           })
           .catch((error: Error) => {
-            message.error(`Failed to get allowance! ${error.message}`);
             window.console.log(`Failed to get allowance!`, error);
           });
       } catch (e) {
-        message.error(`Failed to get allowance!`);
         window.console.log(`Failed to get allowance!`, e);
       }
     }
@@ -219,10 +254,7 @@ export const ERCXRC = () => {
     }
   };
 
-  function getReceiptAddress(): string {
-    return account ? fromBytes(Buffer.from(String(account).replace(/^0x/, ""), "hex")).string() : "";
-  }
-
+  const validateToAddress = useMemo(() => validateAddress(toIoAddress), [toIoAddress]);
   const inputError = useMemo(() => {
     if (!account) {
       return lang.t("input.wallet.not_connected");
@@ -246,6 +278,12 @@ export const ERCXRC = () => {
     if (amountNumber == 0) {
       return lang.t("input.amount.enter_value");
     }
+    if (!validateToAddress) {
+      return lang.t("input.ioaddress.invalid");
+    }
+    if (amountRange.maxAmount.eq(0)) {
+      return lang.t("input.amount.range_error");
+    }
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
@@ -260,7 +298,7 @@ export const ERCXRC = () => {
       return lang.t("input.balance.invalid", { symbol: token.symbol });
     }
     return "";
-  }, [amount, balance, account, tokenAddress, cashierContractAddress]);
+  }, [amount, balance, account, tokenAddress, cashierContractAddress, validateToAddress]);
 
   const possibleApprove = useMemo(() => {
     if (Boolean(inputError) || isETHCurrency) return false;
@@ -288,13 +326,13 @@ export const ERCXRC = () => {
       return;
     }
 
-    if (!cashierContract) {
-      message.error("could not get cashier contract");
+    if (!isEthAddress(toEthAddress)) {
+      message.error("Fail To Convert Address");
       return;
     }
 
-    const args = isETHCurrency ? [] : [tokenAddress, rawAmount];
-    const methodName = "deposit";
+    const args = isETHCurrency ? [toEthAddress] : isIOTXECurrency?[toEthAddress, rawAmount]:[tokenAddress, toEthAddress, rawAmount];
+    const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
     if (isETHCurrency) {
       options["value"] = rawAmount;
@@ -307,7 +345,7 @@ export const ERCXRC = () => {
 
           store.toggleConfirmModalVisible();
 
-          base.toggleComplete(response.hash, getEtherscanLink(chainId, response.hash, "transaction"), getReceiptAddress(), token.name, tokenInfoPair, amount);
+          base.toggleComplete(response.hash, getEtherscanLink(chainId, response.hash, "transaction"), toIoAddress, token.name, tokenInfoPair, amount);
           message.success(" Ethereum transaction broadcasted successfully.");
           return response.hash;
         })
@@ -351,7 +389,7 @@ export const ERCXRC = () => {
             message.error(errorMessage);
           });
       });
-  }, [inputError, amount, token, cashierContract, isETHCurrency]);
+  }, [inputError, amount, token, cashierContract, isETHCurrency, toIoAddress]);
 
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
@@ -408,7 +446,13 @@ export const ERCXRC = () => {
                 })}
               </div>
             )}
-            <AddressInput readOnly address={getReceiptAddress()} label={lang.t("iotx_Address")} />
+            <AddressInput
+              address={accountIoAddress}
+              label={lang.t("iotx_Address")}
+              onChange={(address: string)=>{
+                setChangedToAddress(address);
+              }}
+            />
           </div>
         )}
         <div className="my-6 text-left c-gray-30">
@@ -442,7 +486,7 @@ export const ERCXRC = () => {
           {account && (
             <div className="page__home__component__erc_xrc__button_group flex items-center">
               {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
-              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert} />
+              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert||!validateToAddress} />
             </div>
           )}
         </div>
@@ -455,6 +499,7 @@ export const ERCXRC = () => {
           mintToken={xrc20TokenInfo}
           close={store.toggleConfirmModalVisible}
           middleComment="to ioTube and mint"
+          toAddress={toIoAddress}
           isERCXRC
         />
         <WarnModal visible={base.mode === CARD_ERC20_XRC20 && wallet.showERCWarnModal} isERCXRC close={wallet.toggleERCWarnModal} />

@@ -60,9 +60,12 @@
   "input.token.invalid": "Invalid token contract",
   "input.amount.invalid": "Invalid amount",
   "input.amount.enter_value": "Enter amount",
+  "input.amount.range_error": "Amount range error",
   "input.balance.insufficient": "Insufficient ${symbol} balance",
   "input.balance.invalid": "Invalid ${symbol} balance",
   "input.depositfee.error": "Deposit Fee error",
+  "input.ioaddress.invalid": "Invalid IoTeX Address",
+  "input.ethaddress.invalid": "Invalid ETH Address",
   "tutorial.ioTube": "ioTube",
   "tutorial.tutorial": "ioTube Tutorial",
   "tutorial.summary": "is the cross-chain + multi-asset bridge to connect IoTeX to the blockchain universe! ioTube will enable new assets and liquidity from other blockchains to flow into IoTeX and position IoTeX to deliver unique IoT assets to other blockchains in the future.",
@@ -149,5 +152,7 @@
   "faq.tutorial_community": "Yes: check out this ioTube tutorial on the IoTeX community forum:",
   "faq.is_iotube_open_source": "Is ioTube open source?",
   "faq.iotube_github": "Yes: ioTube code is open source, you can find it on GitHub:",
-  "app": "APP"
+  "app": "APP",
+  "change_destination": "Change Destination",
+  "reset_destination": "Reset Destination"
 }

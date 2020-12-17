@@ -69,6 +69,14 @@ export const ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress =
   [ChainId.KOVAN]: publicConfig[`ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
 };
 
+export const IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
+  [ChainId.MAINNET]: publicConfig[`IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
+  [ChainId.ROPSTEN]: publicConfig[`IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
+  [ChainId.RINKEBY]: "",
+  [ChainId.GÖRLI]: "",
+  [ChainId.KOVAN]: publicConfig[`IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
+};
+
 export const ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS: ChainContractAddress = {
   [ChainId.MAINNET]: publicConfig[`ETH_TOKEN_LIST_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
   [ChainId.ROPSTEN]: publicConfig[`ETH_TOKEN_LIST_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],

@@ -3,13 +3,7 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import { AddressInput, AmountField, ConfirmModal, SubmitButton, TokenSelectField } from "../../../../components";
-import {
-  DEFAULT_IOTEX_CHAIN_ID,
-  IOTEX,
-  IOTEX_CASHIER_CONTRACT_ADDRESS,
-  IOTEX_TOKEN_LIST_CONTRACT_ADDRESS,
-  IOTEXSCAN_URL,
-} from "../../../../constants/index";
+import { DEFAULT_IOTEX_CHAIN_ID, IOTEX, IOTEX_CASHIER_CONTRACT_ADDRESS, IOTEX_TOKEN_LIST_CONTRACT_ADDRESS, IOTEXSCAN_URL } from "../../../../constants/index";
 import { BigNumber } from "@ethersproject/bignumber";
 import { getAmountNumber, getIOTXContract, isAddress } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
@@ -50,16 +44,15 @@ export const XRCERC = () => {
   const tokenAddress = useMemo(() => (xrc20TokenInfo ? xrc20TokenInfo.address : ""), [xrc20TokenInfo]);
   const [changedToAddress, setChangedToAddress] = useState(undefined);
   const toIoAddress = useMemo(() => {
-    if(changedToAddress!==undefined){
-      if(isEthAddress(changedToAddress)) {
+    if (changedToAddress !== undefined) {
+      if (isEthAddress(changedToAddress)) {
         return fromBytes(Buffer.from(String(changedToAddress).replace(/^0x/, ""), "hex")).string();
       }
       return "";
     }
     return account;
   }, [account, changedToAddress]);
-  const accountEthAddress = useMemo(() => account?fromString(account).stringEth():"", [account]);
-  const toEthAddress = useMemo(() => toIoAddress?fromString(toIoAddress).stringEth():"", [toIoAddress]);
+  const toEthAddress = useMemo(() => (toIoAddress ? fromString(toIoAddress).stringEth() : ""), [toIoAddress]);
 
   const cashierContractAddress = useMemo(() => {
     if (isIOTXCurrency) {
@@ -164,8 +157,7 @@ export const XRCERC = () => {
     wallet.init();
   }, [account, tokenContract, isIOTXCurrency, wallet.walletBalance]);
 
-
-  const validateToAddress = useMemo(() => toEthAddress&&isEthAddress(toEthAddress), [toEthAddress]);
+  const validateToAddress = useMemo(() => toEthAddress && isEthAddress(toEthAddress), [toEthAddress]);
 
   const inputError = useMemo(() => {
     if (!account) {
@@ -395,9 +387,8 @@ export const XRCERC = () => {
           <div className="my-6 text-left">
             <div className="text-base c-gray-20">You will receive {token.name} tokens at</div>
             <AddressInput
-              address={accountEthAddress}
               label={"Ether Address"}
-              onChange={(address: string)=>{
+              onChange={(address: string) => {
                 setChangedToAddress(address);
               }}
             />
@@ -419,7 +410,7 @@ export const XRCERC = () => {
           {wallet.walletConnected && (
             <div className="page__home__component__xrc_erc__button_group flex items-center">
               {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
-              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert||!validateToAddress} />
+              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert || !validateToAddress} />
             </div>
           )}
         </div>

@@ -56,16 +56,15 @@ export const ERCXRC = () => {
 
   const [changedToAddress, setChangedToAddress] = useState(undefined);
   const toEthAddress = useMemo(() => {
-    if(changedToAddress!==undefined){
-      if(validateAddress(changedToAddress)) {
+    if (changedToAddress !== undefined) {
+      if (validateAddress(changedToAddress)) {
         return fromString(changedToAddress).stringEth();
       }
       return "";
     }
     return account;
   }, [account, changedToAddress]);
-  const accountIoAddress = useMemo(() => account?fromBytes(Buffer.from(String(account).replace(/^0x/, ""), "hex")).string():"", [account]);
-  const toIoAddress = useMemo(() => toEthAddress?fromBytes(Buffer.from(String(toEthAddress).replace(/^0x/, ""), "hex")).string():"", [toEthAddress]);
+  const toIoAddress = useMemo(() => (toEthAddress ? fromBytes(Buffer.from(String(toEthAddress).replace(/^0x/, ""), "hex")).string() : ""), [toEthAddress]);
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
@@ -144,8 +143,8 @@ export const ERCXRC = () => {
               maxAmount,
             });
           } else if (contract === cashierContract) {
-            const signerOrProvider = (contract.signer || contract.provider);
-            if(signerOrProvider){
+            const signerOrProvider = contract.signer || contract.provider;
+            if (signerOrProvider) {
               const [minAmount, maxAmount] = await Promise.all([contract.minAmount(), contract.maxAmount()]);
               setAmountRange({
                 minAmount,
@@ -331,7 +330,7 @@ export const ERCXRC = () => {
       return;
     }
 
-    const args = isETHCurrency ? [toEthAddress] : isIOTXECurrency?[toEthAddress, rawAmount]:[tokenAddress, toEthAddress, rawAmount];
+    const args = isETHCurrency ? [toEthAddress] : isIOTXECurrency ? [toEthAddress, rawAmount] : [tokenAddress, toEthAddress, rawAmount];
     const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
     if (isETHCurrency) {
@@ -447,9 +446,8 @@ export const ERCXRC = () => {
               </div>
             )}
             <AddressInput
-              address={accountIoAddress}
               label={lang.t("iotx_Address")}
-              onChange={(address: string)=>{
+              onChange={(address: string) => {
                 setChangedToAddress(address);
               }}
             />
@@ -486,7 +484,7 @@ export const ERCXRC = () => {
           {account && (
             <div className="page__home__component__erc_xrc__button_group flex items-center">
               {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
-              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert||!validateToAddress} />
+              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert || !validateToAddress} />
             </div>
           )}
         </div>

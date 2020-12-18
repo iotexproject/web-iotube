@@ -1,20 +1,4 @@
 {
-  "IOTX": {
-    "eth": {
-      "address": "0x6fb3e0a217407efff7ca062d46c26e5d60a14d69",
-      "name": "IoTeX",
-      "decimals": 18,
-      "symbol": "IOTX-E",
-      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
-    },
-    "iotx": {
-      "address": "io1p99pprm79rftj4r6kenfjcp8jkp6zc6mytuah5",
-      "name": "IoTeX",
-      "decimals": 18,
-      "symbol": "IOTX",
-      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
-    }
-  },
   "ETH": {
     "eth": {
       "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
@@ -45,6 +29,38 @@
       "decimals": 18,
       "symbol": "ioETH",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
+    }
+  },
+  "USDT": {
+    "eth": {
+      "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "name": "Tether USD",
+      "decimals": 6,
+      "symbol": "USDT",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/825.png"
+    },
+    "iotx": {
+      "address": "io1er3t54p96l6x70l9hmd6nmx7sm74jc9sz287m6",
+      "name": "Tether USD",
+      "decimals": 6,
+      "symbol": "ioUSDT",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/825.png"
+    }
+  },
+  "WBTC": {
+    "eth": {
+      "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "name": "Wrapped BTC",
+      "decimals": 8,
+      "symbol": "WBTC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
+    },
+    "iotx": {
+      "address": "io1c7unwg8h8vph89xwqru4f7zfa4yy5002wxvlrm",
+      "name": "ioWBTC",
+      "decimals": 8,
+      "symbol": "ioWBTC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
     }
   },
   "BUSD": {
@@ -79,6 +95,22 @@
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png"
     }
   },
+  "IOTX": {
+    "eth": {
+      "address": "0x6fb3e0a217407efff7ca062d46c26e5d60a14d69",
+      "name": "IoTeX",
+      "decimals": 18,
+      "symbol": "IOTX-E",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    },
+    "iotx": {
+      "address": "io1p99pprm79rftj4r6kenfjcp8jkp6zc6mytuah5",
+      "name": "IoTeX",
+      "decimals": 18,
+      "symbol": "IOTX",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    }
+  },
   "PAXG": {
     "eth": {
       "address": "0x45804880de22913dafe09f4980848ece6ecbaf78",
@@ -93,22 +125,6 @@
       "decimals": 18,
       "symbol": "ioPAXG",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4705.png"
-    }
-  },
-  "WBTC": {
-    "eth": {
-      "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-      "name": "Wrapped BTC",
-      "decimals": 8,
-      "symbol": "WBTC",
-      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
-    },
-    "iotx": {
-      "address": "io1c7unwg8h8vph89xwqru4f7zfa4yy5002wxvlrm",
-      "name": "ioWBTC",
-      "decimals": 8,
-      "symbol": "ioWBTC",
-      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
     }
   }
 }

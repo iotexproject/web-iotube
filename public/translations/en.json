@@ -12,6 +12,8 @@
   "amount": "Amount",
   "convert": "Convert",
   "connect_metamask": "Connect Metamask",
+  "open_tube_in": "Open Tube in…",
+  "open_tube_in_desc": "To covert from ERC20 to XRC20, Please click the wallet to continue",
   "fee": "Fee",
   "fee.tube": "Tube Fee",
   "fee.network": "Network Fee",

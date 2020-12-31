@@ -50,6 +50,7 @@ html {
     .app_frame {
       max-width: var(--app-frame-width);
       margin: auto;
+
       @media screen and (max-width: 500px) {
         max-width: 90%;
       }
@@ -177,14 +178,17 @@ html {
         transition: all 0.3s;
         background-color: transparent !important;
         padding: 0.5rem 1.5rem !important;
+
         .ant-select-item-option-content {
           display: flex;
           align-items: center;
         }
+
         &.ant-select-item-option-selected {
           background-color: #2d3137 !important;
           color: white !important;
         }
+
         &:hover {
           background-color: rgb(186, 192, 204) !important;
         }
@@ -203,33 +207,41 @@ html {
       &.modal__confirm_deposit--ercxrc .ant-modal-body {
         background-color: var(--bg-primary) !important;
       }
+
       &.modal__confirm_deposit--xrcerc .ant-modal-body {
         background-color: var(--bg-secondary) !important;
       }
 
       .ant-modal-content {
         border-radius: 0.5rem !important;
+
         .ant-modal-close-x {
           color: #9398a2;
           font-size: 1.4rem;
         }
+
         .ant-modal-header {
           background-color: var(--bg-primary) !important;
           border-bottom: none !important;
           padding-top: 1.5rem;
+
           .ant-modal-title {
             color: white;
             font-weight: 200;
           }
         }
+
         .ant-modal-body {
           padding-top: 0.5rem;
+
           &.modal__confirm_deposit__confirm--erc-xrc {
             background-color: var(--bg-primary) !important;
           }
+
           &.modal__confirm_deposit__confirm--xrc-erc {
             background-color: var(--bg-secondary) !important;
           }
+
           .modal__confirm_deposit__confirm {
             background-color: var(--c-green);
             color: var(--bg-primary) !important;
@@ -254,6 +266,7 @@ html {
           border-top-color: var(--bg-primary);
           border-left-color: var(--bg-primary);
         }
+
         .ant-popover-inner {
           background-color: var(--bg-primary);
           border-radius: 0.4rem;
@@ -262,33 +275,41 @@ html {
     }
 
     // warn modal
-    .modal__warn {
+    .modal__warn,
+    .modal__open {
       width: 400px !important;
       top: 150px !important;
 
       &.modal__warn--ercxrc .ant-modal-body {
         background-color: var(--bg-primary) !important;
       }
+
       &.modal__warn--xrcerc .ant-modal-body {
         background-color: var(--bg-secondary) !important;
       }
 
       .ant-modal-content {
         border-radius: 0.5rem !important;
+
         .ant-modal-close-x {
           display: none;
         }
+
         .ant-modal-header {
           display: none;
         }
+
         .ant-modal-body {
           border-radius: 0.25rem;
+
           &.modal__warn__confirm--erc-xrc {
             background-color: var(--bg-primary) !important;
           }
+
           &.modal__warn__confirm--xrc-erc {
             background-color: var(--bg-secondary) !important;
           }
+
           .modal__warn__confirm {
             background-color: var(--c-green);
             color: var(--bg-primary) !important;
@@ -301,6 +322,53 @@ html {
             align-items: center;
             justify-content: center;
             height: 3.125rem !important;
+          }
+        }
+      }
+    }
+
+    .modal__open {
+      width: 400px !important;
+      top: 190px !important;
+
+      .ant-modal-body {
+        background-color: var(--bg-primary) !important;
+      }
+
+      .modal__open__list {
+        margin-top: 2rem;
+
+        ul {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+
+          li {
+            width: 48%;
+            text-align: center;
+            background-color: rgb(48, 48, 48);
+            padding: 20px 0 10px 0;
+            margin-bottom: 7px;
+            cursor: pointer;
+
+            &:hover {
+              background-color: rgba(48, 48, 48, 0.5);
+            }
+
+            img {
+              width: 50px;
+              margin-bottom: 10px;
+              display: inline-block;
+            }
+
+            p {
+              font-size: 1rem;
+              text-align: center;
+              color: #fff;
+            }
           }
         }
       }

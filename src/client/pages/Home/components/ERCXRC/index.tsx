@@ -305,10 +305,10 @@ export const ERCXRC = () => {
   }, [allowance, amount, token, chainId, account, isETHCurrency]);
 
   const possibleConvert = useMemo(() => {
-    if (possibleApprove || Boolean(inputError)) return false;
     if (isETHCurrency) return true;
+    if (possibleApprove || Boolean(inputError)) return false;
     return amountInAllowance(allowance, amount, token) == AmountState.APPROVED;
-  }, [possibleApprove, allowance, amount, token, chainId, account, isETHCurrency]);
+  }, [possibleApprove, allowance, amount, token, chainId, account, isETHCurrency, toIoAddress]);
 
   const onConfirm = useCallback(async () => {
     if (Boolean(inputError)) return false;
@@ -331,6 +331,7 @@ export const ERCXRC = () => {
     }
 
     const args = isETHCurrency ? [toEthAddress] : isIOTXECurrency ? [toEthAddress, rawAmount] : [tokenAddress, toEthAddress, rawAmount];
+    console.log({ args });
     const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };
     if (isETHCurrency) {
@@ -379,12 +380,14 @@ export const ERCXRC = () => {
           })
           .catch((callError) => {
             window.console.log("Call threw error", callError);
+
             let errorMessage: string;
-            if ((callError.reason && callError.reason.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0) || callError.reason.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0) {
+            if ((callError.reason && callError.reason?.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0) || callError.reason?.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0) {
               errorMessage = "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
             } else {
               errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
             }
+            depositTo();
             message.error(errorMessage);
           });
       });

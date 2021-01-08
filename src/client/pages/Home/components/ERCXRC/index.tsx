@@ -62,7 +62,7 @@ export const ERCXRC = () => {
       }
       return "";
     }
-    return account;
+    // return account;
   }, [account, changedToAddress]);
   const toIoAddress = useMemo(() => (toEthAddress ? fromBytes(Buffer.from(String(toEthAddress).replace(/^0x/, ""), "hex")).string() : ""), [toEthAddress]);
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
@@ -305,6 +305,7 @@ export const ERCXRC = () => {
   }, [allowance, amount, token, chainId, account, isETHCurrency]);
 
   const possibleConvert = useMemo(() => {
+    if (!toIoAddress) return false;
     if (isETHCurrency) return true;
     if (possibleApprove || Boolean(inputError)) return false;
     return amountInAllowance(allowance, amount, token) == AmountState.APPROVED;

@@ -50,7 +50,7 @@ export const XRCERC = () => {
       }
       return "";
     }
-    return account;
+    // return account;
   }, [account, changedToAddress]);
   const toEthAddress = useMemo(() => (toIoAddress ? fromString(toIoAddress).stringEth() : ""), [toIoAddress]);
 
@@ -217,10 +217,11 @@ export const XRCERC = () => {
   }, [allowance, amount, xrc20TokenInfo, isIOTXCurrency]);
 
   const possibleConvert = useMemo(() => {
-    if (possibleApprove || Boolean(inputError)) return false;
+    if (!toEthAddress) return false;
     if (isIOTXCurrency) return true;
+    if (possibleApprove || Boolean(inputError)) return false;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.APPROVED;
-  }, [possibleApprove, allowance, amount, xrc20TokenInfo, isIOTXCurrency]);
+  }, [possibleApprove, allowance, amount, xrc20TokenInfo, isIOTXCurrency, toEthAddress]);
 
   useEffect(() => {
     if (isAddress(account) && cashierContractAddress && tokenContract && !isIOTXCurrency) {

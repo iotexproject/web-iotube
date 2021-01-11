@@ -1,5 +1,6 @@
 import React, { MouseEventHandler } from "react";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
+import window from "global/window";
 import { useStore } from "../../../common/store";
 const IMG_MATAMASK = require("../../static/images/metamask.png");
 const IM_TOKEN = require("../../static/images/imToken.png");
@@ -13,16 +14,24 @@ interface IComponentProps {
 }
 
 const wallets = [
-  { name: "imToken", src: IM_TOKEN },
-  { name: "Metamask", src: IMG_MATAMASK },
-  { name: "Trust Wallet", src: TRUST_WALLET },
-  { name: "Token Pocket", src: TOKEN_POCKET },
-  { name: "Other Wallet", src: OTHER_WALLET },
+  { name: "imToken", src: IM_TOKEN, url: "imtokenv2://navigate?screen=DappView&url=https://tube.iotex.io/eth" },
+  { name: "Metamask", src: IMG_MATAMASK, url: "https://metamask.app.link/dapp/tube.iotex.io/eth" },
+  { name: "Trust Wallet", src: TRUST_WALLET, url: "https://link.trustwallet.com/open_url?coin_id=60&url=https://tube.iotex.io/eth" },
+  { name: "Token Pocket", src: TOKEN_POCKET, url: "" },
+  { name: "Other Wallet", src: OTHER_WALLET, url: "" },
 ];
 
 export const OpenModal = (props: IComponentProps) => {
   const { lang } = useStore();
   if (!props.visible) return null;
+
+  const toOpenAppUrl = (url: String) => {
+    if (window.openOtherApp) {
+      window.openOtherApp(url);
+    } else {
+      window.console.log("not found openOtherApp Function");
+    }
+  };
 
   return (
     <Modal visible={props.visible} onCancel={props.close} footer={null} style={{ top: 300 }} className="modal__open">
@@ -31,7 +40,7 @@ export const OpenModal = (props: IComponentProps) => {
         <ul>
           {wallets.map((item) => {
             return (
-              <li key={item.name}>
+              <li key={item.name} onClick={() => toOpenAppUrl(item.url)}>
                 <img src={item.src} alt="" />
                 <p>{item.name}</p>
               </li>

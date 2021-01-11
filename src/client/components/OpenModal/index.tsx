@@ -3,7 +3,7 @@ import { Modal } from "antd";
 import window from "global/window";
 import { useStore } from "../../../common/store";
 const IMG_MATAMASK = require("../../static/images/metamask.png");
-const IM_TOKEN = require("../../static/images/imToken.png");
+const IM_TOKEN = require("../../static/images/imtoken.png");
 const TRUST_WALLET = require("../../static/images/trustwallet.png");
 const TOKEN_POCKET = require("../../static/images/tokenpocket.png");
 const OTHER_WALLET = require("../../static/images/other_wallet.png");

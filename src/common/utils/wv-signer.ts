@@ -68,16 +68,10 @@ export class WvSigner implements SignerPlugin {
         window.console.log("data error from android: = ", e.toString());
       }
 
-      bridge.registerHandler(
-        "signAndSendJsFunction",
-        (data: string, responseCallback: Function) => {
-          window.console.log(
-            "data from signAndSendJsFunction register handler: = ",
-            String(data)
-          );
-          responseCallback("responseData signAndSendJsFunction test");
-        }
-      );
+      bridge.registerHandler("signAndSendJsFunction", (data: string, responseCallback: Function) => {
+        window.console.log("data from signAndSendJsFunction register handler: = ", String(data));
+        responseCallback("responseData signAndSendJsFunction test");
+      });
     });
   }
 
@@ -90,21 +84,17 @@ export class WvSigner implements SignerPlugin {
     };
 
     return new Promise<any>((resolve) =>
-      window.WebViewJavascriptBridge.callHandler(
-        "sign_and_send",
-        JSON.stringify(req),
-        (responseData: string) => {
-          let resp = { reqId: -1, actionHash: "" };
-          try {
-            resp = JSON.parse(responseData);
-          } catch (_) {
-            return;
-          }
-          if (resp.reqId === id) {
-            resolve(resp);
-          }
+      window.WebViewJavascriptBridge.callHandler("sign_and_send", JSON.stringify(req), (responseData: string) => {
+        let resp = { reqId: -1, actionHash: "" };
+        try {
+          resp = JSON.parse(responseData);
+        } catch (_) {
+          return;
         }
-      )
+        if (resp.reqId === id) {
+          resolve(resp);
+        }
+      })
     );
   }
 
@@ -130,10 +120,7 @@ export class WvSigner implements SignerPlugin {
     };
     let sec = 1;
     while (!window.WebViewJavascriptBridge) {
-      window.console.log(
-        "getIoAddressFromIoPay get_account sleepPromise sec: ",
-        sec
-      );
+      window.console.log("getIoAddressFromIoPay get_account sleepPromise sec: ", sec);
       await sleepPromise(sec * 200);
       sec = sec * 1.6;
       if (sec >= 48) {
@@ -144,29 +131,22 @@ export class WvSigner implements SignerPlugin {
       location.reload();
     }, 5000);
     return new Promise<Array<Account>>((resolve) =>
-      window.WebViewJavascriptBridge.callHandler(
-        "get_account",
-        JSON.stringify(req),
-        (responseData: string) => {
+      window.WebViewJavascriptBridge.callHandler("get_account", JSON.stringify(req), (responseData: string) => {
         clearTimeout(timer);
-          window.console.log(
-            "getIoAddressFromIoPay get_account responseData: ",
-            responseData
-          );
-          let resp = { reqId: -1, address: "" };
-          try {
-            resp = JSON.parse(responseData);
-          } catch (_) {
-            return;
-          }
-          if (resp.reqId === id) {
-            this.ioPayAddress = resp.address;
-            const account = new Account();
-            account.address = this.ioPayAddress;
-            resolve([account]);
-          }
+        window.console.log("getIoAddressFromIoPay get_account responseData: ", responseData);
+        let resp = { reqId: -1, address: "" };
+        try {
+          resp = JSON.parse(responseData);
+        } catch (_) {
+          return;
         }
-      )
+        if (resp.reqId === id) {
+          this.ioPayAddress = resp.address;
+          const account = new Account();
+          account.address = this.ioPayAddress;
+          resolve([account]);
+        }
+      })
     );
   }
 
@@ -179,23 +159,33 @@ export class WvSigner implements SignerPlugin {
       message,
     };
     return new Promise<Buffer>((resolve) =>
-      window.WebViewJavascriptBridge.callHandler(
-        "sign",
-        JSON.stringify(req),
-        (responseData: string) => {
-          window.console.log("signMessage sign responseData: ", responseData);
-          let resp = { reqId: -1, signature: new Buffer("") };
-          try {
-            resp = JSON.parse(responseData);
-          } catch (e) {
-            window.console.log("signMessage: Error when parse responseData", e);
-            return;
-          }
-          if (resp.reqId === id) {
-            resolve(resp.signature);
-          }
+      window.WebViewJavascriptBridge.callHandler("sign", JSON.stringify(req), (responseData: string) => {
+        window.console.log("signMessage sign responseData: ", responseData);
+        let resp = { reqId: -1, signature: new Buffer("") };
+        try {
+          resp = JSON.parse(responseData);
+        } catch (e) {
+          window.console.log("signMessage: Error when parse responseData", e);
+          return;
         }
-      )
+        if (resp.reqId === id) {
+          resolve(resp.signature);
+        }
+      })
+    );
+  }
+
+  async toOpenAppUrl(url: String): Promise<string> {
+    return new Promise<any>((resolve) =>
+      window.WebViewJavascriptBridge.callHandler("openOtherApp", url, (responseData: string) => {
+        let resp = { reqId: -1, actionHash: "" };
+        try {
+          resp = JSON.parse(responseData);
+          resolve(resp);
+        } catch (_) {
+          return;
+        }
+      })
     );
   }
 }

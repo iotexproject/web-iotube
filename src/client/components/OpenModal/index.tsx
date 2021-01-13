@@ -26,6 +26,9 @@ export const OpenModal = (props: IComponentProps) => {
   if (!props.visible) return null;
 
   const toOpenAppUrl = (url: String) => {
+    // call app function eg:
+    // AntennaUtils.getAntenna().iotx.signer.toOpenAppUrl(url);
+
     if (window.openOtherApp) {
       window.openOtherApp(url);
     } else {

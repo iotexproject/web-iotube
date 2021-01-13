@@ -16,3 +16,5 @@ public/static
 package-lock.json
 .env
 tailwind.css
+
+.idea/

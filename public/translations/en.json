@@ -156,5 +156,7 @@
   "faq.iotube_github": "Yes: ioTube code is open source, you can find it on GitHub:",
   "app": "APP",
   "change_destination": "Change Destination",
-  "reset_destination": "Reset Destination"
+  "reset_destination": "Reset Destination",
+  "other.wallet.tips": "Please COPY this link to visit ioTube in your other wallet app as a Dapp.",
+  "other.wallet.link": "https://tube.iotex.io/eth"
 }

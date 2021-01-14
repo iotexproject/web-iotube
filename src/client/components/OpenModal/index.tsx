@@ -1,7 +1,9 @@
-import React, { MouseEventHandler } from "react";
+import React, { MouseEventHandler, useState } from "react";
 import { Modal } from "antd";
 import window from "global/window";
 import { useStore } from "../../../common/store";
+import { AntennaUtils } from "../../../common/utils/antenna";
+import { OtherWalletModal } from "../OtherWalletModal";
 const IMG_MATAMASK = require("../../static/images/metamask.png");
 const IM_TOKEN = require("../../static/images/imtoken.png");
 const TRUST_WALLET = require("../../static/images/trustwallet.png");
@@ -23,34 +25,40 @@ const wallets = [
 
 export const OpenModal = (props: IComponentProps) => {
   const { lang } = useStore();
+  const [visible, setVisible] = useState(false);
   if (!props.visible) return null;
 
-  const toOpenAppUrl = (url: String) => {
+  const toOpenAppUrl = (item) => {
     // call app function eg:
     // AntennaUtils.getAntenna().iotx.signer.toOpenAppUrl(url);
-
+    if (item.name === "Other Wallet") {
+      setVisible(true);
+    }
     if (window.openOtherApp) {
-      window.openOtherApp(url);
+      window.openOtherApp(item.url);
     } else {
       window.console.log("not found openOtherApp Function");
     }
   };
 
   return (
-    <Modal visible={props.visible} onCancel={props.close} footer={null} style={{ top: 300 }} className="modal__open">
-      <div className="text-base mb-4 c-white">{lang.t("open_tube_in_desc")}</div>
-      <div className="modal__open__list text-sm font-light">
-        <ul>
-          {wallets.map((item) => {
-            return (
-              <li key={item.name} onClick={() => toOpenAppUrl(item.url)}>
-                <img src={item.src} alt="" />
-                <p>{item.name}</p>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </Modal>
+    <>
+      <Modal visible={props.visible} onCancel={props.close} footer={null} style={{ top: 300 }} className="modal__open">
+        <div className="text-base mb-4 c-white">{lang.t("open_tube_in_desc")}</div>
+        <div className="modal__open__list text-sm font-light">
+          <ul>
+            {wallets.map((item) => {
+              return (
+                <li key={item.name} onClick={() => toOpenAppUrl(item)}>
+                  <img src={item.src} alt="" />
+                  <p>{item.name}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </Modal>
+      <OtherWalletModal visible={visible} close={() => setVisible(!visible)} />
+    </>
   );
 };

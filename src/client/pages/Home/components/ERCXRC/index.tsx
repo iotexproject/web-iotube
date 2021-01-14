@@ -39,6 +39,7 @@ import { publicConfig } from "../../../../../../configs/public";
 import { Contract as EthContract } from "@ethersproject/contracts";
 import { isAddress as isEthAddress } from "@ethersproject/address";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
+import qs from "qs";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -396,6 +397,7 @@ export const ERCXRC = () => {
       });
   }, [inputError, amount, token, cashierContract, isETHCurrency, toIoAddress]);
 
+  const prefillAddress = !!location.search ? qs.parse(location.search, { ignoreQueryPrefix: true }).to.toString() : null;
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
       <Form className="">
@@ -454,6 +456,7 @@ export const ERCXRC = () => {
               )}
               <AddressInput
                 label={lang.t("iotx_Address")}
+                address={prefillAddress}
                 onChange={(address: string) => {
                   setChangedToAddress(address);
                 }}

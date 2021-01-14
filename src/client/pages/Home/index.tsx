@@ -25,12 +25,15 @@ export const Home = () => {
     exact: true,
   });
 
+  const ERCXRCPathName = isERCXRC ? history.location.pathname + history.location.search : "/eth";
+  const XRCERCPathName = !isERCXRC ? history.location.pathname + history.location.search : "/iotx";
+
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
   }, [isERCXRC]);
 
   const switchTo = () => {
-    history.push(base.mode === CARD_ERC20_XRC20 ? "/iotx" : "/eth");
+    history.push(base.mode === CARD_ERC20_XRC20 ? XRCERCPathName : ERCXRCPathName);
   };
 
   return useObserver(() => (

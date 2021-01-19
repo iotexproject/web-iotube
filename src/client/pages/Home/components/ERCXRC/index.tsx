@@ -40,6 +40,7 @@ import { Contract as EthContract } from "@ethersproject/contracts";
 import { isAddress as isEthAddress } from "@ethersproject/address";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import qs from "qs";
+import { utils } from "../../../../../common/utils/index";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -401,113 +402,118 @@ export const ERCXRC = () => {
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
       <Form className="">
-        <div className="hidden md:block">
-          <div className="my-6">
-            <TokenSelectField
-              network={ETHEREUM}
-              onChange={(tokenPair) => {
-                setTokenInfoPair(tokenPair);
-                setFillSate("TOKEN");
-              }}
-            />
-          </div>
-          <AmountField
-            amount={amount}
-            label={lang.t("amount")}
-            min={Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
-            max={Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
-            onChange={(value) => {
-              setAmount(value);
-              setFillSate("AMOUNT");
-            }}
-            customAddon={
-              token && (
-                <span
-                  onClick={() => {
-                    if (balance) {
-                      setAmount(balance.toFixed(3));
-                    }
-                  }}
-                  className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
-                >
-                  MAX
-                </span>
-              )
-            }
-          />
-          {token && (
-            <div className="font-light text-sm text-right c-gray-30 mt-2">
-              {balance && (
-                <span>
-                  {balance?.toExact()} {token.symbol}
-                </span>
-              )}
-            </div>
-          )}
-          {amount && account && (
-            <div className="my-6 text-left">
-              {token && xrc20TokenInfo && (
-                <div className="text-base c-gray-20 font-thin">
-                  {lang.t("you_will_recieve_amount_symbol_tokens_at", {
-                    amount,
-                    symbol: xrc20TokenInfo.symbol,
-                  })}
-                </div>
-              )}
-              <AddressInput
-                label={lang.t("iotx_Address")}
-                address={prefillAddress}
-                onChange={(address: string) => {
-                  setChangedToAddress(address);
+        {utils.env.isIoPayMobile() ? (
+          <div>
+            <div className="block md:hidden mt-6 text-base text-left mb-48 c-white">To transfer your assets from ETH to loTeX. You need to open Tube in an ETH wallet.</div>
+            <div className="block md:hidden">
+              <SubmitButton
+                title={lang.t("open_tube_in")}
+                onClick={() => {
+                  setOpenVisible(true);
                 }}
               />
             </div>
-          )}
-          <div className="my-6 text-left c-gray-30">
-            <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
-            <div className="font-light text-sm flex items-center justify-between">
-              <span>{lang.t("fee.tube")}</span>
-              <span>0 ({lang.t("free")})</span>
+          </div>
+        ) : (
+          <div>
+            <div className="my-6">
+              <TokenSelectField
+                network={ETHEREUM}
+                onChange={(tokenPair) => {
+                  setTokenInfoPair(tokenPair);
+                  setFillSate("TOKEN");
+                }}
+              />
             </div>
-            <div className="font-light text-sm flex items-center justify-between">
-              <span>{lang.t("relay_to_iotex")}</span>
-              <span>0 ({lang.t("free")})</span>
-            </div>
-            {hash && (
+            <AmountField
+              amount={amount}
+              label={lang.t("amount")}
+              min={Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
+              max={Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}
+              onChange={(value) => {
+                setAmount(value);
+                setFillSate("AMOUNT");
+              }}
+              customAddon={
+                token && (
+                  <span
+                    onClick={() => {
+                      if (balance) {
+                        setAmount(balance.toFixed(3));
+                      }
+                    }}
+                    className="page__home__component__erc_xrc__max c-green-20 border-green-20 px-1 mx-2 leading-5 font-light text-sm cursor-pointer"
+                  >
+                    MAX
+                  </span>
+                )
+              }
+            />
+            {token && (
+              <div className="font-light text-sm text-right c-gray-30 mt-2">
+                {balance && (
+                  <span>
+                    {balance?.toExact()} {token.symbol}
+                  </span>
+                )}
+              </div>
+            )}
+            {amount && account && (
+              <div className="my-6 text-left">
+                {token && xrc20TokenInfo && (
+                  <div className="text-base c-gray-20 font-thin">
+                    {lang.t("you_will_recieve_amount_symbol_tokens_at", {
+                      amount,
+                      symbol: xrc20TokenInfo.symbol,
+                    })}
+                  </div>
+                )}
+                <AddressInput
+                  label={lang.t("iotx_Address")}
+                  address={prefillAddress}
+                  onChange={(address: string) => {
+                    setChangedToAddress(address);
+                  }}
+                />
+              </div>
+            )}
+            <div className="my-6 text-left c-gray-30">
+              <div className="font-normal text-base mb-3">{lang.t("fee")}</div>
               <div className="font-light text-sm flex items-center justify-between">
-                <a href={getEtherscanLink(chainId, hash, "transaction")} target={"_blank"}>
-                  {`view on Etherscan ${hash}`}
-                </a>
+                <span>{lang.t("fee.tube")}</span>
+                <span>0 ({lang.t("free")})</span>
+              </div>
+              <div className="font-light text-sm flex items-center justify-between">
+                <span>{lang.t("relay_to_iotex")}</span>
+                <span>0 ({lang.t("free")})</span>
+              </div>
+              {hash && (
+                <div className="font-light text-sm flex items-center justify-between">
+                  <a href={getEtherscanLink(chainId, hash, "transaction")} target={"_blank"}>
+                    {`view on Etherscan ${hash}`}
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {!account && (
+              <SubmitButton
+                title={lang.t("connect_metamask")}
+                icon={<img src={IMG_MATAMASK} className="h-6 mr-4" />}
+                onClick={() => {
+                  tryActivation(injected).then();
+                }}
+              />
+            )}
+            {account && (
+              <div className="page__home__component__erc_xrc__button_group flex items-center">
+                {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
+                <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert || !validateToAddress} />
               </div>
             )}
           </div>
-        </div>
-        <div className="hidden md:block">
-          {!account && (
-            <SubmitButton
-              title={lang.t("connect_metamask")}
-              icon={<img src={IMG_MATAMASK} className="h-6 mr-4" />}
-              onClick={() => {
-                tryActivation(injected).then();
-              }}
-            />
-          )}
-          {account && (
-            <div className="page__home__component__erc_xrc__button_group flex items-center">
-              {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
-              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert || !validateToAddress} />
-            </div>
-          )}
-        </div>
-        <div className="block md:hidden mt-6 text-base text-left mb-48 c-white">To transfer your assets from ETH to loTeX. You need to open Tube in an ETH wallet.</div>
-        <div className="block md:hidden">
-          <SubmitButton
-            title={lang.t("open_tube_in")}
-            onClick={() => {
-              setOpenVisible(true);
-            }}
-          />
-        </div>
+        )}
+
         <ConfirmModal
           visible={store.showConfirmModal}
           onConfirm={onConfirm}

@@ -527,7 +527,7 @@ export const ERCXRC = () => {
           isERCXRC
         />
         <WarnModal visible={base.mode === CARD_ERC20_XRC20 && wallet.showERCWarnModal} isERCXRC close={wallet.toggleERCWarnModal} />
-        <OpenModal visible={openVisible} close={() => setOpenVisible(!openVisible)} />
+        <OpenModal visible={openVisible} changeVisible={setOpenVisible} close={() => setOpenVisible(!openVisible)} />
       </Form>
     </div>
   ));

@@ -14,6 +14,7 @@ const OTHER_WALLET = require("../../static/images/other_wallet.png");
 interface IComponentProps {
   visible: boolean;
   close: MouseEventHandler;
+  changeVisible: Function;
 }
 
 const wallets = [
@@ -26,8 +27,7 @@ const wallets = [
 
 export const OpenModal = (props: IComponentProps) => {
   const { lang } = useStore();
-  const [visible, setVisible] = useState(false);
-  if (!props.visible) return null;
+  const [copyModalVisible, setCopyModalVisible] = useState(false);
 
   const toOpenAppUrl = (item) => {
     if (utils.env.isIoPayMobile()) {
@@ -35,7 +35,8 @@ export const OpenModal = (props: IComponentProps) => {
         //@ts-ignore
         AntennaUtils.getAntenna().iotx.signer.toOpenAppUrl(item.url);
       } else {
-        setVisible(true);
+        setCopyModalVisible(true);
+        props.changeVisible(false);
       }
     }
   };
@@ -57,7 +58,7 @@ export const OpenModal = (props: IComponentProps) => {
           </ul>
         </div>
       </Modal>
-      <OtherWalletModal visible={visible} close={() => setVisible(!visible)} />
+      <OtherWalletModal visible={copyModalVisible} close={() => setCopyModalVisible(!copyModalVisible)} />
     </>
   );
 };

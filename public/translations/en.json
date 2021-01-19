@@ -158,5 +158,7 @@
   "change_destination": "Change Destination",
   "reset_destination": "Reset Destination",
   "other.wallet.tips": "Please COPY this link to visit ioTube in your other wallet app as a Dapp.",
-  "other.wallet.link": "https://tube.iotex.io/eth"
+  "other.wallet.link": "https://tube.iotex.io/eth",
+  "other.wallet.copy_success": "Link copied successfully",
+  "other.wallet.copy_failed": "Link copied failed"
 }

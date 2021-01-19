@@ -21,9 +21,9 @@ export const OtherWalletModal = (props: IComponentProps) => {
     const copyStatus = document.execCommand("Copy"); // 执行copy操作
     // 对成功与否定进行提示
     if (copyStatus) {
-      message.success("复制成功");
+      message.success(lang.t("other.wallet.copy_success"));
     } else {
-      message.error("复制失败");
+      message.error(lang.t("other.wallet.copy_failed"));
     }
     window.getSelection().removeAllRanges(); //清除页面中已有的selection
   };

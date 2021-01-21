@@ -21,6 +21,12 @@ export const AddressInput = (props: IComponentProps) => {
     if (props.onChange) props.onChange(address);
   };
 
+  useEffect(() => {
+    if (props.address) {
+      onChange(props.address);
+    }
+  });
+
   return (
     <div>
       <div className="text-base font-thin c-gray-20">

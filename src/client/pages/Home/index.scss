@@ -6,7 +6,7 @@
 
   .page__home__exchange__container {
     position: relative;
-    padding-top: 20vh;
+    padding-top: 18vh;
     height: 100vh;
     min-height: 1080px;
 
@@ -21,6 +21,7 @@
         opacity: 1;
         z-index: 1;
       }
+
       &.page__home__exchange__container__frame--inactive {
         opacity: 0;
         width: 100%;
@@ -29,7 +30,7 @@
     }
 
     .page__home__exchange__container__beta-notice {
-      margin-top: 35rem;
+      margin-top: 30rem;
     }
 
     @media screen and (max-width: 500px) {
@@ -102,6 +103,7 @@
     @media screen and (max-width: 500px) {
       width: 90%;
       padding: 7rem 0;
+
       .page__home__faq__container__youtube {
         width: 12rem;
         top: -4rem;

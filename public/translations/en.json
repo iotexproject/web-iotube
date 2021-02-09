@@ -160,5 +160,6 @@
   "other.wallet.tips": "Please COPY this link to visit ioTube in your other wallet app as a Dapp.",
   "other.wallet.link": "https://tube.iotex.io/eth",
   "other.wallet.copy_success": "Link copied successfully",
-  "other.wallet.copy_failed": "Link copied failed"
+  "other.wallet.copy_failed": "Link copied failed",
+  "beta.notice2": "ioTube V3 is coming! We will perform app maintenance from 2/9/2021 10PM - 2/10/2021 8AM UTC"
 }

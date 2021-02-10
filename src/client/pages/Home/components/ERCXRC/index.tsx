@@ -287,7 +287,7 @@ export const ERCXRC = () => {
   const possibleApprove = useMemo(() => {
     if (Boolean(inputError) || isETHCurrency) return false;
     return amountInAllowance(allowance, amount, token) == AmountState.UNAPPROVED;
-  }, [allowance, amount, token, chainId, account, isETHCurrency]);
+  }, [allowance, amount, token, chainId, account, isETHCurrency, toIoAddress]);
 
   const possibleConvert = useMemo(() => {
     if (!toIoAddress) return false;

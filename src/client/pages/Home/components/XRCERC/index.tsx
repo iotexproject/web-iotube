@@ -120,8 +120,9 @@ export const XRCERC = () => {
             mintableTokenListContract.methods.minAmount(tokenAddress, { from: chain.contract.mintableTokenList.address }),
             mintableTokenListContract.methods.maxAmount(tokenAddress, { from: chain.contract.mintableTokenList.address }),
           ]);
-          const minAmount = minAmount1 || minAmount2;
-          const maxAmount = maxAmount1 || maxAmount2;
+          const minAmount = minAmount1.toString() === "0" ? minAmount2.toString() : minAmount1.toString();
+          const maxAmount = maxAmount1.toString() === "0" ? maxAmount2.toString() : maxAmount1.toString();
+          console.log(tokenAddress, minAmount, maxAmount, minAmount1.toString(), minAmount2.toString(), maxAmount1.toString(), maxAmount2.toString());
           setAmountRange({
             minAmount: BigNumber.from(minAmount.toString()),
             maxAmount: BigNumber.from(maxAmount.toString()),
@@ -133,7 +134,7 @@ export const XRCERC = () => {
       };
       fetchAmountRange();
     }
-  }, [tokenAddress, isIOTXCurrency]);
+  }, [tokenAddress]);
 
   useEffect(() => {
     if (isIOTXCurrency) {

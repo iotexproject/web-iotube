@@ -130,9 +130,12 @@ export const ERCXRC = () => {
             mintableTokenListContract.minAmount(tokenAddress),
             mintableTokenListContract.maxAmount(tokenAddress),
           ]);
+          const minAmount = minAmount1.toString() === "0" ? minAmount2.toString() : minAmount1.toString();
+          const maxAmount = maxAmount1.toString() === "0" ? maxAmount2.toString() : maxAmount1.toString();
+          console.log(tokenAddress, minAmount, maxAmount, minAmount1.toString(), minAmount2.toString(), maxAmount1.toString(), maxAmount2.toString());
           setAmountRange({
-            minAmount: minAmount1 || minAmount2,
-            maxAmount: maxAmount1 || maxAmount2,
+            minAmount: BigNumber.from(minAmount.toString()),
+            maxAmount: BigNumber.from(maxAmount.toString()),
           });
         } catch (e) {
           window.console.log(`Failed to get amount range `, e);

@@ -106,7 +106,7 @@ export const ERCXRC = () => {
 
   const mintableTokenListContract = useMemo(() => {
     const contract = chain.contract.mintableTokenList;
-    if (isAddress(contract.address)) {
+    if (isAddress(contract.address) && library) {
       return getContract(contract.address, contract.abi, library, account);
     }
     return null;
@@ -114,7 +114,7 @@ export const ERCXRC = () => {
 
   const standardTokenListContract = useMemo(() => {
     const contract = chain.contract.standardTokenList;
-    if (isAddress(contract.address)) {
+    if (isAddress(contract.address) && library) {
       return getContract(contract.address, contract.abi, library, account);
     }
     return null;

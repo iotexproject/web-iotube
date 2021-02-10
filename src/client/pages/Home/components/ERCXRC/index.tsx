@@ -2,15 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
-import {
-  ETH_CHAIN_CASHIER_CONTRACT_ADDRESS,
-  ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS,
-  ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS,
-  ETHEREUM,
-  IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS,
-  SUPPORTED_WALLETS,
-  TRANSACTION_REJECTED,
-} from "../../../../constants/index";
+import { ETHEREUM, SUPPORTED_WALLETS, TRANSACTION_REJECTED } from "../../../../constants/index";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { injected } from "../../../../connectors/index";
@@ -41,6 +33,7 @@ import { isAddress as isEthAddress } from "@ethersproject/address";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import qs from "qs";
 import { utils } from "../../../../../common/utils/index";
+import { chianMap, ChianMapType } from "../../../../constants/index";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -72,18 +65,12 @@ export const ERCXRC = () => {
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
-  const isIOTXECurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.symbol === "IOTX-E" && isAddress(IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair, account]);
+  const chain = useMemo<ChianMapType["eth"]["42"]>(() => chianMap.eth[chainId], [chainId]);
   const cashierContractAddress = useMemo(() => {
-    if (isIOTXECurrency) {
-      return IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
-    }
-    if (isAddress(ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId])) {
-      return ETH_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId];
-    }
-    return null;
-  }, [chainId, isIOTXECurrency]);
+    return chain.contract.cashier.address;
+  }, [chain]);
 
-  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH" && isAddress(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId]), [chainId, tokenInfoPair, account]);
+  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH", [chainId, tokenInfoPair, account]);
   const tokenBalance = useTokenBalances(tokenAddress, token, [account])[account];
   const userEthBalance = useETHBalances([account])[account];
   const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency, userEthBalance, tokenBalance]);
@@ -97,10 +84,6 @@ export const ERCXRC = () => {
 
   const cashierContractValidate = useMemo(() => {
     if (!cashierContractAddress || !isAddress(cashierContractAddress)) {
-      if (chainId) {
-        let content = `please set correctly ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[chainId]} in env for chain ${ChainId[chainId]}`;
-        window.console.log(content);
-      }
       return false;
     }
     return true;
@@ -113,57 +96,52 @@ export const ERCXRC = () => {
     return null;
   }, [tokenAddress, library, account]);
 
-  const tokenListContractAddress = useMemo(() => ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS[chainId], [chainId]);
-
-  const tokenListContract = useMemo(() => {
-    if (isAddress(tokenListContractAddress) && library) {
-      return getContract(tokenListContractAddress, TOKEN_LIST_ABI, library, account);
-    }
-    return null;
-  }, [tokenListContractAddress, library, account]);
-
   const cashierContract = useMemo(() => {
-    if (isAddress(cashierContractAddress)) {
-      if (isETHCurrency) {
-        return getContract(ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS[chainId], ETH_CASHIER_ABI, library, account);
-      }
-      if (isIOTXECurrency) {
-        return getContract(cashierContractAddress, E2N_ABI, library, account);
-      }
-      return getContract(cashierContractAddress, ERC20_XRC20_ABI, library, account);
+    const contract = chain.contract.cashier;
+    if (isAddress(contract.address)) {
+      return getContract(contract.address, contract.abi, library, account);
     }
     return null;
-  }, [cashierContractAddress, library, account, isETHCurrency, isIOTXECurrency]);
+  }, [chain, library, account, isETHCurrency]);
+
+  const mintableTokenListContract = useMemo(() => {
+    const contract = chain.contract.mintableTokenList;
+    if (isAddress(contract.address)) {
+      return getContract(contract.address, contract.abi, library, account);
+    }
+    return null;
+  }, [chain, library, account, isETHCurrency]);
+
+  const standardTokenListContract = useMemo(() => {
+    const contract = chain.contract.standardTokenList;
+    if (isAddress(contract.address)) {
+      return getContract(contract.address, contract.abi, library, account);
+    }
+    return null;
+  }, [chain, library, account, isETHCurrency]);
 
   useMemo(() => {
-    const contract = isIOTXECurrency && cashierContract ? cashierContract : tokenListContract ? tokenListContract : null;
-    if (tokenAddress && contract) {
-      const fetchAmountRange = async (contract: EthContract) => {
+    if (tokenAddress && mintableTokenListContract && standardTokenListContract) {
+      const fetchAmountRange = async () => {
         try {
-          if (contract === tokenListContract) {
-            const [minAmount, maxAmount] = await Promise.all([contract.minAmount(tokenAddress), contract.maxAmount(tokenAddress)]);
-            setAmountRange({
-              minAmount,
-              maxAmount,
-            });
-          } else if (contract === cashierContract) {
-            const signerOrProvider = contract.signer || contract.provider;
-            if (signerOrProvider) {
-              const [minAmount, maxAmount] = await Promise.all([contract.minAmount(), contract.maxAmount()]);
-              setAmountRange({
-                minAmount,
-                maxAmount,
-              });
-            }
-          }
+          const [minAmount1, maxAmount1, minAmount2, maxAmount2] = await Promise.all([
+            standardTokenListContract.minAmount(tokenAddress),
+            standardTokenListContract.maxAmount(tokenAddress),
+            mintableTokenListContract.minAmount(tokenAddress),
+            mintableTokenListContract.maxAmount(tokenAddress),
+          ]);
+          setAmountRange({
+            minAmount: minAmount1 || minAmount2,
+            maxAmount: maxAmount1 || maxAmount2,
+          });
         } catch (e) {
           window.console.log(`Failed to get amount range `, e);
           message.error(`Failed to get amount range!\n${e.message}`);
         }
       };
-      fetchAmountRange(contract);
+      fetchAmountRange();
     }
-  }, [tokenAddress, tokenListContract, isIOTXECurrency, cashierContract]);
+  }, [tokenAddress, cashierContract]);
 
   useEffect(() => {
     if (isAddress(account) && cashierContractValidate && tokenContract && !isETHCurrency) {
@@ -324,7 +302,10 @@ export const ERCXRC = () => {
       return;
     }
 
-    const tokenAddress = token ? token.address : "";
+    let tokenAddress = token ? token.address : "";
+    if (isETHCurrency) {
+      tokenAddress = "0x0000000000000000000000000000000000000000";
+    }
     if (!tokenAddress) {
       message.error("could not get token address");
       return;
@@ -335,7 +316,7 @@ export const ERCXRC = () => {
       return;
     }
 
-    const args = isETHCurrency ? [toEthAddress] : isIOTXECurrency ? [toEthAddress, rawAmount] : [tokenAddress, toEthAddress, rawAmount];
+    const args = [tokenAddress, toEthAddress, rawAmount];
     console.log({ args });
     const methodName = "depositTo";
     const options = { from: account, gasLimit: 1000000 };

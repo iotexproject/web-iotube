@@ -11,6 +11,9 @@ export const IMG_LOGO = require("../static/images/logo_iotube.svg");
 export const IMG_IOTX = require("../static/images/icon_wallet.png");
 export const IMG_ETHER = require("../static/images/icon-eth.png");
 
+import cashierABI from "./abis/erc20_xrc20.json";
+import tokenListABI from "./abis/token_list.json";
+
 export const ETHEREUM = "ETHEREUM";
 export const IOTEX = "IOTEX";
 
@@ -52,47 +55,69 @@ export const IOTEXSCAN_URL = {
   [IotexChainId.TESTNET]: "https://testnet.iotexscan.io/",
 };
 
-export const ETH_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
-  // ETH CHAIN ID
-  [ChainId.MAINNET]: publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
-  [ChainId.ROPSTEN]: publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
-  [ChainId.RINKEBY]: "",
-  [ChainId.GÖRLI]: "",
-  [ChainId.KOVAN]: publicConfig[`ETH_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
-};
+export type ChianMapType = typeof chianMap;
 
-export const ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
-  [ChainId.MAINNET]: publicConfig[`ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
-  [ChainId.ROPSTEN]: publicConfig[`ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
-  [ChainId.RINKEBY]: "",
-  [ChainId.GÖRLI]: "",
-  [ChainId.KOVAN]: publicConfig[`ETH_CURRENCY_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
-};
-
-export const IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS: ChainContractAddress = {
-  [ChainId.MAINNET]: publicConfig[`IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
-  [ChainId.ROPSTEN]: publicConfig[`IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
-  [ChainId.RINKEBY]: "",
-  [ChainId.GÖRLI]: "",
-  [ChainId.KOVAN]: publicConfig[`IOTXE_CHAIN_CASHIER_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
-};
-
-export const ETH_CHAIN_TOKEN_LIST_CONTRACT_ADDRESS: ChainContractAddress = {
-  [ChainId.MAINNET]: publicConfig[`ETH_TOKEN_LIST_CONTRACT_ADDRESS_${ChainId[ChainId.MAINNET]}`],
-  [ChainId.ROPSTEN]: publicConfig[`ETH_TOKEN_LIST_CONTRACT_ADDRESS_${ChainId[ChainId.ROPSTEN]}`],
-  [ChainId.RINKEBY]: "",
-  [ChainId.GÖRLI]: "",
-  [ChainId.KOVAN]: publicConfig[`ETH_TOKEN_LIST_CONTRACT_ADDRESS_${ChainId[ChainId.KOVAN]}`],
-};
-
-export const IOTEX_CASHIER_CONTRACT_ADDRESS: IotexChainContractAddress = {
-  [IotexChainId.MAINNET]: publicConfig[`IOTX_CASHIER_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.MAINNET]}`],
-  [IotexChainId.TESTNET]: publicConfig[`IOTX_CASHIER_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.TESTNET]}`],
-};
-
-export const IOTEX_TOKEN_LIST_CONTRACT_ADDRESS: IotexChainContractAddress = {
-  [IotexChainId.MAINNET]: publicConfig[`IOTX_TOKEN_LIST_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.MAINNET]}`],
-  [IotexChainId.TESTNET]: publicConfig[`IOTX_TOKEN_LIST_CONTRACT_ADDRESS_${IotexChainId[IotexChainId.TESTNET]}`],
+export const chianMap = {
+  eth: {
+    [ChainId.MAINNET]: {
+      contract: {
+        cashier: {
+          address: "0x653d7e18892b4e9e8a9241603f5dea4995722b24",
+          abi: cashierABI,
+        },
+      },
+    },
+    [ChainId.KOVAN]: {
+      contract: {
+        cashier: {
+          address: "0x74b1621c7173b9b2682b778c6957be42567bf2ce",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "0xaf5e19fbac85ff5ef94cacc79d085efb6b146d89",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "0xaf2873b71574758b4b5a8f005561f13ca59573f2",
+          abi: tokenListABI,
+        },
+      },
+    },
+  },
+  iotex: {
+    [IotexChainId.MAINNET]: {
+      contract: {
+        cashier: {
+          address: "io1gsr52ahqzklaf7flqar8r0269f2utkw9349qg8",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "io1dn8nqk3pmmll990xz6a94fpradtrljxmmx5p8j",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "io1t89whrwyfr0supctsqcx9n7ex5dd8yusfqhyfz",
+          abi: tokenListABI,
+        },
+      },
+    },
+    [IotexChainId.TESTNET]: {
+      contract: {
+        cashier: {
+          address: "io1c275yknrsqrnrcawg2m9j67a0qefnl93xt4vqt",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "io1d6vjmu2862e6ax50nquygh56xn2jpmfavhpwv2",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "io1rsaswmmm8sps83ncumtsefz0hxq7anr78xtxvw",
+          abi: tokenListABI,
+        },
+      },
+    },
+  },
 };
 
 export const CHAIN_TOKEN_LIST: ChainTokenPairList = {

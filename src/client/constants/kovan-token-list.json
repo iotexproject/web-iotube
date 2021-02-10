@@ -1,14 +1,14 @@
 {
   "IOTX": {
     "eth": {
-      "address": "",
+      "address": "0x6fb3e0a217407efff7ca062d46c26e5d60a14d69",
       "name": "IoTeX",
       "decimals": 18,
       "symbol": "IOTX-E",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
     },
     "iotx": {
-      "address": "",
+      "address": "io1kwxuxch2y67hdaqp69pfrtuapp7xdxkkxyejr5",
       "name": "IoTeX",
       "decimals": 18,
       "symbol": "IOTX",
@@ -17,7 +17,7 @@
   },
   "ETH": {
     "eth": {
-      "address": "0x8807a4ab2342412adb97a170a7d2b677e7829f6b",
+      "address": "0xa1c74a9a3e59ffe9bee7b85cd6e91c0751289ebd",
       "name": "ETH",
       "decimals": 18,
       "symbol": "ETH",
@@ -33,7 +33,7 @@
   },
   "WETH": {
     "eth": {
-      "address": "0x8807a4ab2342412adb97a170a7d2b677e7829f6b",
+      "address": "0xa1c74a9a3e59ffe9bee7b85cd6e91c0751289ebd",
       "name": "Wrapped ETH",
       "decimals": 18,
       "symbol": "WETH",

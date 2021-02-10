@@ -120,10 +120,11 @@ export const XRCERC = () => {
             mintableTokenListContract.methods.minAmount(tokenAddress, { from: chain.contract.mintableTokenList.address }),
             mintableTokenListContract.methods.maxAmount(tokenAddress, { from: chain.contract.mintableTokenList.address }),
           ]);
-          console.log(minAmount1.toString(), maxAmount1.toString(), minAmount2.toString(), maxAmount2.toString());
+          const minAmount = minAmount1 || minAmount2;
+          const maxAmount = maxAmount1 || maxAmount2;
           setAmountRange({
-            minAmount: minAmount1 || minAmount2,
-            maxAmount: maxAmount1 || maxAmount2,
+            minAmount: BigNumber.from(minAmount.toString()),
+            maxAmount: BigNumber.from(maxAmount.toString()),
           });
         } catch (e) {
           message.error(`Failed to get amount range!\n${e.message}`);
@@ -296,7 +297,7 @@ export const XRCERC = () => {
       return;
     }
 
-    const rawAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
+    let rawAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
     if (!rawAmount) {
       message.error(`Could not parse amount for token ${xrc20TokenInfo.name}`);
       return;
@@ -308,7 +309,8 @@ export const XRCERC = () => {
       return;
     }
     if (isIOTXCurrency) {
-      tokenAddress = "0x0000000000000000000000000000000000000000";
+      tokenAddress = "io1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqd39ym7";
+      rawAmount = depositFee.add(rawAmount).toString();
     }
 
     const args = [tokenAddress, toIoAddress, rawAmount];
@@ -320,7 +322,7 @@ export const XRCERC = () => {
       gasPrice: toRau("1", "Qev"),
     };
     if (isIOTXCurrency) {
-      options["amount"] = depositFee.add(rawAmount).toString();
+      options["amount"] = rawAmount;
     }
     console.log({ args });
     const deposit = () => {

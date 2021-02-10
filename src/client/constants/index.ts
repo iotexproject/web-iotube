@@ -62,15 +62,15 @@ export const chianMap = {
     [ChainId.MAINNET]: {
       contract: {
         cashier: {
-          address: "0x74b1621c7173b9b2682b778c6957be42567bf2ce",
+          address: "0xa0fd7430852361931b23a31f84374ba3314e1682",
           abi: cashierABI,
         },
         mintableTokenList: {
-          address: "0xaf5e19fbac85ff5ef94cacc79d085efb6b146d89",
+          address: "0x73ffdfc98983ad59fb441fc5fe855c1589e35b3e",
           abi: tokenListABI,
         },
         standardTokenList: {
-          address: "0xaf2873b71574758b4b5a8f005561f13ca59573f2",
+          address: "0x7c0bef36e1b1cbeb1f1a5541300786a7b608aede",
           abi: tokenListABI,
         },
       },
@@ -78,7 +78,7 @@ export const chianMap = {
     [ChainId.KOVAN]: {
       contract: {
         cashier: {
-          address: "0x74b1621c7173b9b2682b778c6957be42567bf2ce",
+          address: "0xd3aaa7e009d2982164e82b855d0ce87c7dd364db",
           abi: cashierABI,
         },
         mintableTokenList: {
@@ -112,7 +112,7 @@ export const chianMap = {
     [IotexChainId.TESTNET]: {
       contract: {
         cashier: {
-          address: "io1c275yknrsqrnrcawg2m9j67a0qefnl93xt4vqt",
+          address: "io1m5lxrn8q604fz4zqv05ly4ehykzs0g0a2ksmcg",
           abi: cashierABI,
         },
         mintableTokenList: {

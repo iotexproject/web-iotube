@@ -3,7 +3,7 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import { AddressInput, AmountField, ConfirmModal, SubmitButton, TokenSelectField } from "../../../../components";
-import { DEFAULT_IOTEX_CHAIN_ID, IOTEX, IOTEX_CASHIER_CONTRACT_ADDRESS, IOTEX_TOKEN_LIST_CONTRACT_ADDRESS, IOTEXSCAN_URL } from "../../../../constants/index";
+import { DEFAULT_IOTEX_CHAIN_ID, IOTEX, IOTEXSCAN_URL, ChianMapType, chianMap } from "../../../../constants/index";
 import { BigNumber } from "@ethersproject/bignumber";
 import { getAmountNumber, getIOTXContract, isAddress } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
@@ -53,12 +53,10 @@ export const XRCERC = () => {
     // return account;
   }, [account, changedToAddress]);
   const toEthAddress = useMemo(() => (toIoAddress ? fromString(toIoAddress).stringEth() : ""), [toIoAddress]);
+  const chain = useMemo<ChianMapType["iotex"]["1"]>(() => chianMap.iotex[DEFAULT_IOTEX_CHAIN_ID], [DEFAULT_IOTEX_CHAIN_ID]);
 
   const cashierContractAddress = useMemo(() => {
-    if (isIOTXCurrency) {
-      return tokenAddress;
-    }
-    return IOTEX_CASHIER_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+    return chain.contract.cashier.address;
   }, [isIOTXCurrency, tokenAddress]);
 
   const tokenContract = useMemo(() => {
@@ -69,14 +67,12 @@ export const XRCERC = () => {
   }, [tokenAddress, account]);
 
   const cashierContract = useMemo(() => {
-    if (isAddress(cashierContractAddress)) {
-      if (isIOTXCurrency) {
-        return getIOTXContract(cashierContractAddress, N2E_ABI);
-      }
-      return getIOTXContract(cashierContractAddress, ERC20_XRC20_ABI);
+    const contract = chain.contract.cashier;
+    if (isAddress(contract.address)) {
+      return getIOTXContract(contract.address, contract.abi);
     }
     return null;
-  }, [cashierContractAddress, isIOTXCurrency]);
+  }, []);
 
   useMemo(() => {
     if (cashierContract) {
@@ -98,41 +94,47 @@ export const XRCERC = () => {
     }
   }, [cashierContract]);
 
-  const tokenListContractAddress = IOTEX_TOKEN_LIST_CONTRACT_ADDRESS[DEFAULT_IOTEX_CHAIN_ID];
+  const mintableTokenListContract = useMemo(() => {
+    const contract = chain.contract.mintableTokenList;
+    if (isAddress(contract.address)) {
+      return getIOTXContract(contract.address, contract.abi);
+    }
+    return null;
+  }, []);
 
-  const tokenListContract = useMemo(() => {
-    return tokenListContractAddress ? getIOTXContract(tokenListContractAddress, TOKEN_LIST_ABI) : null;
-  }, [tokenListContractAddress]);
+  const standardTokenListContract = useMemo(() => {
+    const contract = chain.contract.standardTokenList;
+    if (isAddress(contract.address)) {
+      return getIOTXContract(contract.address, contract.abi);
+    }
+    return null;
+  }, []);
 
   useMemo(() => {
-    const contract = isIOTXCurrency && cashierContract ? cashierContract : tokenListContract ? tokenListContract : null;
-    if (tokenAddress && contract) {
-      const fetchAmountRange = async (contract: IOTXContract) => {
+    if (tokenAddress && mintableTokenListContract && standardTokenListContract) {
+      const fetchAmountRange = async () => {
         try {
-          if (contract === tokenListContract) {
-            const [minAmount, maxAmount] = await Promise.all([
-              contract.methods.minAmount(tokenAddress, { from: tokenListContractAddress }),
-              contract.methods.maxAmount(tokenAddress, { from: tokenListContractAddress }),
-            ]);
-            setAmountRange({
-              minAmount: BigNumber.from(minAmount.toString()),
-              maxAmount: BigNumber.from(maxAmount.toString()),
-            });
-          } else if (contract === cashierContract) {
-            const [minAmount, maxAmount] = await Promise.all([contract.methods.minAmount({ from: tokenAddress }), contract.methods.maxAmount({ from: tokenAddress })]);
-            setAmountRange({
-              minAmount: BigNumber.from(minAmount.toString()),
-              maxAmount: BigNumber.from(maxAmount.toString()),
-            });
-          }
+          const [minAmount1, maxAmount1, minAmount2, maxAmount2] = await Promise.all([
+            standardTokenListContract.methods.minAmount(tokenAddress, { from: chain.contract.standardTokenList.address }),
+            standardTokenListContract.methods.maxAmount(tokenAddress, { from: chain.contract.standardTokenList.address }),
+            mintableTokenListContract.methods.minAmount(tokenAddress, { from: chain.contract.mintableTokenList.address }),
+            mintableTokenListContract.methods.maxAmount(tokenAddress, { from: chain.contract.mintableTokenList.address }),
+          ]);
+          const minAmount = minAmount1.toString() === "0" ? minAmount2.toString() : minAmount1.toString();
+          const maxAmount = maxAmount1.toString() === "0" ? maxAmount2.toString() : maxAmount1.toString();
+          console.log(tokenAddress, minAmount, maxAmount, minAmount1.toString(), minAmount2.toString(), maxAmount1.toString(), maxAmount2.toString());
+          setAmountRange({
+            minAmount: BigNumber.from(minAmount.toString()),
+            maxAmount: BigNumber.from(maxAmount.toString()),
+          });
         } catch (e) {
           message.error(`Failed to get amount range!\n${e.message}`);
           window.console.log(`Failed to get amount range `, e);
         }
       };
-      fetchAmountRange(contract);
+      fetchAmountRange();
     }
-  }, [tokenAddress, tokenListContract, isIOTXCurrency]);
+  }, [tokenAddress]);
 
   useEffect(() => {
     if (isIOTXCurrency) {
@@ -296,18 +298,23 @@ export const XRCERC = () => {
       return;
     }
 
-    const rawAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
+    let rawAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
     if (!rawAmount) {
       message.error(`Could not parse amount for token ${xrc20TokenInfo.name}`);
       return;
     }
 
-    const tokenAddress = xrc20TokenInfo ? xrc20TokenInfo.address : "";
+    let tokenAddress = xrc20TokenInfo ? xrc20TokenInfo.address : "";
     if (!tokenAddress) {
       message.error("could not get token address");
       return;
     }
-    const args = isIOTXCurrency ? [toIoAddress] : [tokenAddress, toIoAddress, rawAmount];
+    if (isIOTXCurrency) {
+      tokenAddress = "io1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqd39ym7";
+      rawAmount = depositFee.add(rawAmount).toString();
+    }
+
+    const args = [tokenAddress, toIoAddress, rawAmount];
     const methodName = "depositTo";
     const options = {
       from: account,
@@ -318,6 +325,7 @@ export const XRCERC = () => {
     if (isIOTXCurrency) {
       options["amount"] = rawAmount;
     }
+    console.log({ args });
     const deposit = () => {
       cashierContract.methods
         .depositTo(...args, options)

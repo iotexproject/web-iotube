@@ -144,7 +144,7 @@
     }
   },
   "engines": {
-    "node": "11.x"
+    "node": ">=11.x <15.0"
   },
   "prettier": {
     "printWidth": 200

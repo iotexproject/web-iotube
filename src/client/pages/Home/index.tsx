@@ -40,7 +40,6 @@ export const Home = () => {
     <ClientOnly>
       <div className="page__home">
         <div className="page__home__exchange__container app_frame">
-          <div className="c-white-10 text-sm font-light mb-4">{lang.t("beta.notice2")}</div>
           {base.showComplete ? (
             <div className="rounded app_frame_shadow">
               <CompleteFrame isERCXRC={isERCXRC} />

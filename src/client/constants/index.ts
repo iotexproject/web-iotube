@@ -62,8 +62,16 @@ export const chianMap = {
     [ChainId.MAINNET]: {
       contract: {
         cashier: {
-          address: "0x653d7e18892b4e9e8a9241603f5dea4995722b24",
+          address: "0x74b1621c7173b9b2682b778c6957be42567bf2ce",
           abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "0xaf5e19fbac85ff5ef94cacc79d085efb6b146d89",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "0xaf2873b71574758b4b5a8f005561f13ca59573f2",
+          abi: tokenListABI,
         },
       },
     },

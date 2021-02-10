@@ -319,7 +319,7 @@ export const ERCXRC = () => {
     const args = [tokenAddress, toEthAddress, rawAmount];
     console.log({ args });
     const methodName = "depositTo";
-    const options = { from: account, gasLimit: 1000000 };
+    const options = { from: account, gasLimit: 130000 };
     if (isETHCurrency) {
       options["value"] = rawAmount;
     }

@@ -53,7 +53,7 @@ export function useTokens(network: string): { [p: string]: TokenInfoPair } {
     } else if (network === IOTEX) {
       (IOTEX_TOKEN_LIST[DEFAULT_IOTEX_CHAIN_ID] || []).forEach((aToken) => {
         if (aToken.IOTEX.address) {
-          tokenList[aToken.IOTEX.address.toLowerCase()] = {
+          tokenList[aToken.IOTEX.name.toLowerCase()] = {
             ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
             IOTEX: aToken.IOTEX,
           };

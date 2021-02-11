@@ -47,6 +47,22 @@
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png"
     }
   },
+  "CYC": {
+    "eth": {
+      "address": "0x8861cfF2366C1128fd699B68304aD99a0764Ef9a",
+      "name": "Cyclone Protocol",
+      "decimals": 18,
+      "symbol": "CYC",
+      "logoURI": "https://iotexscan.io/image/token/io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh.png"
+    },
+    "iotx": {
+      "address": "io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh",
+      "name": "Cyclone Protocol",
+      "decimals": 18,
+      "symbol": "CYC",
+      "logoURI": "https://iotexscan.io/image/token/io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh.png"
+    }
+  },
   "BUSD": {
     "eth": {
       "address": "0x4Fabb145d64652a948d72533023f6E7A623C7C53",
@@ -77,22 +93,6 @@
       "decimals": 18,
       "symbol": "ioUNI",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png"
-    }
-  },
-  "CYC": {
-    "eth": {
-      "address": "0x8861cfF2366C1128fd699B68304aD99a0764Ef9a",
-      "name": "Cyclone Protocol",
-      "decimals": 18,
-      "symbol": "CYC",
-      "logoURI": "https://iotexscan.io/image/token/io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh.png"
-    },
-    "iotx": {
-      "address": "io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh",
-      "name": "Cyclone Protocol",
-      "decimals": 18,
-      "symbol": "CYC",
-      "logoURI": "https://iotexscan.io/image/token/io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh.png"
     }
   },
   "PAXG": {

@@ -43,7 +43,7 @@ export function useTokens(network: string): { [p: string]: TokenInfoPair } {
       if (chainId) {
         CHAIN_TOKEN_LIST[chainId].forEach((aToken, index) => {
           if (aToken.ETHEREUM.address) {
-            tokenList[`${index}_${chainId}_${aToken.ETHEREUM.name.toLowerCase()}_${aToken.ETHEREUM.address.toLowerCase()}`] = {
+            tokenList[aToken.ETHEREUM.symbol.toLowerCase()] = {
               ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
               IOTEX: aToken.IOTEX,
             };
@@ -53,7 +53,7 @@ export function useTokens(network: string): { [p: string]: TokenInfoPair } {
     } else if (network === IOTEX) {
       (IOTEX_TOKEN_LIST[DEFAULT_IOTEX_CHAIN_ID] || []).forEach((aToken) => {
         if (aToken.IOTEX.address) {
-          tokenList[aToken.IOTEX.name.toLowerCase()] = {
+          tokenList[aToken.IOTEX.symbol.toLowerCase()] = {
             ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
             IOTEX: aToken.IOTEX,
           };

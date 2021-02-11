@@ -31,6 +31,38 @@
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
     }
   },
+  "IOTX": {
+    "eth": {
+      "address": "0x6fb3e0a217407efff7ca062d46c26e5d60a14d69",
+      "name": "IoTeX Network",
+      "decimals": 18,
+      "symbol": "IOTX-E",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    },
+    "iotx": {
+      "address": "io15qr5fzpxsnp7garl4m7k355rafzqn8grrm0grz",
+      "name": "IoTeX Network",
+      "decimals": 18,
+      "symbol": "IOTX",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    }
+  },
+  "WIOTX": {
+    "eth": {
+      "address": "0x6fb3e0a217407efff7ca062d46c26e5d60a14d69",
+      "name": "IoTeX Network",
+      "decimals": 18,
+      "symbol": "IOTX-E",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    },
+    "iotx": {
+      "address": "io15qr5fzpxsnp7garl4m7k355rafzqn8grrm0grz",
+      "name": "Wrapped IOTX",
+      "decimals": 18,
+      "symbol": "WIOTX",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    }
+  },
   "WBTC": {
     "eth": {
       "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",

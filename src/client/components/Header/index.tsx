@@ -135,6 +135,9 @@ export const Header = () => {
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>
+              <a className="c-white" href="https://community.iotex.io/t/iotube-v3-faster-cheaper-and-unified/2001" target="_blank">
+                {"V3  "}
+              </a>
               <Link className="c-white" to="/tutorial">
                 {lang.t("header.tutorial")}
               </Link>

@@ -190,6 +190,7 @@ export const XRCERC = () => {
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
+
     if (amountNumber > Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
@@ -211,7 +212,7 @@ export const XRCERC = () => {
       }
     }
     return "";
-  }, [amount, depositFee, tokenBalance, account, tokenAddress, cashierContractAddress, validateToAddress]);
+  }, [amount, depositFee, tokenBalance, account, amountRange, tokenAddress, cashierContractAddress, validateToAddress]);
 
   const possibleApprove = useMemo(() => {
     if (Boolean(inputError) || isIOTXCurrency) return false;

@@ -415,8 +415,8 @@ export const XRCERC = () => {
           </div>
         </div>
         <div>
-          {!wallet.walletConnected && <SubmitButton title={lang.t("connect_io_pay")} icon={<img src={IMG_IOPAY} className="h-6 mr-4" />} onClick={wallet.init} />}
-          {wallet.walletConnected && (
+          {!Boolean(wallet.walletAddress) && <SubmitButton title={lang.t("connect_io_pay")} icon={<img src={IMG_IOPAY} className="h-6 mr-4" />} onClick={wallet.init} />}
+          {Boolean(wallet.walletAddress) && (
             <div className="page__home__component__xrc_erc__button_group flex items-center">
               {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
               <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={Boolean(inputError) || !possibleConvert || !validateToAddress} />

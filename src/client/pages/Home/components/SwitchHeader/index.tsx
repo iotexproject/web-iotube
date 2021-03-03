@@ -1,7 +1,7 @@
-import React, { useEffect, MouseEventHandler } from "react";
+import React, { useEffect } from "react";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
-import { useObserver, useLocalStore } from "mobx-react";
+import { useObserver, useLocalStore, useAsObservableSource } from "mobx-react";
 import { useSwipeable } from "react-swipeable";
 import { DownOutlined } from "@ant-design/icons/lib";
 
@@ -19,22 +19,30 @@ interface IComponentProps {
 export const SwitchHeader = (props: IComponentProps) => {
   const { lang } = useStore();
   const { onSwitch, toggleERC20List } = props;
-  const store = useLocalStore(() => ({
-    isERCXRC: props.isERCXRC,
-    isShowERC20List: props.isShowERC20List,
-    toggleERCXRC() {
-      this.isShowERC20List = false;
-      toggleERC20List(false);
-      this.isERCXRC = !this.isERCXRC;
-      setTimeout(() => {
-        onSwitch();
-      }, 400);
-    },
-    toggleERC20List() {
-      this.isShowERC20List = !this.isShowERC20List;
-      toggleERC20List(this.isShowERC20List);
-    },
-  }));
+  const store = useLocalStore(
+    () => ({
+      isERCXRC: props.isERCXRC,
+      isShowERC20List: props.isShowERC20List,
+      toggleERCXRC() {
+        this.isShowERC20List = false;
+        toggleERC20List(false);
+        this.isERCXRC = !this.isERCXRC;
+        setTimeout(() => {
+          onSwitch();
+        }, 400);
+      },
+      toggleERC20List() {
+        this.isShowERC20List = !this.isShowERC20List;
+        toggleERC20List(this.isShowERC20List);
+      },
+    }),
+    props
+  );
+
+  useEffect(() => {
+    store.isShowERC20List = props.isShowERC20List;
+  }, [props, store]);
+
   const ethHandlers = useSwipeable({
     onSwipedLeft: () => {
       if (!store.isERCXRC) {
@@ -67,16 +75,19 @@ export const SwitchHeader = (props: IComponentProps) => {
       >
         <div
           className="flex items-center select-none flex-col"
-          onClick={() => {
+          onClick={(e) => {
             if (store.isERCXRC) store.toggleERC20List();
+            e.stopPropagation();
           }}
         >
           <img
             src={IMG_ETH}
             className="h-20 cursor-pointer"
             onClick={(e) => {
-              e.stopPropagation();
-              if (!store.isERCXRC) store.toggleERCXRC();
+              if (!store.isERCXRC) {
+                store.toggleERCXRC();
+                e.stopPropagation();
+              }
             }}
           />
           <div className={`text-xl font-light -mt-2 flex items-center select-none flex-column ${store.isERCXRC ? "cursor-pointer" : ""}`}>

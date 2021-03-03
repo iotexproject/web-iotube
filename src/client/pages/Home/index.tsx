@@ -41,7 +41,7 @@ export const Home = () => {
 
   return useObserver(() => (
     <ClientOnly>
-      <div className="page__home">
+      <div className="page__home" onClick={() => setERC20List(false)}>
         <div className="page__home__exchange__container app_frame">
           {base.showComplete ? (
             <div className="rounded app_frame_shadow">

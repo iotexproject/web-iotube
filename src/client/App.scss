@@ -377,5 +377,27 @@ html {
     .modal__match_center__page {
       top: 66px !important;
     }
+
+    .erc20__dropdown {
+      width: 225px;
+      background: #242323;
+      height: 180px;
+      position: absolute;
+      div {
+        color: white;
+        height: 60px;
+        line-height: 60px;
+        &:hover,
+        &.active {
+          background: #3e3e3e;
+          cursor: pointer;
+        }
+        img {
+          width: 34px;
+          height: 34px;
+          margin: 0 11px 0 20px;
+        }
+      }
+    }
   }
 }

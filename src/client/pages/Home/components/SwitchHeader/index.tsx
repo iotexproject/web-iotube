@@ -8,6 +8,8 @@ import { DownOutlined } from "@ant-design/icons/lib";
 const IMG_ETH = require("../../../../static/images/logo-ethereum.png");
 const IMG_IOTEX = require("../../../../static/images/logo-iotex.png");
 const IMG_SWITCH = require("../../../../static/images/icon-arrow.png");
+const IMG_HECO = require("../../../../static/images/logo-heco.png");
+const IMG_BSC = require("../../../../static/images/logo-bsc.png");
 
 interface IComponentProps {
   onSwitch: Function;
@@ -49,7 +51,7 @@ export const SwitchHeader = (props: IComponentProps) => {
   });
 
   return useObserver(() => (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", zIndex: 100 }}>
       <div className={`page__home__component__switch_header ${store.isERCXRC ? "bg-secondary" : "bg-primary"}`}>
         <div
           {...ethHandlers}
@@ -93,12 +95,19 @@ export const SwitchHeader = (props: IComponentProps) => {
           </div>
         </div>
       </div>
-      <div style={{ width: 225, position: "absolute" }}>
-        <ul>
-          <li>Eth</li>
-          <li>Heco</li>
-          <li>BSC</li>
-        </ul>
+      <div className="erc20__dropdown">
+        <div className="flex flex-column items-center text-center">
+          <img src={IMG_ETH} />
+          <div className="text-xl font-light text-center">Ethereum</div>
+        </div>
+        <div className="flex flex-column items-center text-center">
+          <img src={IMG_HECO} />
+          <div className="text-xl font-light text-center">Heco</div>
+        </div>
+        <div className="flex flex-column items-center text-center">
+          <img src={IMG_BSC} />
+          <div className="text-xl font-light text-center">BSC</div>
+        </div>
       </div>
     </div>
   ));

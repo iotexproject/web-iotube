@@ -45,7 +45,7 @@ export const Home = () => {
               <CompleteFrame isERCXRC={isERCXRC} />
             </div>
           ) : (
-            <div className="rounded-t-md overflow-hidden">
+            <div className="rounded-t-md">
               <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} />
               <>
                 <div

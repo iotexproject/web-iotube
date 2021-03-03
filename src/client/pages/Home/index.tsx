@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ModalVideo from "react-modal-video";
 import { useObserver } from "mobx-react-lite";
 import "./index.scss";
-import { ClientOnly, SubmitButton, CollapseView } from "../../components";
+import { ClientOnly, CollapseView } from "../../components";
 
 import { ERCXRC, XRCERC, SwitchHeader, CompleteFrame } from "./components";
 import { useStore } from "../../../common/store";
@@ -10,13 +10,16 @@ import { CARD_XRC20_ERC20, CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { matchPath, useHistory } from "react-router-dom";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
-const IMG_FAQ_BACKGROUND = require("../../static/images/faq-background.png");
 const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
 const IMG_YOUTUBE = require("../../static/images/info-youtube.png");
+const IMG_ETH = require("../../static/images/logo-ethereum.png");
+const IMG_HECO = require("../../static/images/logo-heco.png");
+const IMG_BSC = require("../../static/images/logo-bsc.png");
 
 export const Home = () => {
   const { base, lang } = useStore();
   const [isShowVideo, setShowVideo] = useState(false);
+  const [isShowERC20List, setERC20List] = useState(false);
 
   const history = useHistory();
 
@@ -46,7 +49,23 @@ export const Home = () => {
             </div>
           ) : (
             <div className="rounded-t-md">
-              <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} />
+              <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} isShowERC20List={isShowERC20List} toggleERC20List={setERC20List} />
+              {isERCXRC && (
+                <div className={`erc20__dropdown ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
+                  <div className="flex flex-column items-center text-center">
+                    <img src={IMG_ETH} />
+                    <div className="text-xl font-light text-center">Ethereum</div>
+                  </div>
+                  <div className="flex flex-column items-center text-center">
+                    <img src={IMG_HECO} />
+                    <div className="text-xl font-light text-center">Heco</div>
+                  </div>
+                  <div className="flex flex-column items-center text-center">
+                    <img src={IMG_BSC} />
+                    <div className="text-xl font-light text-center">BSC</div>
+                  </div>
+                </div>
+              )}
               <>
                 <div
                   className={`page__home__exchange__container__frame bg-primary rounded-b-md overflow-hidden ${

@@ -122,7 +122,6 @@ export const XRCERC = () => {
           ]);
           const minAmount = minAmount1.toString() === "0" ? minAmount2.toString() : minAmount1.toString();
           const maxAmount = maxAmount1.toString() === "0" ? maxAmount2.toString() : maxAmount1.toString();
-          console.log(tokenAddress, minAmount, maxAmount, minAmount1.toString(), minAmount2.toString(), maxAmount1.toString(), maxAmount2.toString());
           setAmountRange({
             minAmount: BigNumber.from(minAmount.toString()),
             maxAmount: BigNumber.from(maxAmount.toString()),
@@ -190,6 +189,7 @@ export const XRCERC = () => {
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
+
     if (amountNumber > Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must <= ${Number(formatUnits(amountRange.maxAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
     }
@@ -211,7 +211,7 @@ export const XRCERC = () => {
       }
     }
     return "";
-  }, [amount, depositFee, tokenBalance, account, tokenAddress, cashierContractAddress, validateToAddress]);
+  }, [amount, depositFee, tokenBalance, account, amountRange, tokenAddress, cashierContractAddress, validateToAddress]);
 
   const possibleApprove = useMemo(() => {
     if (Boolean(inputError) || isIOTXCurrency) return false;
@@ -401,6 +401,7 @@ export const XRCERC = () => {
                 setChangedToAddress(address);
               }}
             />
+            <div className="text-xs c-gray-10">{lang.t("erc20.address.warning")}</div>
           </div>
         )}
         <div className="my-6 text-left c-gray-30">
@@ -415,11 +416,11 @@ export const XRCERC = () => {
           </div>
         </div>
         <div>
-          {!wallet.walletConnected && <SubmitButton title={lang.t("connect_io_pay")} icon={<img src={IMG_IOPAY} className="h-6 mr-4" />} onClick={wallet.init} />}
-          {wallet.walletConnected && (
+          {!Boolean(wallet.walletAddress) && <SubmitButton title={lang.t("connect_io_pay")} icon={<img src={IMG_IOPAY} className="h-6 mr-4" />} onClick={wallet.init} />}
+          {Boolean(wallet.walletAddress) && (
             <div className="page__home__component__xrc_erc__button_group flex items-center">
               {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
-              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={!possibleConvert || !validateToAddress} />
+              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={Boolean(inputError) || !possibleConvert || !validateToAddress} />
             </div>
           )}
         </div>

@@ -160,5 +160,6 @@
   "other.wallet.tips": "Please COPY this link to visit ioTube in your other wallet app as a Dapp.",
   "other.wallet.link": "https://tube.iotex.io/eth",
   "other.wallet.copy_success": "Link copied successfully",
-  "other.wallet.copy_failed": "Link copied failed"
+  "other.wallet.copy_failed": "Link copied failed",
+  "erc20.address.warning": "Warning: Do not use exchange addresses or contract addresses. You may lose your tokens."
 }

@@ -2,9 +2,10 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ChainId } from "@uniswap/sdk";
 import { fortmatic, injected, portis, walletconnect, walletlink } from "../connectors";
 import { TokenInfo } from "@uniswap/token-lists";
-import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
+import BSC_TOKEN_LIST from "./bsc-token-list.json";
+
 import { publicConfig } from "../../../configs/public";
 
 export const IMG_LOGO = require("../static/images/logo_iotube.svg");
@@ -50,6 +51,7 @@ type IotexChainContractAddress = {
   readonly [chainId in IotexChainId]: string;
 };
 
+
 export const IOTEXSCAN_URL = {
   [IotexChainId.MAINNET]: "https://iotexscan.io/",
   [IotexChainId.TESTNET]: "https://testnet.iotexscan.io/",
@@ -91,6 +93,22 @@ export const chianMap = {
         },
       },
     },
+    56:{
+      contract: {
+        cashier: {
+          address: "0x082020Ae0B38fD1bef48895c6cFf4428e420F400",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "0xa6ae9312D0AA3CC74d969Fcd4806d7729A321EE3",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "0x0d793F4D4287265B9bdA86b7a4083193E8743b34",
+          abi: tokenListABI,
+        },
+      },
+    }
   },
   iotex: {
     [IotexChainId.MAINNET]: {
@@ -135,15 +153,13 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
       IOTEX: { ...item.iotx, chainId: ChainId.MAINNET } as TokenInfo,
     };
   }),
-  [ChainId.ROPSTEN]: Object.values(ROPSTEN_TOKEN_LIST).map((item) => {
+  [ChainId.KOVAN]: Object.values(KOVAN_TOKEN_LIST).map((item) => {
     return {
-      ETHEREUM: { ...item.eth, chainId: ChainId.ROPSTEN } as TokenInfo,
-      IOTEX: { ...item.iotx, chainId: ChainId.ROPSTEN } as TokenInfo,
+      ETHEREUM: { ...item.eth, chainId: ChainId.KOVAN } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: ChainId.KOVAN } as TokenInfo) : null,
     };
   }),
-  [ChainId.RINKEBY]: [],
-  [ChainId.GÖRLI]: [],
-  [ChainId.KOVAN]: Object.values(KOVAN_TOKEN_LIST).map((item) => {
+  56: Object.values(BSC_TOKEN_LIST).map((item) => {
     return {
       ETHEREUM: { ...item.eth, chainId: ChainId.KOVAN } as TokenInfo,
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: ChainId.KOVAN } as TokenInfo) : null,
@@ -244,10 +260,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
 
 export const ETH_NETWORK_NAMES = {
   [ChainId.MAINNET]: "MAINNET",
-  [ChainId.ROPSTEN]: "ROPSTEN",
-  [ChainId.RINKEBY]: "RINKEBY",
-  [ChainId.GÖRLI]: "GÖRLI",
   [ChainId.KOVAN]: "KOVAN",
+  56:"BSC"
 };
 
 export const NetworkContextName = "NETWORK";

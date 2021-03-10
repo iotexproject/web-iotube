@@ -12,11 +12,7 @@ import { useETHBalances, useTokenBalances } from "../../../../state/wallet/hooks
 import "./index.scss";
 import { AddressInput, AmountField, SubmitButton, TokenSelectField } from "../../../../components";
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
-import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
-import ETH_CASHIER_ABI from "../../../../constants/abis/eth_cashier.json";
-import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
-import E2N_ABI from "../../../../constants/abis/e2n_abi.json";
 import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import { amountInAllowance, AmountState, DEFAULT_TOKEN_DECIMAL, tryParseAmount } from "../../../../hooks/Tokens";
@@ -28,7 +24,6 @@ import { WarnModal } from "../../../../components/WarnModal";
 import { OpenModal } from "../../../../components/OpenModal";
 import { CARD_ERC20_XRC20 } from "../../../../../common/store/base";
 import { publicConfig } from "../../../../../../configs/public";
-import { Contract as EthContract } from "@ethersproject/contracts";
 import { isAddress as isEthAddress } from "@ethersproject/address";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import qs from "qs";
@@ -70,11 +65,11 @@ export const ERCXRC = () => {
     return chain.contract.cashier.address;
   }, [chain]);
 
-  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH", [chainId, tokenInfoPair, account]);
-  const tokenBalance = useTokenBalances(tokenAddress, token, [account])[account];
+  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.tokenInfo.isETH, [chainId, tokenInfoPair, account]);
+  const tokenBalance = useTokenBalances(tokenAddress, token, [account, token])[account];
   const userEthBalance = useETHBalances([account])[account];
   const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency, userEthBalance, tokenBalance]);
-
+  console.log({isETHCurrency,userEthBalance})
   const store = useLocalStore(() => ({
     showConfirmModal: false,
     toggleConfirmModalVisible() {

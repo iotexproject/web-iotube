@@ -11,12 +11,10 @@ import { DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX, IOTEXSCAN_URL } from "../const
 import { useWeb3React } from "@web3-react/core";
 import { publicConfig } from "../../../configs/public";
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  1: "",
-  3: "ropsten.",
-  4: "rinkeby.",
-  5: "goerli.",
-  42: "kovan.",
+const ETHERSCAN_URL: { [chainId in ChainId]: string } = {
+  1: "https://etherscan.io/",
+  42: "https://kovan.etherscan.io/",
+  56: "https://bscscan.com/"
 };
 
 export function isAddress(value: any): string | false {
@@ -102,9 +100,7 @@ export function getEtherscanLink(
   data: string,
   type: "transaction" | "token" | "address"
 ): string {
-  const prefix = `https://${
-    ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]
-  }etherscan.io`;
+  const prefix = ETHERSCAN_URL[chainId];
 
   switch (type) {
     case "transaction": {

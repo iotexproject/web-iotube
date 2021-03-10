@@ -148,5 +148,8 @@
   },
   "prettier": {
     "printWidth": 200
+  },
+  "volta": {
+    "node": "11.15.0"
   }
 }

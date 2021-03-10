@@ -11,7 +11,7 @@ import { DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX, IOTEXSCAN_URL } from "../const
 import { useWeb3React } from "@web3-react/core";
 import { publicConfig } from "../../../configs/public";
 
-const ETHERSCAN_URL: { [chainId in ChainId]: string } = {
+const ETHERSCAN_URL: { [key: number]: string } = {
   1: "https://etherscan.io/",
   42: "https://kovan.etherscan.io/",
   56: "https://bscscan.com/",

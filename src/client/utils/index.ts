@@ -14,16 +14,12 @@ import { publicConfig } from "../../../configs/public";
 const ETHERSCAN_URL: { [chainId in ChainId]: string } = {
   1: "https://etherscan.io/",
   42: "https://kovan.etherscan.io/",
-  56: "https://bscscan.com/"
+  56: "https://bscscan.com/",
 };
 
 export function isAddress(value: any): string | false {
   try {
-    if (
-      typeof value === "string" &&
-      value.startsWith("io") &&
-      validateAddress(`${value}`)
-    ) {
+    if (typeof value === "string" && value.startsWith("io") && validateAddress(`${value}`)) {
       return value;
     }
     return getAddress(value);
@@ -42,36 +38,21 @@ export function shortenAddress(address: string, chars = 4): string {
 }
 
 // account is not optional
-export function getSigner(
-  library: Web3Provider,
-  account: string
-): JsonRpcSigner {
+export function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
   return library.getSigner(account).connectUnchecked();
 }
 
 // account is optional
-export function getProviderOrSigner(
-  library: Web3Provider,
-  account?: string
-): Web3Provider | JsonRpcSigner {
+export function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
   return account ? getSigner(library, account) : library;
 }
 
-export function getContract(
-  address: string,
-  ABI: any,
-  library: Web3Provider,
-  account?: string
-): Contract {
+export function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`);
   }
 
-  return new Contract(
-    address,
-    ABI,
-    getProviderOrSigner(library, account) as any
-  );
+  return new Contract(address, ABI, getProviderOrSigner(library, account) as any);
 }
 
 export function getIOTXContract(address: string, ABI: any): IOTXContract {
@@ -90,16 +71,10 @@ export function escapeRegExp(string: string): string {
 
 // add 10% on top of estimated gas limit
 export function calculateGasMargin(value: BigNumber): BigNumber {
-  return value
-    .mul(BigNumber.from(10000).add(BigNumber.from(1000)))
-    .div(BigNumber.from(10000));
+  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000));
 }
 
-export function getEtherscanLink(
-  chainId: ChainId,
-  data: string,
-  type: "transaction" | "token" | "address"
-): string {
+export function getEtherscanLink(chainId: number, data: string, type: "transaction" | "token" | "address"): string {
   const prefix = ETHERSCAN_URL[chainId];
 
   switch (type) {
@@ -115,20 +90,16 @@ export function getEtherscanLink(
     }
   }
 }
-export function getTokenLink(
-  network: string,
-  data: string
-): string {
-  if(network===ETHEREUM) {
+export function getTokenLink(network: string, data: string): string {
+  if (network === ETHEREUM) {
     const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useWeb3React<Web3Provider>();
     return getEtherscanLink(chainId, data, "token");
-  } else if(network===IOTEX) {
+  } else if (network === IOTEX) {
     const prefix = IOTEXSCAN_URL[DEFAULT_IOTEX_CHAIN_ID];
     return `${prefix}address/${data}`;
   }
   return "";
 }
-
 
 export default function uriToHttp(uri: string): string[] {
   try {
@@ -139,16 +110,10 @@ export default function uriToHttp(uri: string): string[] {
       return [uri];
     } else if (parsed.protocol === "ipfs:") {
       const hash = parsed.href.match(/^ipfs:(\/\/)?(.*)$/)?.[2];
-      return [
-        `https://cloudflare-ipfs.com/ipfs/${hash}/`,
-        `https://ipfs.io/ipfs/${hash}/`,
-      ];
+      return [`https://cloudflare-ipfs.com/ipfs/${hash}/`, `https://ipfs.io/ipfs/${hash}/`];
     } else if (parsed.protocol === "ipns:") {
       const name = parsed.href.match(/^ipns:(\/\/)?(.*)$/)?.[2];
-      return [
-        `https://cloudflare-ipfs.com/ipns/${name}/`,
-        `https://ipfs.io/ipns/${name}/`,
-      ];
+      return [`https://cloudflare-ipfs.com/ipns/${name}/`, `https://ipfs.io/ipns/${name}/`];
     } else {
       return [];
     }

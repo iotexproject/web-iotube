@@ -36,7 +36,7 @@ export type TokenInfoPair = {
 };
 
 type ChainTokenPairList = {
-  readonly [chainId in ChainId]: TokenInfoPair[];
+  readonly [key: number]: TokenInfoPair[];
 };
 
 type IotexTokenPairList = {
@@ -50,7 +50,6 @@ type ChainContractAddress = {
 type IotexChainContractAddress = {
   readonly [chainId in IotexChainId]: string;
 };
-
 
 export const IOTEXSCAN_URL = {
   [IotexChainId.MAINNET]: "https://iotexscan.io/",
@@ -93,7 +92,7 @@ export const chianMap = {
         },
       },
     },
-    56:{
+    56: {
       contract: {
         cashier: {
           address: "0x082020Ae0B38fD1bef48895c6cFf4428e420F400",
@@ -108,7 +107,7 @@ export const chianMap = {
           abi: tokenListABI,
         },
       },
-    }
+    },
   },
   iotex: {
     [IotexChainId.MAINNET]: {
@@ -261,7 +260,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
 export const ETH_NETWORK_NAMES = {
   [ChainId.MAINNET]: "MAINNET",
   [ChainId.KOVAN]: "KOVAN",
-  56:"BSC"
+  56: "BSC",
 };
 
 export const NetworkContextName = "NETWORK";

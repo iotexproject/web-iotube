@@ -167,7 +167,7 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
 };
 
 export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
-  [IotexChainId.MAINNET]: Object.values(MAINNET_TOKEN_LIST).map((item) => {
+  [IotexChainId.MAINNET]: Object.values(BSC_TOKEN_LIST).map((item) => {
     return {
       ETHEREUM: { ...item.eth, chainId: IotexChainId.MAINNET } as TokenInfo,
       IOTEX: { ...item.iotx, chainId: IotexChainId.MAINNET } as TokenInfo,

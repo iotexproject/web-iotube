@@ -11,12 +11,16 @@ import { publicConfig } from "../../../configs/public";
 export const IMG_LOGO = require("../static/images/logo_iotube.svg");
 export const IMG_IOTX = require("../static/images/icon_wallet.png");
 export const IMG_ETHER = require("../static/images/icon-eth.png");
+export const IMG_BSC = require("../static/images/logo-bsc.png");
+export const IMG_HECO = require("../static/images/logo-heco.png");
+export const IMG_ETH = require("../static/images/logo-ethereum.png");
 
 import cashierABI from "./abis/erc20_xrc20.json";
 import tokenListABI from "./abis/token_list.json";
 
 export const ETHEREUM = "ETHEREUM";
 export const IOTEX = "IOTEX";
+export const BSC = "BSC";
 
 export const DEFAULT_IOTEX_CHAIN_ID = publicConfig.DEFAULT_IOTEX_CHAIN_ID;
 export const IOTX_ETH_PRICE = typeof publicConfig.IOTX_ETH_PRICE === "undefined" ? 0 : publicConfig.IOTX_ETH_PRICE;
@@ -24,6 +28,11 @@ export const IOTX_ETH_PRICE = typeof publicConfig.IOTX_ETH_PRICE === "undefined"
 if (typeof DEFAULT_IOTEX_CHAIN_ID === "undefined") {
   throw new Error(`DEFAULT_IOTEX_CHAIN_ID must be a defined environment variable`);
 }
+
+export const ChainList = [
+  { name: "Ethereum", logo: IMG_ETH },
+  { name: BSC, logo: IMG_BSC },
+];
 
 export enum IotexChainId {
   MAINNET = 1,
@@ -99,22 +108,6 @@ export const chianMap = {
         },
       },
     },
-    [AllChainId.BSC]: {
-      contract: {
-        cashier: {
-          address: "0x082020Ae0B38fD1bef48895c6cFf4428e420F400",
-          abi: cashierABI,
-        },
-        mintableTokenList: {
-          address: "0xa6ae9312D0AA3CC74d969Fcd4806d7729A321EE3",
-          abi: tokenListABI,
-        },
-        standardTokenList: {
-          address: "0x0d793F4D4287265B9bdA86b7a4083193E8743b34",
-          abi: tokenListABI,
-        },
-      },
-    },
   },
   iotex: {
     [IotexChainId.MAINNET_BSC]: {
@@ -161,6 +154,24 @@ export const chianMap = {
         },
         standardTokenList: {
           address: "io1rsaswmmm8sps83ncumtsefz0hxq7anr78xtxvw",
+          abi: tokenListABI,
+        },
+      },
+    },
+  },
+  bsc: {
+    [AllChainId.BSC]: {
+      contract: {
+        cashier: {
+          address: "0x082020Ae0B38fD1bef48895c6cFf4428e420F400",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "0xa6ae9312D0AA3CC74d969Fcd4806d7729A321EE3",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "0x0d793F4D4287265B9bdA86b7a4083193E8743b34",
           abi: tokenListABI,
         },
       },

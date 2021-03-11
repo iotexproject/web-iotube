@@ -17,7 +17,7 @@ interface IComponentProps {
 }
 
 export const SwitchHeader = (props: IComponentProps) => {
-  const { lang } = useStore();
+  const { lang, base } = useStore();
   const { onSwitch, toggleERC20List } = props;
   const store = useLocalStore(
     () => ({
@@ -81,7 +81,7 @@ export const SwitchHeader = (props: IComponentProps) => {
           }}
         >
           <img
-            src={IMG_ETH}
+            src={base.chainToken.logo}
             className="h-20 cursor-pointer"
             onClick={(e) => {
               if (!store.isERCXRC) {
@@ -92,7 +92,7 @@ export const SwitchHeader = (props: IComponentProps) => {
           />
           <div className={`text-xl font-light -mt-2 flex items-center select-none flex-column ${store.isERCXRC ? "cursor-pointer" : ""}`}>
             <div className="w-10" />
-            <div>{lang.t("token.ethereum")}</div>
+            <div>{base.chainToken.name}</div>
             <div className="w-10">{store.isERCXRC && <DownOutlined className="ml-4 float-right c-gray" />}</div>
           </div>
         </div>

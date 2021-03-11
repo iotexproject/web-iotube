@@ -12,7 +12,7 @@
       "address": "io1jlnvfzr8lhper2xla8gknmxsqhgajq5ravu4wr",
       "name": "Binance Coin",
       "decimals": 18,
-      "symbol": "ioBNB",
+      "symbol": "BNB-bsc",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png"
     }
   },
@@ -28,7 +28,7 @@
       "address": "io1sj4uk2pjhesxxsd9qy52avwmgw4qzazfrypm04",
       "name": "ioBUSD",
       "decimals": 18,
-      "symbol": "ioBUSD",
+      "symbol": "BUSD-bsc",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png"
     }
   },

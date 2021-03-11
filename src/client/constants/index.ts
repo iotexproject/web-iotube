@@ -117,11 +117,11 @@ export const chianMap = {
           abi: cashierABI,
         },
         mintableTokenList: {
-          address: "io1dn8nqk3pmmll990xz6a94fpradtrljxmmx5p8j",
+          address: "io17r9ehjstwj4gfqzwpm08fjnd606h04h2m6r92f",
           abi: tokenListABI,
         },
         standardTokenList: {
-          address: "io1t89whrwyfr0supctsqcx9n7ex5dd8yusfqhyfz",
+          address: "io1h2d3r0d20t58sv6h707ppc959kvs8wjsurrtnk",
           abi: tokenListABI,
         },
       },

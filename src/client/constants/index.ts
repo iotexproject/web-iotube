@@ -113,7 +113,7 @@ export const chianMap = {
     [IotexChainId.MAINNET]: {
       contract: {
         cashier: {
-          address: "io1gsr52ahqzklaf7flqar8r0269f2utkw9349qg8",
+          address: "io1zjlng7je02kxyvjq4eavswp6uxvfvcnh2a0a3d",
           abi: cashierABI,
         },
         mintableTokenList: {

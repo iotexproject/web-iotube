@@ -109,7 +109,6 @@ export const XRCERC = () => {
     }
     return null;
   }, []);
-
   useMemo(() => {
     if (tokenAddress && mintableTokenListContract && standardTokenListContract) {
       const fetchAmountRange = async () => {

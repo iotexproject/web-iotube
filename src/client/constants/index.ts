@@ -95,7 +95,7 @@ export const chianMap = {
     56: {
       contract: {
         cashier: {
-          address: "0x082020Ae0B38fD1bef48895c6cFf4428e420F400",
+          address: "0x797f1465796fd89ea7135e76dbc7cdb136bba1ca",
           abi: cashierABI,
         },
         mintableTokenList: {

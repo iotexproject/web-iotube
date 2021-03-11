@@ -4,6 +4,7 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from "../conne
 import { TokenInfo } from "@uniswap/token-lists";
 import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
+import BSC_TOKEN_LIST from "./bsc-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
 import { publicConfig } from "../../../configs/public";
 
@@ -27,6 +28,7 @@ if (typeof DEFAULT_IOTEX_CHAIN_ID === "undefined") {
 export enum IotexChainId {
   MAINNET = 1,
   TESTNET = 2,
+  MAINNET_BSC = 3,
 }
 
 export type TokenInfoPair = {
@@ -34,8 +36,14 @@ export type TokenInfoPair = {
   readonly IOTEX: TokenInfo;
 };
 
+export enum MoreChainId {
+  BSC = 56,
+}
+
+export const AllChainId = { ...MoreChainId, ...ChainId };
+
 type ChainTokenPairList = {
-  readonly [chainId in ChainId]: TokenInfoPair[];
+  readonly [key: number]: TokenInfoPair[];
 };
 
 type IotexTokenPairList = {
@@ -59,7 +67,7 @@ export type ChianMapType = typeof chianMap;
 
 export const chianMap = {
   eth: {
-    [ChainId.MAINNET]: {
+    [AllChainId.MAINNET]: {
       contract: {
         cashier: {
           address: "0xa0fd7430852361931b23a31f84374ba3314e1682",
@@ -75,7 +83,7 @@ export const chianMap = {
         },
       },
     },
-    [ChainId.KOVAN]: {
+    [AllChainId.KOVAN]: {
       contract: {
         cashier: {
           address: "0xd3aaa7e009d2982164e82b855d0ce87c7dd364db",
@@ -91,8 +99,40 @@ export const chianMap = {
         },
       },
     },
+    [AllChainId.BSC]: {
+      contract: {
+        cashier: {
+          address: "0x082020Ae0B38fD1bef48895c6cFf4428e420F400",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "0xa6ae9312D0AA3CC74d969Fcd4806d7729A321EE3",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "0x0d793F4D4287265B9bdA86b7a4083193E8743b34",
+          abi: tokenListABI,
+        },
+      },
+    },
   },
   iotex: {
+    [IotexChainId.MAINNET_BSC]: {
+      contract: {
+        cashier: {
+          address: "io1zjlng7je02kxyvjq4eavswp6uxvfvcnh2a0a3d",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "io17r9ehjstwj4gfqzwpm08fjnd606h04h2m6r92f",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "io1h2d3r0d20t58sv6h707ppc959kvs8wjsurrtnk",
+          abi: tokenListABI,
+        },
+      },
+    },
     [IotexChainId.MAINNET]: {
       contract: {
         cashier: {
@@ -149,6 +189,12 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: ChainId.KOVAN } as TokenInfo) : null,
     };
   }),
+  [AllChainId.BSC]: Object.values(BSC_TOKEN_LIST).map((item) => {
+    return {
+      ETHEREUM: { ...item.eth, chainId: ChainId.KOVAN } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: ChainId.KOVAN } as TokenInfo) : null,
+    };
+  }),
 };
 
 export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
@@ -159,6 +205,12 @@ export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
     };
   }),
   [IotexChainId.TESTNET]: Object.values(KOVAN_TOKEN_LIST).map((item) => {
+    return {
+      ETHEREUM: { ...item.eth, chainId: IotexChainId.TESTNET } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo) : null,
+    };
+  }),
+  [IotexChainId.MAINNET_BSC]: Object.values(BSC_TOKEN_LIST).map((item) => {
     return {
       ETHEREUM: { ...item.eth, chainId: IotexChainId.TESTNET } as TokenInfo,
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo) : null,
@@ -243,11 +295,12 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
 };
 
 export const ETH_NETWORK_NAMES = {
-  [ChainId.MAINNET]: "MAINNET",
-  [ChainId.ROPSTEN]: "ROPSTEN",
-  [ChainId.RINKEBY]: "RINKEBY",
-  [ChainId.GÖRLI]: "GÖRLI",
-  [ChainId.KOVAN]: "KOVAN",
+  [AllChainId.MAINNET]: "MAINNET",
+  [AllChainId.ROPSTEN]: "ROPSTEN",
+  [AllChainId.RINKEBY]: "RINKEBY",
+  [AllChainId.GÖRLI]: "GÖRLI",
+  [AllChainId.KOVAN]: "KOVAN",
+  [AllChainId.BSC]: "BSC",
 };
 
 export const NetworkContextName = "NETWORK";

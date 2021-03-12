@@ -1,7 +1,7 @@
 import { utils } from "../src/common/utils/index";
 const { NODE_ENV } = utils.env.getEnv();
 
-const IS_PROD = NODE_ENV == "production";
+const IS_PROD = true;
 
 const { APP_NETWORK_URL, APP_FORTMATIC_KEY, APP_PORTIS_ID, DEFAULT_IOTEX_CHAIN_ID, IOTEX_CORE_ENDPOPINT, IOTX_ETH_PRICE, SENTRY_DSN, FORCE_HTTPS } = utils.env.getEnv();
 

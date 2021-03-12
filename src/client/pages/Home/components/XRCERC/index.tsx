@@ -17,7 +17,6 @@ import { WarnModal } from "../../../../components/WarnModal";
 import { CARD_XRC20_ERC20 } from "../../../../../common/store/base";
 import { isAddress as isEthAddress } from "@ethersproject/address";
 import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
-import { injectSupportedIdsBsc, injectSupportedIdsEth } from "../../../../connectors/index";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -58,6 +57,8 @@ export const XRCERC = () => {
   }, [DEFAULT_IOTEX_CHAIN_ID, base.chainToken]);
 
   const cashierContractAddress = useMemo(() => {
+    console.log("wht");
+    console.log(chain);
     return chain.contract.cashier.address;
   }, [isIOTXCurrency, tokenAddress, chain]);
 
@@ -74,7 +75,7 @@ export const XRCERC = () => {
       return getIOTXContract(contract.address, contract.abi);
     }
     return null;
-  }, []);
+  }, [chain]);
 
   useMemo(() => {
     if (cashierContract) {
@@ -102,7 +103,7 @@ export const XRCERC = () => {
       return getIOTXContract(contract.address, contract.abi);
     }
     return null;
-  }, []);
+  }, [chain]);
 
   const standardTokenListContract = useMemo(() => {
     const contract = chain.contract.standardTokenList;
@@ -110,9 +111,12 @@ export const XRCERC = () => {
       return getIOTXContract(contract.address, contract.abi);
     }
     return null;
-  }, []);
+  }, [chain]);
 
   useMemo(() => {
+    console.log(tokenAddress);
+    console.log(mintableTokenListContract);
+    console.log(standardTokenListContract);
     if (tokenAddress && mintableTokenListContract && standardTokenListContract) {
       const fetchAmountRange = async () => {
         try {

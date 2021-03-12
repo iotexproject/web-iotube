@@ -56,7 +56,7 @@ export const Header = () => {
 
   const onConnectWallet = () => {
     if (base.mode === CARD_ERC20_XRC20) {
-      tryActivation(injected).then();
+      tryActivation(base.chainToken.injected).then();
     } else {
       // @ts-ignore
       wallet.init();

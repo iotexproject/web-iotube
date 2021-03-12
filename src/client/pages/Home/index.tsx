@@ -65,7 +65,7 @@ export const Home = () => {
                       className="flex flex-column items-center text-center"
                       onClick={() => {
                         base.targetChainToken = item;
-                        if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup) {
+                        if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup || !isERCXRC) {
                           base.tokenChange(item);
                         } else {
                           wallet.showERCWarnModal = true;

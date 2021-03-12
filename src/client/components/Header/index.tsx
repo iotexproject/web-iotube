@@ -5,7 +5,7 @@ import { BrowserView, MobileView } from "react-device-detect";
 import { CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import useENSName from "../../hooks/useENSName";
-import { useCurrentChainBlockCoinbaseBalances, useETHBalances, useTokenBalances } from "../../state/wallet/hooks";
+import { useETHBalances } from "../../state/wallet/hooks";
 import { Web3Provider } from "@ethersproject/providers";
 import { SUPPORTED_WALLETS, ETH_NETWORK_NAMES } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
@@ -25,7 +25,6 @@ export const Header = () => {
   const { account, activate, chainId } = useWeb3React<Web3Provider>();
   const { ENSName } = useENSName(account);
   const userEthBalance = useETHBalances([account])[account];
-  const tokenBalance = useCurrentChainBlockCoinbaseBalances()[chainId];
 
   const isTutorialPage = location.pathname === "/tutorial";
 
@@ -136,8 +135,8 @@ export const Header = () => {
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>
-              <a className="c-white" href="https://github.com/iotexproject/iotube" target="_blank">
-                {"V4-BSC  "}
+              <a className="c-green-20" href="https://github.com/iotexproject/iotube" target="_blank">
+                {"V4-BSC-BETA  "}
               </a>
               <Link className="c-white" to="/tutorial">
                 {lang.t("header.tutorial")}

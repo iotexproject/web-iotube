@@ -38,25 +38,6 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
   );
 }
 
-export function useCurrentChainBlockCoinbaseBalances(uncheckedAddresses?: (string | undefined)[]): { [address: string]: CurrencyAmount | undefined } {
-  const multicallContract = useMulticallContract();
-
-  const addresses: string[] = useMemo(
-    () =>
-      uncheckedAddresses
-        ? uncheckedAddresses
-            .map(isAddress)
-            .filter((a): a is string => a !== false)
-            .sort()
-        : [],
-    [uncheckedAddresses]
-  );
-
-  const results = useSingleContractMultipleData(multicallContract, "getCurrentBlockCoinbase", null);
-  console.log(results);
-  return useTokenBalances(results[0]?.result[0], null);
-}
-
 export function useTokenBalances(tokenAddress: string | undefined, token: Token, uncheckedAddresses?: (string | undefined)[]): { [address: string]: CurrencyAmount | undefined } {
   const tokenContract = useTokenContract(tokenAddress || "");
 

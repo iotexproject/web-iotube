@@ -169,6 +169,7 @@ export const ERCXRC = () => {
         window.console.log(`Failed to get allowance!`, e);
       }
     }
+    wallet.metaMaskConnected = !!account;
   }, [account, cashierContractValidate, tokenContract, isETHCurrency]);
 
   const tryActivation = async (connector) => {

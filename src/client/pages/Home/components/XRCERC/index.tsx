@@ -3,7 +3,7 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import { AddressInput, AmountField, ConfirmModal, SubmitButton, TokenSelectField } from "../../../../components";
-import { AllChainId, chainMap, ChainMapType, DEFAULT_IOTEX_CHAIN_ID, IOTEX, IotexChainId, IOTEXSCAN_URL } from "../../../../constants/index";
+import { chainMap, ChainMapType, DEFAULT_IOTEX_CHAIN_ID, IOTEX, IotexChainId, IOTEXSCAN_URL } from "../../../../constants/index";
 import { BigNumber } from "@ethersproject/bignumber";
 import { getAmountNumber, getIOTXContract, isAddress } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
@@ -57,8 +57,6 @@ export const XRCERC = () => {
   }, [DEFAULT_IOTEX_CHAIN_ID, base.chainToken]);
 
   const cashierContractAddress = useMemo(() => {
-    console.log("wht");
-    console.log(chain);
     return chain.contract.cashier.address;
   }, [isIOTXCurrency, tokenAddress, chain]);
 
@@ -114,9 +112,6 @@ export const XRCERC = () => {
   }, [chain]);
 
   useMemo(() => {
-    console.log(tokenAddress);
-    console.log(mintableTokenListContract);
-    console.log(standardTokenListContract);
     if (tokenAddress && mintableTokenListContract && standardTokenListContract) {
       const fetchAmountRange = async () => {
         try {
@@ -237,6 +232,7 @@ export const XRCERC = () => {
         tokenContract.methods
           .allowance(account, cashierContractAddress, { from: account })
           .then((value: BigNumber) => {
+            console.log("allowance" + BigNumber.from(value.toString()));
             setAllowance(BigNumber.from(value.toString()));
             return value;
           })
@@ -249,7 +245,7 @@ export const XRCERC = () => {
         window.console.log(`Failed to get allowance!`, e);
       }
     }
-  }, [account, tokenContract, beConverted, isIOTXCurrency]);
+  }, [account, tokenContract, beConverted, isIOTXCurrency, chain]);
 
   const store = useLocalStore(() => ({
     showConfirmModal: false,
@@ -427,7 +423,7 @@ export const XRCERC = () => {
           {Boolean(wallet.walletAddress) && (
             <div className="page__home__component__xrc_erc__button_group flex items-center">
               {possibleApprove && !Boolean(inputError) && <SubmitButton title={fillState ? inputError || lang.t("approve") : lang.t("approve")} onClick={onApprove} />}
-              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={Boolean(inputError) || !possibleConvert || !validateToAddress} />
+              <SubmitButton title={fillState ? inputError || lang.t("convert") : lang.t("convert")} onClick={onConvert} disabled={Boolean(inputError) || !validateToAddress} />
             </div>
           )}
         </div>

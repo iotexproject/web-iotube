@@ -18,7 +18,7 @@ const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
 const IMG_YOUTUBE = require("../../static/images/info-youtube.png");
 
 export const Home = () => {
-  const { base, lang } = useStore();
+  const { base, lang, wallet } = useStore();
   const [isShowVideo, setShowVideo] = useState(false);
   const [isShowERC20List, setERC20List] = useState(false);
 
@@ -62,7 +62,17 @@ export const Home = () => {
                 <div className={`erc20__dropdown ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
                   {erc20ChainList.map((item) => {
                     return (
-                      <div className="flex flex-column items-center text-center" onClick={() => base.tokenChange(item)}>
+                      <div
+                        className="flex flex-column items-center text-center"
+                        onClick={() => {
+                          base.targetChainToken = item;
+                          if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup) {
+                            base.tokenChange(item);
+                          } else {
+                            wallet.showERCWarnModal = true;
+                          }
+                        }}
+                      >
                         <img src={item.logo} />
                         <div className="text-xl font-light text-center">{item.name}</div>
                       </div>

@@ -17,6 +17,7 @@ export const IMG_ETH = require("../static/images/logo-ethereum.png");
 
 import cashierABI from "./abis/erc20_xrc20.json";
 import tokenListABI from "./abis/token_list.json";
+import { injectSupportedIdsBsc, injectSupportedIdsEth } from "../connectors/index";
 
 export const ETHEREUM = "ETHEREUM";
 export const IOTEX = "IOTEX";
@@ -38,6 +39,7 @@ export const ERC20ChainList = {
     injected: injected,
     coinImg: IMG_ETHER,
     balanceUnit: "Eth",
+    chainIdsGroup: injectSupportedIdsEth,
   },
   bsc: {
     key: "bsc",
@@ -47,6 +49,7 @@ export const ERC20ChainList = {
     injected: injectedBsc,
     coinImg: IMG_BSC,
     balanceUnit: "BNB",
+    chainIdsGroup: injectSupportedIdsBsc,
   },
 };
 

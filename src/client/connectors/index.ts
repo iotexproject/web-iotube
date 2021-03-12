@@ -6,6 +6,8 @@ import { PortisConnector } from "@web3-react/portis-connector";
 import { FortmaticConnector } from "./Fortmatic";
 import { NetworkConnector } from "./NetworkConnector";
 import { publicConfig } from "../../../configs/public";
+import { BSC } from "../constants";
+import { ChainId } from "@uniswap/sdk";
 
 const NETWORK_URL = publicConfig.IOTEX_CORE_ENDPOPINT;
 const FORMATIC_KEY = publicConfig.APP_FORTMATIC_KEY;
@@ -19,12 +21,15 @@ export const network = new NetworkConnector({
   urls: { [Number(process.env.REACT_APP_CHAIN_ID)]: NETWORK_URL },
 });
 
+export const injectSupportedIdsEth = [1, 3, 4, 5, 42];
+export const injectSupportedIdsBsc = [56];
+
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42],
+  supportedChainIds: injectSupportedIdsEth,
 });
 
 export const injectedBsc = new InjectedConnector({
-  supportedChainIds: [1, 42, 56],
+  supportedChainIds: injectSupportedIdsBsc,
 });
 
 // mainnet only

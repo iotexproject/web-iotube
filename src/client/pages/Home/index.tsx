@@ -8,7 +8,10 @@ import { ERCXRC, XRCERC, SwitchHeader, CompleteFrame } from "./components";
 import { useStore } from "../../../common/store";
 import { CARD_XRC20_ERC20, CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { matchPath, useHistory } from "react-router-dom";
-import { ChainList } from "../../constants/index";
+import { ERC20ChainList } from "../../constants/index";
+import { publicConfig } from "../../../../configs/public";
+import { ChainId } from "@uniswap/sdk";
+import { useActiveWeb3React } from "../../hooks/index";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
 const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
@@ -28,14 +31,21 @@ export const Home = () => {
 
   const ERCXRCPathName = isERCXRC ? history.location.pathname + history.location.search : "/eth";
   const XRCERCPathName = !isERCXRC ? history.location.pathname + history.location.search : "/iotx";
+  const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useActiveWeb3React();
 
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
-  }, [isERCXRC]);
+    // base.chainToken()
+  }, [isERCXRC, chainId]);
 
   const switchTo = () => {
     history.push(base.mode === CARD_ERC20_XRC20 ? XRCERCPathName : ERCXRCPathName);
   };
+
+  const erc20ChainList = [];
+  Object.keys(ERC20ChainList).forEach((key) => {
+    erc20ChainList.push(ERC20ChainList[key]);
+  });
 
   return useObserver(() => (
     <ClientOnly>
@@ -50,7 +60,7 @@ export const Home = () => {
               <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} isShowERC20List={isShowERC20List} toggleERC20List={setERC20List} />
               {isERCXRC && (
                 <div className={`erc20__dropdown ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
-                  {ChainList.map((item) => {
+                  {erc20ChainList.map((item) => {
                     return (
                       <div className="flex flex-column items-center text-center" onClick={() => base.tokenChange(item)}>
                         <img src={item.logo} />

@@ -1,6 +1,6 @@
 import { observable, action, computed } from "mobx";
 import remotedev from "mobx-remotedev";
-import { ChainList } from "../../client/constants/index";
+import { ERC20ChainList } from "../../client/constants/index";
 
 export const CARD_ERC20_XRC20 = "ERC20-XRC20";
 export const CARD_XRC20_ERC20 = "XRC20-ERC20";
@@ -16,7 +16,7 @@ export class BaseStore {
   @observable tokenName = "";
   @observable tokenInfoPair = null;
   @observable amount = "";
-  @observable chainToken = ChainList[0];
+  @observable chainToken = ERC20ChainList.eth;
 
   @action.bound
   setMode(mode) {

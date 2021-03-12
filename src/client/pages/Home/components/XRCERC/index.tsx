@@ -3,7 +3,7 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import { AddressInput, AmountField, ConfirmModal, SubmitButton, TokenSelectField } from "../../../../components";
-import { chianMap, ChianMapType, DEFAULT_IOTEX_CHAIN_ID, IOTEX, IOTEXSCAN_URL } from "../../../../constants/index";
+import { AllChainId, chainMap, ChainMapType, DEFAULT_IOTEX_CHAIN_ID, IOTEX, IotexChainId, IOTEXSCAN_URL } from "../../../../constants/index";
 import { BigNumber } from "@ethersproject/bignumber";
 import { getAmountNumber, getIOTXContract, isAddress } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
@@ -17,6 +17,7 @@ import { WarnModal } from "../../../../components/WarnModal";
 import { CARD_XRC20_ERC20 } from "../../../../../common/store/base";
 import { isAddress as isEthAddress } from "@ethersproject/address";
 import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
+import { injectSupportedIdsBsc, injectSupportedIdsEth } from "../../../../connectors/index";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -49,11 +50,17 @@ export const XRCERC = () => {
     // return account;
   }, [account, changedToAddress]);
   const toEthAddress = useMemo(() => (toIoAddress ? fromString(toIoAddress).stringEth() : ""), [toIoAddress]);
-  const chain = useMemo<ChianMapType["iotex"]["1"]>(() => chianMap.iotex[DEFAULT_IOTEX_CHAIN_ID], [DEFAULT_IOTEX_CHAIN_ID]);
+  const chain = useMemo<ChainMapType["iotex"]["1"]>(() => {
+    console.log("xixiixi" + base.chainToken.key);
+    if (base.chainToken.key == "bsc") {
+      return chainMap.iotex[IotexChainId.MAINNET_BSC];
+    }
+    return chainMap.iotex[DEFAULT_IOTEX_CHAIN_ID];
+  }, [DEFAULT_IOTEX_CHAIN_ID, base.chainToken]);
 
   const cashierContractAddress = useMemo(() => {
     return chain.contract.cashier.address;
-  }, [isIOTXCurrency, tokenAddress]);
+  }, [isIOTXCurrency, tokenAddress, chain]);
 
   const tokenContract = useMemo(() => {
     if (validateAddress(tokenAddress)) {
@@ -349,6 +356,7 @@ export const XRCERC = () => {
         <div className="my-6">
           <TokenSelectField
             network={IOTEX}
+            fromXrc={base.chainToken.key == "bsc"}
             onChange={(tokenPair) => {
               setTokenInfoPair(tokenPair);
               setFillSate("TOKEN");

@@ -1,6 +1,6 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ChainId } from "@uniswap/sdk";
-import { fortmatic, injected, portis, walletconnect, walletlink } from "../connectors";
+import { fortmatic, injected, injectedBsc, portis, walletconnect, walletlink } from "../connectors";
 import { TokenInfo } from "@uniswap/token-lists";
 import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
@@ -29,10 +29,22 @@ if (typeof DEFAULT_IOTEX_CHAIN_ID === "undefined") {
   throw new Error(`DEFAULT_IOTEX_CHAIN_ID must be a defined environment variable`);
 }
 
-export const ChainList = [
-  { name: "Ethereum", logo: IMG_ETH },
-  { name: BSC, logo: IMG_BSC },
-];
+export const ERC20ChainList = {
+  eth: {
+    key: "eth",
+    name: "Ethereum",
+    logo: IMG_ETH,
+    network: ETHEREUM,
+    injected: injected,
+  },
+  bsc: {
+    key: "bsc",
+    name: BSC,
+    logo: IMG_BSC,
+    network: BSC,
+    injected: injectedBsc,
+  },
+};
 
 export enum IotexChainId {
   MAINNET = 1,
@@ -41,8 +53,9 @@ export enum IotexChainId {
 }
 
 export type TokenInfoPair = {
-  readonly ETHEREUM: TokenInfo;
+  readonly ETHEREUM?: TokenInfo;
   readonly IOTEX: TokenInfo;
+  readonly BSC?: TokenInfo;
 };
 
 export enum MoreChainId {
@@ -72,9 +85,9 @@ export const IOTEXSCAN_URL = {
   [IotexChainId.TESTNET]: "https://testnet.iotexscan.io/",
 };
 
-export type ChianMapType = typeof chianMap;
+export type ChainMapType = typeof chainMap;
 
-export const chianMap = {
+export const chainMap = {
   eth: {
     [AllChainId.MAINNET]: {
       contract: {
@@ -163,7 +176,7 @@ export const chianMap = {
     [AllChainId.BSC]: {
       contract: {
         cashier: {
-          address: "0x082020Ae0B38fD1bef48895c6cFf4428e420F400",
+          address: "0x797f1465796fd89ea7135e76dbc7cdb136bba1ca",
           abi: cashierABI,
         },
         mintableTokenList: {
@@ -202,8 +215,8 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
   }),
   [AllChainId.BSC]: Object.values(BSC_TOKEN_LIST).map((item) => {
     return {
-      ETHEREUM: { ...item.eth, chainId: ChainId.KOVAN } as TokenInfo,
-      IOTEX: item.iotx ? ({ ...item.iotx, chainId: ChainId.KOVAN } as TokenInfo) : null,
+      BSC: { ...item.bsc, chainId: AllChainId.BSC } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: AllChainId.BSC } as TokenInfo) : null,
     };
   }),
 };
@@ -223,7 +236,7 @@ export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
   }),
   [IotexChainId.MAINNET_BSC]: Object.values(BSC_TOKEN_LIST).map((item) => {
     return {
-      ETHEREUM: { ...item.eth, chainId: IotexChainId.TESTNET } as TokenInfo,
+      BSC: { ...item.bsc, chainId: IotexChainId.TESTNET } as TokenInfo,
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo) : null,
     };
   }),

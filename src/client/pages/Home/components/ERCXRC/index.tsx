@@ -2,21 +2,15 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
-import { ETHEREUM, SUPPORTED_WALLETS, TRANSACTION_REJECTED } from "../../../../constants/index";
+import { AllChainId, BSC, chainMap, ChainMapType, SUPPORTED_WALLETS, TRANSACTION_REJECTED } from "../../../../constants/index";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import { injected } from "../../../../connectors/index";
 import { TransactionResponse, Web3Provider } from "@ethersproject/providers";
-import { calculateGasMargin, getAmountNumber, getContract, getEtherscanLink, isAddress, isValidAmount } from "../../../../utils/index";
+import { calculateGasMargin, getAmountNumber, getContract, getEtherscanLink, isAddress } from "../../../../utils/index";
 import { useETHBalances, useTokenBalances } from "../../../../state/wallet/hooks";
-import "./index.scss";
 import { AddressInput, AmountField, SubmitButton, TokenSelectField } from "../../../../components";
 import { ConfirmModal } from "../../../../components/ConfirmModal/index";
-import ERC20_XRC20_ABI from "../../../../constants/abis/erc20_xrc20.json";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
-import ETH_CASHIER_ABI from "../../../../constants/abis/eth_cashier.json";
-import TOKEN_LIST_ABI from "../../../../constants/abis/token_list.json";
-import E2N_ABI from "../../../../constants/abis/e2n_abi.json";
 import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
 import message from "antd/lib/message";
 import { amountInAllowance, AmountState, DEFAULT_TOKEN_DECIMAL, tryParseAmount } from "../../../../hooks/Tokens";
@@ -28,12 +22,11 @@ import { WarnModal } from "../../../../components/WarnModal";
 import { OpenModal } from "../../../../components/OpenModal";
 import { CARD_ERC20_XRC20 } from "../../../../../common/store/base";
 import { publicConfig } from "../../../../../../configs/public";
-import { Contract as EthContract } from "@ethersproject/contracts";
 import { isAddress as isEthAddress } from "@ethersproject/address";
 import { validateAddress } from "iotex-antenna/lib/account/utils";
 import qs from "qs";
 import { utils } from "../../../../../common/utils/index";
-import { chianMap, ChianMapType } from "../../../../constants/index";
+import { injected, injectedBsc, injectSupportedIdsBsc, injectSupportedIdsEth } from "../../../../connectors/index";
 
 const IMG_MATAMASK = require("../../../../static/images/metamask.png");
 
@@ -65,13 +58,26 @@ export const ERCXRC = () => {
   const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
-  const chain = useMemo<ChianMapType["eth"]["42"]>(() => chianMap.eth[chainId], [chainId]);
+  const chain = useMemo<ChainMapType["eth"]["42"]>(() => {
+    console.log(base.chainToken.key);
+    if (base.chainToken.key == "bsc" && chainId in injectSupportedIdsBsc) {
+      return chainMap[base.chainToken.key][AllChainId.BSC];
+    } else if (chainId in injectSupportedIdsEth) {
+      return chainMap[base.chainToken.key][chainId];
+    }
+    return chainMap["eth"]["42"];
+  }, [chainId, base.chainToken]);
   const cashierContractAddress = useMemo(() => {
+    console.log(chain);
     return chain.contract.cashier.address;
   }, [chain]);
 
-  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.ETHEREUM.name === "ETH", [chainId, tokenInfoPair, account]);
-  const tokenBalance = useTokenBalances(tokenAddress, token, [account])[account];
+  const isETHCurrency = useMemo(() => tokenInfoPair && ((tokenInfoPair.ETHEREUM && tokenInfoPair.ETHEREUM.tokenInfo.isETH) || (tokenInfoPair.BSC && tokenInfoPair.BSC.tokenInfo.isETH)), [
+    chainId,
+    tokenInfoPair,
+    account,
+  ]);
+  const tokenBalance = useTokenBalances(tokenAddress, token, [account, token])[account];
   const userEthBalance = useETHBalances([account])[account];
   const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency, userEthBalance, tokenBalance]);
 
@@ -402,7 +408,7 @@ export const ERCXRC = () => {
           <div>
             <div className="my-6">
               <TokenSelectField
-                network={ETHEREUM}
+                network={base.chainToken.network}
                 onChange={(tokenPair) => {
                   setTokenInfoPair(tokenPair);
                   setFillSate("TOKEN");
@@ -485,7 +491,7 @@ export const ERCXRC = () => {
                 title={lang.t("connect_metamask")}
                 icon={<img src={IMG_MATAMASK} className="h-6 mr-4" />}
                 onClick={() => {
-                  tryActivation(injected).then();
+                  tryActivation(base.chainToken.injected).then();
                 }}
               />
             )}

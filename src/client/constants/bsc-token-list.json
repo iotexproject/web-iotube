@@ -1,6 +1,6 @@
 {
   "BNB": {
-    "eth": {
+    "bsc": {
       "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "name": "Binance Coin",
       "decimals": 18,
@@ -17,7 +17,7 @@
     }
   },
   "BUSD": {
-    "eth": {
+    "bsc": {
       "address": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "name": "BUSD",
       "decimals": 18,
@@ -33,8 +33,8 @@
     }
   },
   "CYC": {
-    "eth": {
-      "address": "0x971eabca076bb42c033561a3497fe811b6c53c63",
+    "bsc": {
+      "address": "0x810ee35443639348adbbc467b33310d2ab43c168",
       "name": "Cyclone Protocol",
       "decimals": 18,
       "symbol": "CYC",

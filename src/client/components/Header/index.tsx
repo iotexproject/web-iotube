@@ -126,7 +126,7 @@ export const Header = () => {
           <Link to="/">
             <img alt="logo" src={IMG_LOGO} className="inline" />
           </Link>
-          <div className="text-2xl c-green-20"> V3</div>
+          <div className="text-l c-green-20"> V3</div>
         </div>
 
         {isTutorialPage && (
@@ -139,7 +139,7 @@ export const Header = () => {
           <span className="flex items-center c-white font-thin">
             <BrowserView>
               <a className="inline-block rounded bg-primary c-green px-2 mr-4" href="https://bsc-tube.iotex.io">
-                {"V4-BSC-BETA  "}
+                {"V4 preview  "}
               </a>
               <Link className="c-white" to="/tutorial">
                 {lang.t("header.tutorial")}

@@ -126,7 +126,7 @@ export const Header = () => {
           <Link to="/">
             <img alt="logo" src={IMG_LOGO} className="inline" />
           </Link>
-          <div className="text-2xl c-green-20"> V4</div>
+          <div className="text-l c-green-20"> V4 preview</div>
         </div>
 
         {isTutorialPage && (

@@ -40,7 +40,7 @@ export const CompleteFrame = (props: IComponentProps) => {
       <div className="c-gray-30 font-thin mt-3 text-sm">
         {props.isERCXRC
           ? lang.t("complete.tx_broadcast_network", {
-              newtwork: base.chainToken.network,
+              network: base.chainToken.network,
               amount: base.amount,
               token: base.tokenInfoPair?.IOTEX.symbol,
             })

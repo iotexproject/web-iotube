@@ -58,28 +58,26 @@ export const Home = () => {
           ) : (
             <div className="rounded-t-md">
               <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} isShowERC20List={isShowERC20List} toggleERC20List={setERC20List} />
-              {isERCXRC && (
-                <div className={`erc20__dropdown ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
-                  {erc20ChainList.map((item) => {
-                    return (
-                      <div
-                        className="flex flex-column items-center text-center"
-                        onClick={() => {
-                          base.targetChainToken = item;
-                          if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup) {
-                            base.tokenChange(item);
-                          } else {
-                            wallet.showERCWarnModal = true;
-                          }
-                        }}
-                      >
-                        <img src={item.logo} />
-                        <div className="text-xl font-light text-center">{item.name}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+              <div className={`erc20__dropdown ${isERCXRC ? "" : "erc20__dropdown_right"} ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
+                {erc20ChainList.map((item) => {
+                  return (
+                    <div
+                      className="flex flex-column items-center text-center"
+                      onClick={() => {
+                        base.targetChainToken = item;
+                        if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup) {
+                          base.tokenChange(item);
+                        } else {
+                          wallet.showERCWarnModal = true;
+                        }
+                      }}
+                    >
+                      <img src={item.logo} />
+                      <div className="text-xl font-light text-center">{item.name}</div>
+                    </div>
+                  );
+                })}
+              </div>
               <>
                 <div
                   className={`page__home__exchange__container__frame bg-primary rounded-b-md overflow-hidden ${

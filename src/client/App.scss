@@ -405,6 +405,10 @@ html {
       transition: max-height 0.3s ease-out;
       overflow-y: auto;
 
+      &.erc20__dropdown_right {
+        right: 0;
+      }
+
       &.erc20__dropdown_open {
         max-height: 180px;
         -webkit-animation: slide-down 0.5s ease-in;

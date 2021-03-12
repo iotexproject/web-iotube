@@ -74,26 +74,19 @@ export const SwitchHeader = (props: IComponentProps) => {
         } flex-1 flex flex-col justify-center items-center bg-primary c-white py-8 `}
       >
         <div
-          className="flex items-center select-none flex-col"
+          className="flex items-center select-none flex-col cursor-pointer"
           onClick={(e) => {
-            if (store.isERCXRC) store.toggleERC20List();
+            store.toggleERC20List();
             e.stopPropagation();
           }}
         >
-          <img
-            src={base.chainToken.logo}
-            className="h-20 cursor-pointer"
-            onClick={(e) => {
-              if (!store.isERCXRC) {
-                store.toggleERCXRC();
-                e.stopPropagation();
-              }
-            }}
-          />
-          <div className={`text-xl font-light -mt-2 flex items-center select-none flex-column ${store.isERCXRC ? "cursor-pointer" : ""}`}>
+          <img src={base.chainToken.logo} className="h-20" />
+          <div className="text-xl font-light -mt-2 flex items-center select-none flex-column">
             <div className="w-10" />
             <div>{base.chainToken.name}</div>
-            <div className="w-10">{store.isERCXRC && <DownOutlined className="ml-4 float-right c-gray" />}</div>
+            <div className="w-10">
+              <DownOutlined className="ml-4 float-right c-gray" />
+            </div>
           </div>
         </div>
       </div>

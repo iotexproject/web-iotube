@@ -1,7 +1,6 @@
-import { observable, action, computed } from "mobx";
+import { observable, action } from "mobx";
 import remotedev from "mobx-remotedev";
 import { ERC20ChainList } from "../../client/constants/index";
-import { useActiveWeb3React } from "../../client/hooks/index";
 
 export const CARD_ERC20_XRC20 = "ERC20-XRC20";
 export const CARD_XRC20_ERC20 = "XRC20-ERC20";
@@ -38,6 +37,7 @@ export class BaseStore {
 
   @action.bound
   tokenChange(chainToken) {
+    this.tokenInfoPair = null;
     this.chainToken = chainToken;
   }
 }

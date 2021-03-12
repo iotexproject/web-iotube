@@ -40,6 +40,7 @@ export const CompleteFrame = (props: IComponentProps) => {
       <div className="c-gray-30 font-thin mt-3 text-sm">
         {props.isERCXRC
           ? lang.t("complete.tx_broadcast_network", {
+              newtwork: base.chainToken.network,
               amount: base.amount,
               token: base.tokenInfoPair?.IOTEX.symbol,
             })
@@ -53,7 +54,7 @@ export const CompleteFrame = (props: IComponentProps) => {
         <img src={IMG_COPY} onClick={onCopyAddress} className="page__home__component__complete_frame__btn--copy cursor-pointer" />
       </div>
       <div className="c-white text-base font-thin mt-10 flex items-center">
-        {lang.t(props.isERCXRC ? "complete.your_tx_eth" : "complete.your_tx_iotx")}
+        {props.isERCXRC ? lang.t("complete.your_tx_eth", { balanceUnit: base.chainToken.balanceUnit }) : lang.t("complete.your_tx_iotx")}
         &nbsp;
       </div>
       <div className="text-base font-thin">

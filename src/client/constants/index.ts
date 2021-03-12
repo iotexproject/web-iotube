@@ -36,6 +36,8 @@ export const ERC20ChainList = {
     logo: IMG_ETH,
     network: ETHEREUM,
     injected: injected,
+    coinImg: IMG_ETHER,
+    balanceUnit: "Eth",
   },
   bsc: {
     key: "bsc",
@@ -43,6 +45,8 @@ export const ERC20ChainList = {
     logo: IMG_BSC,
     network: BSC,
     injected: injectedBsc,
+    coinImg: IMG_BSC,
+    balanceUnit: "BNB",
   },
 };
 

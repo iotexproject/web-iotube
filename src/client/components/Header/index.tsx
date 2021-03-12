@@ -5,13 +5,13 @@ import { BrowserView, MobileView } from "react-device-detect";
 import { CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import useENSName from "../../hooks/useENSName";
-import { useETHBalances } from "../../state/wallet/hooks";
+import { useCurrentChainBlockCoinbaseBalances, useETHBalances, useTokenBalances } from "../../state/wallet/hooks";
 import { Web3Provider } from "@ethersproject/providers";
 import { SUPPORTED_WALLETS, ETH_NETWORK_NAMES } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
 import { fromRau } from "iotex-antenna/lib/account/utils";
-import { IMG_ETHER, IMG_IOTX, IMG_LOGO } from "../../constants/index";
+import { CHAIN_TOKEN_LIST, IMG_ETHER, IMG_IOTX, IMG_LOGO } from "../../constants/index";
 import React from "react";
 import "./index.scss";
 import { CopyOutlined, EllipsisOutlined, InfoCircleOutlined } from "@ant-design/icons";
@@ -25,6 +25,7 @@ export const Header = () => {
   const { account, activate, chainId } = useWeb3React<Web3Provider>();
   const { ENSName } = useENSName(account);
   const userEthBalance = useETHBalances([account])[account];
+  const tokenBalance = useCurrentChainBlockCoinbaseBalances()[chainId];
 
   const isTutorialPage = location.pathname === "/tutorial";
 
@@ -92,7 +93,7 @@ export const Header = () => {
             .split(" ")
             .map((value, index) => (index === 1 ? value : Number(value).toFixed(2)))
             .join(" ");
-    const balanceUnit = base.mode === CARD_ERC20_XRC20 ? "ETH" : wallet.token;
+    const balanceUnit = base.mode === CARD_ERC20_XRC20 ? base.chainToken.balanceUnit : wallet.token;
 
     return walletConnected ? (
       <>
@@ -110,7 +111,7 @@ export const Header = () => {
         &nbsp;
         <CopyOutlined className="text-lg cursor-pointer" onClick={onCopyAddress(walletAddress)} />
         &nbsp;
-        <Avatar src={base.mode === CARD_ERC20_XRC20 ? IMG_ETHER : IMG_IOTX} size="small" />
+        <Avatar src={base.mode === CARD_ERC20_XRC20 ? base.chainToken.coinImg : IMG_IOTX} size="small" />
       </>
     ) : (
       <Button className="c-white" type="text" onClick={onConnectWallet}>
@@ -135,8 +136,8 @@ export const Header = () => {
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>
-              <a className="c-white" href="https://community.iotex.io/t/iotube-v3-faster-cheaper-and-unified/2001" target="_blank">
-                {"V3  "}
+              <a className="c-white" href="https://github.com/iotexproject/iotube" target="_blank">
+                {"V4-BSC  "}
               </a>
               <Link className="c-white" to="/tutorial">
                 {lang.t("header.tutorial")}

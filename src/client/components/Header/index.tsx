@@ -122,9 +122,12 @@ export const Header = () => {
   return useObserver(() => (
     <div className="component__header h-16">
       <div className="component__header__content app_header_content flex justify-between items-center h-full py-1">
-        <Link to="/">
-          <img alt="logo" src={IMG_LOGO} />
-        </Link>
+        <div className="flex justify-between items-center">
+          <Link to="/">
+            <img alt="logo" src={IMG_LOGO} className="inline" />
+          </Link>
+          <div className="text-2xl c-green-20"> V3</div>
+        </div>
 
         {isTutorialPage && (
           <a className="component__header__content__app bg-green c-dark-20 text-xl font-medium" href="/">
@@ -135,8 +138,8 @@ export const Header = () => {
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>
-              <a className="c-white" href="https://community.iotex.io/t/iotube-v3-faster-cheaper-and-unified/2001" target="_blank">
-                {"V3  "}
+              <a className="inline-block rounded bg-primary c-green px-2 mr-4" href="https://bsc-tube.iotex.io">
+                {"V4-BSC-BETA  "}
               </a>
               <Link className="c-white" to="/tutorial">
                 {lang.t("header.tutorial")}

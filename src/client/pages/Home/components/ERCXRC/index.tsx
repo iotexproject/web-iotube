@@ -59,11 +59,10 @@ export const ERCXRC = () => {
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
   const chain = useMemo<ChainMapType["eth"]["42"]>(() => {
-    console.log(base.chainToken.key);
     if (base.chainToken.key == "bsc" && chainId in injectSupportedIdsBsc) {
       return chainMap[base.chainToken.key][AllChainId.BSC];
     } else if (chainId in injectSupportedIdsEth) {
-      return chainMap[base.chainToken.key][chainId];
+      return chainMap["eth"][chainId];
     }
     return chainMap["eth"]["42"];
   }, [chainId, base.chainToken]);

@@ -7,9 +7,7 @@ import { parseUnits } from "@ethersproject/units";
 import { fromRau } from "iotex-antenna/lib/account/utils";
 import { BigNumber } from "@ethersproject/bignumber";
 import { publicConfig } from "../../../configs/public";
-import { BaseStore } from "../../common/store/base";
-import { Console } from "inspector";
-import { injectSupportedIdsBsc, injectSupportedIdsEth } from "../connectors/index";
+import { injectSupportedIdsEth } from "../connectors/index";
 
 export enum AmountState {
   ZERO,

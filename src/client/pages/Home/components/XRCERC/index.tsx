@@ -51,7 +51,6 @@ export const XRCERC = () => {
   }, [account, changedToAddress]);
   const toEthAddress = useMemo(() => (toIoAddress ? fromString(toIoAddress).stringEth() : ""), [toIoAddress]);
   const chain = useMemo<ChainMapType["iotex"]["1"]>(() => {
-    console.log("xixiixi" + base.chainToken.key);
     if (base.chainToken.key == "bsc") {
       return chainMap.iotex[IotexChainId.MAINNET_BSC];
     }

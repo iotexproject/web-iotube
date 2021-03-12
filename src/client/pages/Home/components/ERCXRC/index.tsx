@@ -55,11 +55,11 @@ export const ERCXRC = () => {
     // return account;
   }, [account, changedToAddress]);
   const toIoAddress = useMemo(() => (toEthAddress ? fromBytes(Buffer.from(String(toEthAddress).replace(/^0x/, ""), "hex")).string() : ""), [toEthAddress]);
-  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM : null), [tokenInfoPair]);
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
   const chain = useMemo<ChainMapType["eth"]["42"]>(() => {
-    if (base.chainToken.key == "bsc" && chainId in injectSupportedIdsBsc) {
+    if (base.chainToken.key == "bsc") {
       return chainMap[base.chainToken.key][AllChainId.BSC];
     } else if (chainId in injectSupportedIdsEth) {
       return chainMap["eth"][chainId];
@@ -69,7 +69,7 @@ export const ERCXRC = () => {
   const cashierContractAddress = useMemo(() => {
     console.log(chain);
     return chain.contract.cashier.address;
-  }, [chain]);
+  }, [chain, base.chainToken]);
 
   const isETHCurrency = useMemo(() => tokenInfoPair && ((tokenInfoPair.ETHEREUM && tokenInfoPair.ETHEREUM.tokenInfo.isETH) || (tokenInfoPair.BSC && tokenInfoPair.BSC.tokenInfo.isETH)), [
     chainId,
@@ -119,6 +119,8 @@ export const ERCXRC = () => {
 
   const standardTokenListContract = useMemo(() => {
     const contract = chain.contract.standardTokenList;
+    console.log("select chain token");
+    console.log(chain);
     if (isAddress(contract.address) && library) {
       return getContract(contract.address, contract.abi, library, account);
     }

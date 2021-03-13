@@ -18,6 +18,7 @@ export class BaseStore {
   @observable amount = "";
   @observable chainToken = ERC20ChainList.bsc;
   @observable targetChainToken = null;
+  @observable chainTokenLength = 1;
 
   @action.bound
   setMode(mode) {

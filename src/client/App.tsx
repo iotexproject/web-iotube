@@ -48,10 +48,10 @@ const App = () => {
           <Updaters />
           <MainLayout>
             <Switch>
-              <Route exact={true} path="/eth" component={Home} />
+              <Route exact={true} path="/bsc" component={Home} />
               <Route exact={true} path="/iotx" component={Home} />
               <Route exact={true} path="/tutorial" component={Tutorial} />
-              {utils.env.isIoPayMobile() ? <Redirect to="/iotx" /> : <Redirect to="/eth" />}
+              {utils.env.isIoPayMobile() ? <Redirect to="/iotx" /> : <Redirect to="/bsc" />}
             </Switch>
           </MainLayout>
         </Provider>

@@ -25,27 +25,27 @@ export const Home = () => {
   const history = useHistory();
 
   const isERCXRC = !!matchPath(history.location.pathname, {
-    path: "/eth",
+    path: "/bsc",
     exact: true,
   });
+  const erc20ChainList = [];
 
-  const ERCXRCPathName = isERCXRC ? history.location.pathname + history.location.search : "/eth";
+  const ERCXRCPathName = isERCXRC ? history.location.pathname + history.location.search : "/bsc";
   const XRCERCPathName = !isERCXRC ? history.location.pathname + history.location.search : "/iotx";
   const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useActiveWeb3React();
 
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
     // base.chainToken()
+    Object.keys(ERC20ChainList).forEach((key) => {
+      erc20ChainList.push(ERC20ChainList[key]);
+    });
+    base.chainTokenLength = erc20ChainList.length;
   }, [isERCXRC, chainId]);
 
   const switchTo = () => {
     history.push(base.mode === CARD_ERC20_XRC20 ? XRCERCPathName : ERCXRCPathName);
   };
-
-  const erc20ChainList = [];
-  Object.keys(ERC20ChainList).forEach((key) => {
-    erc20ChainList.push(ERC20ChainList[key]);
-  });
 
   return useObserver(() => (
     <ClientOnly>
@@ -59,24 +59,25 @@ export const Home = () => {
             <div className="rounded-t-md">
               <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} isShowERC20List={isShowERC20List} toggleERC20List={setERC20List} />
               <div className={`erc20__dropdown ${isERCXRC ? "" : "erc20__dropdown_right"} ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
-                {erc20ChainList.map((item) => {
-                  return (
-                    <div
-                      className="flex flex-column items-center text-center"
-                      onClick={() => {
-                        base.targetChainToken = item;
-                        if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup || !isERCXRC) {
-                          base.tokenChange(item);
-                        } else {
-                          wallet.showERCWarnModal = true;
-                        }
-                      }}
-                    >
-                      <img src={item.logo} />
-                      <div className="text-xl font-light text-center">{item.name}</div>
-                    </div>
-                  );
-                })}
+                {erc20ChainList.length > 1 &&
+                  erc20ChainList.map((item) => {
+                    return (
+                      <div
+                        className="flex flex-column items-center text-center"
+                        onClick={() => {
+                          base.targetChainToken = item;
+                          if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup || !isERCXRC) {
+                            base.tokenChange(item);
+                          } else {
+                            wallet.showERCWarnModal = true;
+                          }
+                        }}
+                      >
+                        <img src={item.logo} />
+                        <div className="text-xl font-light text-center">{item.name}</div>
+                      </div>
+                    );
+                  })}
               </div>
               <>
                 <div

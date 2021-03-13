@@ -4,6 +4,7 @@ import { useStore } from "../../../../../common/store";
 import { useObserver, useLocalStore, useAsObservableSource } from "mobx-react";
 import { useSwipeable } from "react-swipeable";
 import { DownOutlined } from "@ant-design/icons/lib";
+import { ERC20ChainList } from "../../../../constants/index";
 
 const IMG_ETH = require("../../../../static/images/logo-ethereum.png");
 const IMG_IOTEX = require("../../../../static/images/logo-iotex.png");
@@ -84,9 +85,7 @@ export const SwitchHeader = (props: IComponentProps) => {
           <div className="text-xl font-light -mt-2 flex items-center select-none flex-column">
             <div className="w-10" />
             <div>{base.chainToken.name}</div>
-            <div className="w-10">
-              <DownOutlined className="ml-4 float-right c-gray" />
-            </div>
+            <div className="w-10">{base.chainTokenLength > 1 && <DownOutlined className="ml-4 float-right c-gray" />}</div>
           </div>
         </div>
       </div>

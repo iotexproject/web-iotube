@@ -31,16 +31,16 @@ if (typeof DEFAULT_IOTEX_CHAIN_ID === "undefined") {
 }
 
 export const ERC20ChainList = {
-  eth: {
-    key: "eth",
-    name: "Ethereum",
-    logo: IMG_ETH,
-    network: ETHEREUM,
-    injected: injected,
-    coinImg: IMG_ETHER,
-    balanceUnit: "Eth",
-    chainIdsGroup: injectSupportedIdsEth,
-  },
+  // eth: {
+  //   key: "eth",
+  //   name: "Ethereum",
+  //   logo: IMG_ETH,
+  //   network: ETHEREUM,
+  //   injected: injected,
+  //   coinImg: IMG_ETHER,
+  //   balanceUnit: "Eth",
+  //   chainIdsGroup: injectSupportedIdsEth,
+  // },
   bsc: {
     key: "bsc",
     name: BSC,

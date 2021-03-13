@@ -139,7 +139,7 @@ export const Header = () => {
           <span className="flex items-center c-white font-thin">
             <BrowserView>
               <a className="inline-block rounded bg-primary c-green px-2 mr-4" href="https://bsc-tube.iotex.io">
-                {"V4 preview "}
+                {"V4 preview  "}
               </a>
               <Link className="c-white" to="/tutorial">
                 {lang.t("header.tutorial")}

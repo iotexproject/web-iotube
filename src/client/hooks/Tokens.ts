@@ -108,7 +108,8 @@ export function getFeeIOTX(iotxFee: BigNumber): string {
   try {
     const feeInIotx = fromRau(iotxFee.toString(), "iotx");
     const ethConverted = Number(feeInIotx) * IOTX_ETH_PRICE;
-    return `${fromRau(iotxFee.toString(), "iotx")} IOTX (~${ethConverted} ETH)`;
+    // return `${fromRau(iotxFee.toString(), "iotx")} IOTX (~${ethConverted} ETH)`;
+    return `${fromRau(iotxFee.toString(), "iotx")} IOTX`;
   } catch (error) {
     console.debug(`getFeeIOTX: Failed to calculate ETH fee with IOTX_ETH_PRICE ${IOTX_ETH_PRICE}`, error);
     return `${fromRau(iotxFee.toString(), "iotx")} IOTX`;

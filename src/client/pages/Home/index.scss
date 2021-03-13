@@ -21,6 +21,7 @@
         opacity: 1;
         z-index: 1;
       }
+
       &.page__home__exchange__container__frame--inactive {
         opacity: 0;
         width: 100%;
@@ -35,8 +36,8 @@
     @media screen and (max-width: 500px) {
       min-height: auto;
       height: auto;
-      padding: 4rem 0;
-      padding-top: 10vh;
+      padding: 8rem 0;
+      // padding-top: 10vh;
 
       .page__home__exchange__container__beta-notice {
         margin-top: 28rem;
@@ -102,6 +103,7 @@
     @media screen and (max-width: 500px) {
       width: 90%;
       padding: 7rem 0;
+
       .page__home__faq__container__youtube {
         width: 12rem;
         top: -4rem;

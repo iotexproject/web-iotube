@@ -120,9 +120,9 @@ export const Header = () => {
   };
 
   return useObserver(() => (
-    <div className="component__header h-16">
-      <div className="component__header__content app_header_content flex justify-between items-center h-full py-1">
-        <div className="flex justify-between items-center">
+    <div className="component__header h-auto md:h-16">
+      <div className="component__header__content app_header_content flex flex-col md:flex-row justify-between items-center h-full py-1">
+        <div className="flex justify-between items-center my-3 md:my-0">
           <Link to="/">
             <img alt="logo" src={IMG_LOGO} className="inline" />
           </Link>

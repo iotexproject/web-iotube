@@ -18,7 +18,7 @@ interface IComponentProps {
 }
 
 const wallets = [
-  { name: "imToken", src: IM_TOKEN, url: "imtokenv2://navigate?screen=DappView&url=https://tube.iotex.io/eth" },
+  // { name: "imToken", src: IM_TOKEN, url: "imtokenv2://navigate?screen=DappView&url=https://tube.iotex.io/eth" },
   { name: "Metamask", src: IMG_MATAMASK, url: "https://metamask.app.link/dapp/tube.iotex.io/eth" },
   { name: "Trust Wallet", src: TRUST_WALLET, url: "https://link.trustwallet.com/open_url?coin_id=60&url=https://tube.iotex.io/eth" },
   { name: "Token Pocket", src: TOKEN_POCKET, url: null },

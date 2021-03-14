@@ -399,7 +399,7 @@ export const XRCERC = () => {
           <div className="my-6 text-left">
             <div className="text-base c-gray-20">You will receive {token.name} tokens at</div>
             <AddressInput
-              label={"Ether Address"}
+              label={"BSC Address"}
               onChange={(address: string) => {
                 setChangedToAddress(address);
               }}

@@ -110,7 +110,7 @@ export const Header = () => {
         &nbsp;
         <CopyOutlined className="text-lg cursor-pointer" onClick={onCopyAddress(walletAddress)} />
         &nbsp;
-        <Avatar src={base.mode === CARD_ERC20_XRC20 ? IMG_ETHER : IMG_IOTX} size="small" />
+        <Avatar style={{ flex: "none" }} src={base.mode === CARD_ERC20_XRC20 ? IMG_ETHER : IMG_IOTX} size="small" />
       </>
     ) : (
       <Button className="c-white" type="text" onClick={onConnectWallet}>

@@ -122,11 +122,16 @@ export const Header = () => {
   return useObserver(() => (
     <div className="component__header h-auto md:h-16">
       <div className="component__header__content app_header_content flex flex-col md:flex-row justify-between items-center h-full py-1">
-        <div className="flex justify-between items-center my-3 md:my-0">
-          <Link to="/">
-            <img alt="logo" src={IMG_LOGO} className="inline" />
-          </Link>
-          <div className="text-l c-green-20"> V4 preview</div>
+        <div className="w-full md:w-auto flex justify-between items-center my-3 md:my-0">
+          <div className="flex items-center">
+            <Link to="/">
+              <img alt="logo" src={IMG_LOGO} className="inline" />
+            </Link>
+            <div className="text-l c-green-20"> V4 preview</div>
+          </div>
+          <a className="inline-block  md:hidden rounded bg-primary c-green px-2" href="https://tube.iotex.io" target="_blank">
+            {"BACK TO V3  "}
+          </a>
         </div>
 
         {isTutorialPage && (
@@ -138,7 +143,7 @@ export const Header = () => {
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>
-              <a className="inline-block rounded bg-primary c-green px-2 mr-4" href="https://tube.iotex.io" target="_blank">
+              <a className="hidden md:inline-block rounded bg-primary c-green px-2 mr-4" href="https://tube.iotex.io" target="_blank">
                 {"BACK TO V3  "}
               </a>
               <Link className="c-white" to="/tutorial">

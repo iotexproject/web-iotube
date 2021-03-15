@@ -217,14 +217,14 @@ export const XRCERC = () => {
   const possibleApprove = useMemo(() => {
     if (Boolean(inputError) || isIOTXCurrency) return false;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.UNAPPROVED;
-  }, [allowance, amount, xrc20TokenInfo, isIOTXCurrency]);
+  }, [allowance, amount, xrc20TokenInfo, isIOTXCurrency, inputError]);
 
   const possibleConvert = useMemo(() => {
     if (!changedToAddress) return false;
     if (isIOTXCurrency) return true;
     if (possibleApprove || Boolean(inputError)) return false;
     return amountInAllowance(allowance, amount, xrc20TokenInfo) == AmountState.APPROVED;
-  }, [possibleApprove, allowance, amount, xrc20TokenInfo, isIOTXCurrency, changedToAddress]);
+  }, [possibleApprove, allowance, amount, xrc20TokenInfo, isIOTXCurrency, changedToAddress, inputError]);
 
   useEffect(() => {
     if (isAddress(account) && cashierContractAddress && tokenContract && !isIOTXCurrency) {

@@ -137,8 +137,8 @@ export const Home = () => {
             title={lang.t("faq.what_is_iotube_used_for")}
             body={
               <>
-                <p>{lang.t("faq.iotube_used_for.one")}</p>
-                <p>{lang.t("faq.iotube_used_for.two")}</p>
+                <p>{lang.t("faq.iotube_used_for.one", { chain: base.chainToken.name })}</p>
+                <p>{lang.t("faq.iotube_used_for.two", { chain: base.chainToken.name })}</p>
               </>
             }
           />
@@ -150,11 +150,11 @@ export const Home = () => {
                 <ul>
                   <li>
                     <strong>{lang.t("faq.iotube_work.components.smart_contracts")}</strong>
-                    {` ${lang.t("faq.iotube_work.components.smart_contracts.work")}`}
+                    {` ${lang.t("faq.iotube_work.components.smart_contracts.work", { chain: base.chainToken.name })}`}
                   </li>
                   <li>
                     <strong>{lang.t("faq.iotube_work.components.pool_of_witness")}</strong>
-                    {` ${lang.t("faq.iotube_work.components.pool_of_witness.work")}`}
+                    {` ${lang.t("faq.iotube_work.components.pool_of_witness.work", { chain: base.chainToken.name })}`}
                   </li>
                 </ul>
               </>

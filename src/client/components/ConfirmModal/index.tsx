@@ -19,7 +19,7 @@ interface IComponentProps {
 }
 
 export const ConfirmModal = (props: IComponentProps) => {
-  const { lang } = useStore();
+  const { lang, base } = useStore();
   if (!props.visible) return null;
   const isETHCurrency = props.depositToken && props.depositToken.name === "ETH";
   const isIOTXECurrency = props.depositToken && props.depositToken.symbol === "IOTX-E";
@@ -40,7 +40,7 @@ export const ConfirmModal = (props: IComponentProps) => {
             <CurrencyLogo currency={props.depositToken} />
             <span className="text-xl ml-2 font-light">
               {props.depositToken.symbol}&nbsp;&nbsp;
-              {!isETHCurrency && !isIOTXCurrency && `(${lang.t(props.isERCXRC ? "erc_20" : "xrc_20")})`}
+              {!isETHCurrency && !isIOTXCurrency && (props.isERCXRC ? base.chainToken.standard : `${lang.t("xrc_20")}`)}
             </span>
           </>
         )}
@@ -53,13 +53,13 @@ export const ConfirmModal = (props: IComponentProps) => {
             <CurrencyLogo currency={props.mintToken} />
             <span className="text-xl ml-2 font-light">
               {props.mintToken.symbol}&nbsp;&nbsp;
-              {!isIOTXECurrency && `(${lang.t(!props.isERCXRC ? "erc_20" : "xrc_20")})`}
+              {!isIOTXECurrency && (props.isERCXRC ? `${lang.t("xrc_20")}` : base.chainToken.standard)}
             </span>
           </>
         )}
       </div>
       <div className="c-gray font-thin text-base mt-2 mb-5">
-        on {props.isERCXRC ? lang.t("token.iotex") : lang.t("token.ethereum")} at&nbsp;
+        on {props.isERCXRC ? lang.t("token.iotex") : base.chainToken.name} at&nbsp;
         <span className="c-white font-light">{props.toAddress}</span>
       </div>
       <div className="my-6 text-left c-gray">
@@ -69,7 +69,7 @@ export const ConfirmModal = (props: IComponentProps) => {
           <span>0 ({lang.t("free")})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t(props.isERCXRC ? "relay_to_iotex" : "relay_to_ethereum")}</span>
+          {props.isERCXRC ? <span>{lang.t("relay_to_iotex")}</span> : <span>{lang.t("relay_to_chain", { chain: base.chainToken.name })}</span>}
           <span>{props.isERCXRC ? `0 (${lang.t("free")})` : props.networkFee}</span>
         </div>
       </div>

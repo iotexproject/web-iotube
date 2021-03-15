@@ -23,7 +23,7 @@ export const WarnModal = (props: IComponentProps) => {
           <div className="text-base mb-2">{lang.t("warning.chainId.comment", { currentNetwork: wallet.metaMaskConnected ? base.targetChainToken.network : base.chainToken.network })}</div>
         ) : (
           <>
-            <div className="text-base mb-2">{lang.t("warning.iotx.comment.mobile")}</div>
+            <div className="text-base mb-2">{lang.t("warning.iotx.comment.mobile", { chainStandard: base.chainToken.standard })}</div>
             <div className="text-base mb-2">
               {lang.t("warning.iotx.comment.desktop1")}&nbsp;
               <a href="https://iopay.iotex.io/desktop">{lang.t("warning.iotx.comment.desktop2")}</a>

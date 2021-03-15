@@ -185,7 +185,7 @@ export const XRCERC = () => {
       return lang.t("input.amount.enter_value");
     }
     if (!validateToAddress) {
-      return lang.t("input.ethaddress.invalid");
+      return lang.t("input.chainaddress.invalid", { network: base.chainToken.network });
     }
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;

@@ -40,7 +40,7 @@ export const ConfirmModal = (props: IComponentProps) => {
             <CurrencyLogo currency={props.depositToken} />
             <span className="text-xl ml-2 font-light">
               {props.depositToken.symbol}&nbsp;&nbsp;
-              {!isETHCurrency && !isIOTXCurrency && (props.isERCXRC ? base.chainToken.networkSymbol : `${lang.t("xrc_20")}`)}
+              {!isETHCurrency && !isIOTXCurrency && (props.isERCXRC ? base.chainToken.standard : `${lang.t("xrc_20")}`)}
             </span>
           </>
         )}
@@ -53,7 +53,7 @@ export const ConfirmModal = (props: IComponentProps) => {
             <CurrencyLogo currency={props.mintToken} />
             <span className="text-xl ml-2 font-light">
               {props.mintToken.symbol}&nbsp;&nbsp;
-              {!isIOTXECurrency && (props.isERCXRC ? base.chainToken.networkSymbol : `${lang.t("xrc_20")}`)}
+              {!isIOTXECurrency && (props.isERCXRC ? base.chainToken.standard : `${lang.t("xrc_20")}`)}
             </span>
           </>
         )}

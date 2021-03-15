@@ -26,7 +26,7 @@ const wallets = [
 ];
 
 export const OpenModal = (props: IComponentProps) => {
-  const { lang } = useStore();
+  const { lang, base } = useStore();
   const [copyModalVisible, setCopyModalVisible] = useState(false);
 
   const toOpenAppUrl = (item) => {
@@ -44,7 +44,7 @@ export const OpenModal = (props: IComponentProps) => {
   return (
     <>
       <Modal visible={props.visible} onCancel={props.close} footer={null} style={{ top: 300 }} className="modal__open modal__match_center__page">
-        <div className="text-base mb-4 c-white">{lang.t("open_tube_in_desc")}</div>
+        <div className="text-base mb-4 c-white">{lang.t("open_tube_in_desc", { network: base.chainToken.standard })}</div>
         <div className="modal__open__list text-sm font-light">
           <ul>
             {wallets.map((item) => {

@@ -55,7 +55,7 @@ export const CompleteFrame = (props: IComponentProps) => {
         <img src={IMG_COPY} onClick={onCopyAddress} className="page__home__component__complete_frame__btn--copy cursor-pointer" />
       </div>
       <div className="c-white text-base font-thin mt-10 flex items-center">
-        {props.isERCXRC ? lang.t("complete.your_tx_eth", { balanceUnit: base.chainToken.balanceUnit }) : lang.t("complete.your_tx_iotx")}
+        {props.isERCXRC ? lang.t("complete.your_tx_chain", { chain: base.chainToken.name }) : lang.t("complete.your_tx_iotx")}
         &nbsp;
       </div>
       <div className="text-base font-thin">

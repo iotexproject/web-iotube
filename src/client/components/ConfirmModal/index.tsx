@@ -69,7 +69,7 @@ export const ConfirmModal = (props: IComponentProps) => {
           <span>0 ({lang.t("free")})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          {props.isERCXRC ? <span>{lang.t("relay_to_iotex")}</span> : <span>{lang.t("relay_to_network", { network: base.chainToken.network })}</span>}
+          {props.isERCXRC ? <span>{lang.t("relay_to_iotex")}</span> : <span>{lang.t("relay_to_chain", { chain: base.chainToken.name })}</span>}
           <span>{props.isERCXRC ? `0 (${lang.t("free")})` : props.networkFee}</span>
         </div>
       </div>

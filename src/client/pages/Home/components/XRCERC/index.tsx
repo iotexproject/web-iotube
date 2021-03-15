@@ -185,7 +185,7 @@ export const XRCERC = () => {
       return lang.t("input.amount.enter_value");
     }
     if (!validateToAddress) {
-      return lang.t("input.chainaddress.invalid", { network: base.chainToken.network });
+      return lang.t("input.chainaddress.invalid", { chain: base.chainToken.name });
     }
     if (amountNumber < Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))) {
       return `Amount must >= ${Number(formatUnits(amountRange.minAmount, token ? token.decimals : DEFAULT_TOKEN_DECIMAL))}`;
@@ -414,7 +414,7 @@ export const XRCERC = () => {
             <span>0 ({lang.t("free")})</span>
           </div>
           <div className="font-light text-sm flex items-center justify-between">
-            <span>{lang.t("relay_to_network", { network: base.chainToken.network })}</span>
+            <span>{lang.t("relay_to_chain", { chain: base.chainToken.name })}</span>
             <span>{getFeeIOTX(depositFee)}</span>
           </div>
         </div>

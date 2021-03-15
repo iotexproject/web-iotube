@@ -19,7 +19,7 @@ interface IComponentProps {
 }
 
 export const ConfirmModal = (props: IComponentProps) => {
-  const { lang } = useStore();
+  const { lang, base } = useStore();
   if (!props.visible) return null;
   const isETHCurrency = props.depositToken && props.depositToken.name === "ETH";
   const isIOTXECurrency = props.depositToken && props.depositToken.symbol === "IOTX-E";
@@ -40,7 +40,7 @@ export const ConfirmModal = (props: IComponentProps) => {
             <CurrencyLogo currency={props.depositToken} />
             <span className="text-xl ml-2 font-light">
               {props.depositToken.symbol}&nbsp;&nbsp;
-              {!isETHCurrency && !isIOTXCurrency && `(${lang.t(props.isERCXRC ? "erc_20" : "xrc_20")})`}
+              {!isETHCurrency && !isIOTXCurrency && (props.isERCXRC ? base.chainToken.networkSymbol : `${lang.t("xrc_20")}`)}
             </span>
           </>
         )}
@@ -53,7 +53,7 @@ export const ConfirmModal = (props: IComponentProps) => {
             <CurrencyLogo currency={props.mintToken} />
             <span className="text-xl ml-2 font-light">
               {props.mintToken.symbol}&nbsp;&nbsp;
-              {!isIOTXECurrency && `(${lang.t(!props.isERCXRC ? "erc_20" : "xrc_20")})`}
+              {!isIOTXECurrency && (props.isERCXRC ? base.chainToken.networkSymbol : `${lang.t("xrc_20")}`)}
             </span>
           </>
         )}
@@ -69,7 +69,7 @@ export const ConfirmModal = (props: IComponentProps) => {
           <span>0 ({lang.t("free")})</span>
         </div>
         <div className="font-light text-sm flex items-center justify-between">
-          <span>{lang.t(props.isERCXRC ? "relay_to_iotex" : "relay_to_ethereum")}</span>
+          {props.isERCXRC ? <span>{lang.t("relay_to_iotex")}</span> : <span>{lang.t("relay_to_network", { network: base.chainToken.network })}</span>}
           <span>{props.isERCXRC ? `0 (${lang.t("free")})` : props.networkFee}</span>
         </div>
       </div>

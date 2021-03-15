@@ -414,7 +414,7 @@ export const XRCERC = () => {
             <span>0 ({lang.t("free")})</span>
           </div>
           <div className="font-light text-sm flex items-center justify-between">
-            <span>{lang.t("relay_to_bsc")}</span>
+            <span>{lang.t("relay_to_network", { network: base.chainToken.network })}</span>
             <span>{getFeeIOTX(depositFee)}</span>
           </div>
         </div>

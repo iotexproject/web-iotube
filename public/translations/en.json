@@ -18,7 +18,7 @@
   "fee.tube": "Tube Fee",
   "fee.network": "Network Fee",
   "relay_to_iotex": "Relay to IoTeX",
-  "relay_to_ethereum": "Relay to Ethereum",
+  "relay_to_network": "Relay to ${network}",
   "free": "Free",
   "confirm": "Confirm",
   "connect_io_pay": "Connect ioPay",
@@ -162,6 +162,5 @@
   "other.wallet.link": "https://tube.iotex.io/eth",
   "other.wallet.copy_success": "Link copied successfully",
   "other.wallet.copy_failed": "Link copied failed",
-  "erc20.address.warning": "Warning: Do not use exchange addresses or contract addresses. You may lose your tokens.",
-  "relay_to_bsc": "Relay to BSC"
+  "erc20.address.warning": "Warning: Do not use exchange addresses or contract addresses. You may lose your tokens."
 }

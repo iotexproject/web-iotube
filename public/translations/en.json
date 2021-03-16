@@ -49,6 +49,7 @@
   "may_delay_comment": "* may delay due to ${network} network congestion.",
   "you_are_going_to_deposit": "You are going to deposit",
   "ok": "OK",
+  "cancel": "Cancel",
   "warning": "Warning",
   "warning.chainId.comment": "Your network does not match, please open in a supported browser (Firefox/Chrome/Brave) with metamask installed and select a ${currentNetwork} Network",
   "warning.iotx.comment.mobile": "To convert from XRC20 to ${chainStandard}, please open inside ioPay Android/iOS for mobile users.",
@@ -160,5 +161,6 @@
   "other.wallet.link": "https://bsc-tube.iotex.io",
   "other.wallet.copy_success": "Link copied successfully",
   "other.wallet.copy_failed": "Link copied failed",
-  "erc20.address.warning": "Warning: Do not use exchange addresses or contract addresses. You may lose your tokens."
+  "erc20.address.warning": "Warning: Do not use exchange addresses or contract addresses. You may lose your tokens.",
+  "warning.address.convert": "Are you sure that you want to transfer to ${address}. This address is known as ${name}. You may lose your tokens if you continue."
 }

@@ -37,16 +37,18 @@ export const Home = () => {
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
     // base.chainToken()
-    Object.keys(ERC20ChainList).forEach((key) => {
-      erc20ChainList.push(ERC20ChainList[key]);
-    });
-    base.chainTokenLength = erc20ChainList.length;
   }, [isERCXRC, chainId]);
 
   const switchTo = () => {
     history.push(base.mode === CARD_ERC20_XRC20 ? XRCERCPathName : ERCXRCPathName);
   };
 
+  Object.keys(ERC20ChainList).forEach((key) => {
+    erc20ChainList.push(ERC20ChainList[key]);
+  });
+  base.chainTokenLength = erc20ChainList.length;
+
+  console.log(erc20ChainList);
   return useObserver(() => (
     <ClientOnly>
       <div className="page__home" onClick={() => setERC20List(false)}>
@@ -59,7 +61,7 @@ export const Home = () => {
             <div className="rounded-t-md">
               <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} isShowERC20List={isShowERC20List} toggleERC20List={setERC20List} />
               <div className={`erc20__dropdown ${isERCXRC ? "" : "erc20__dropdown_right"} ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
-                {erc20ChainList.length > 1 &&
+                {base.chainTokenLength > 1 &&
                   erc20ChainList.map((item) => {
                     return (
                       <div

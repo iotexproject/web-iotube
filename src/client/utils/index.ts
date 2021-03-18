@@ -140,3 +140,8 @@ export interface WarningAddressInfoPair {
 export const WARNING_ADDRESS_LIST: { [key: string]: WarningAddressInfoPair[] } = {
   bsc: [{ address: "0x810EE35443639348aDbbC467b33310d2AB43c168", name: "Cyclone Contract" }],
 };
+
+export interface SearchParamPair {
+  from: string;
+  to: string;
+}

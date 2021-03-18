@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ModalVideo from "react-modal-video";
 import { useObserver } from "mobx-react-lite";
 import "./index.scss";
@@ -7,11 +7,13 @@ import { ClientOnly, CollapseView } from "../../components";
 import { ERCXRC, XRCERC, SwitchHeader, CompleteFrame } from "./components";
 import { useStore } from "../../../common/store";
 import { CARD_XRC20_ERC20, CARD_ERC20_XRC20 } from "../../../common/store/base";
-import { matchPath, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { ERC20ChainList } from "../../constants/index";
 import { publicConfig } from "../../../../configs/public";
 import { ChainId } from "@uniswap/sdk";
 import { useActiveWeb3React } from "../../hooks/index";
+import qs from "qs";
+import { SearchParamPair } from "../../utils/index";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
 const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
@@ -23,32 +25,58 @@ export const Home = () => {
   const [isShowERC20List, setERC20List] = useState(false);
 
   const history = useHistory();
+  const search = history.location.search;
 
-  const isERCXRC = !!matchPath(history.location.pathname, {
-    path: "/bsc",
-    exact: true,
-  });
+  const searchParam = !!search ? qs.parse(search, { ignoreQueryPrefix: true }) : null;
+  console.log(searchParam);
+  const pathName = useMemo(() => {
+    const paramPair: SearchParamPair = { from: `${base.chainToken.key}`, to: "iotx" };
+    if (!!searchParam) {
+      if (searchParam.from && (searchParam.from == "iotx" || !!ERC20ChainList[searchParam.from.toString()])) {
+        paramPair.from = searchParam.from.toString();
+      }
+      if (searchParam.to && !!ERC20ChainList[searchParam.to.toString()]) {
+        if (searchParam.from == "iotx") {
+          paramPair.to = searchParam.to.toString();
+        }
+      }
+      if (searchParam.from == "iotx" && (!searchParam.to || searchParam.to == "iotx")) {
+        paramPair.to = base.chainToken.key;
+      }
+    }
+    return `?from=${paramPair.from}&to=${paramPair.to}`;
+  }, [searchParam]);
+
+  if (pathName != search) {
+    history.push(pathName);
+  }
+
+  const isERCXRC = !searchParam || (searchParam && searchParam.from != "iotx");
   const erc20ChainList = [];
-
-  const ERCXRCPathName = isERCXRC ? history.location.pathname + history.location.search : "/bsc";
-  const XRCERCPathName = !isERCXRC ? history.location.pathname + history.location.search : "/iotx";
   const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useActiveWeb3React();
 
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
-    // base.chainToken()
+    if (!!searchParam && searchParam.from && searchParam.to) {
+      const currentChainKeyFromPath = isERCXRC ? searchParam.from.toString() : searchParam.to.toString();
+      console.log(isERCXRC);
+      console.log(currentChainKeyFromPath);
+      if (currentChainKeyFromPath in Object.keys(ERC20ChainList) && base.chainToken.key !== currentChainKeyFromPath) {
+        base.chainToken = ERC20ChainList[currentChainKeyFromPath];
+      }
+    }
   }, [isERCXRC, chainId]);
 
   const switchTo = () => {
-    history.push(base.mode === CARD_ERC20_XRC20 ? XRCERCPathName : ERCXRCPathName);
+    let pathParam = !!pathName ? qs.parse(pathName, { ignoreQueryPrefix: true }) : null;
+    console.log("push", `?from=${pathParam.to}&to=${pathParam.from}`);
+    history.push(`?from=${pathParam.to}&to=${pathParam.from}`);
   };
 
   Object.keys(ERC20ChainList).forEach((key) => {
     erc20ChainList.push(ERC20ChainList[key]);
   });
   base.chainTokenLength = erc20ChainList.length;
-
-  console.log(erc20ChainList);
   return useObserver(() => (
     <ClientOnly>
       <div className="page__home" onClick={() => setERC20List(false)}>

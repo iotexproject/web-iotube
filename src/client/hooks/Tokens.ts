@@ -76,7 +76,6 @@ export function useTokens(network: string, fromXrc: boolean = false): { [p: stri
       }
     } else if (network === BSC) {
       CHAIN_TOKEN_LIST[AllChainId.BSC].forEach((aToken, index) => {
-        console.log(aToken);
         if (aToken.BSC.address) {
           tokenList[aToken.BSC.symbol.toLowerCase()] = {
             BSC: new WrappedTokenInfo(aToken.BSC),

@@ -387,7 +387,7 @@ export const ERCXRC = () => {
       });
   }, [inputError, amount, token, cashierContract, isETHCurrency, toIoAddress]);
 
-  const prefillAddress = !!location.search ? qs.parse(location.search, { ignoreQueryPrefix: true }).to.toString() : null;
+  const prefillAddress = !!location.search ? qs.parse(location.search, { ignoreQueryPrefix: true }).to?.toString() : null;
   return useObserver(() => (
     <div className="page__home__component__erc_xrc p-8 pt-6">
       <Form className="">

@@ -267,7 +267,7 @@ export const XRCERC = () => {
   const onConvert = () => {
     let waringPair = null;
     WARNING_ADDRESS_LIST[base.chainToken.key].forEach((item) => {
-      if (item.address == changedToAddress.toUpperCase()) {
+      if (item.address.toUpperCase() == changedToAddress.toUpperCase()) {
         waringPair = item;
       }
     });

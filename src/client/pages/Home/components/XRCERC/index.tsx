@@ -3,9 +3,9 @@ import { useLocalStore, useObserver } from "mobx-react-lite";
 import "./index.scss";
 import { useStore } from "../../../../../common/store";
 import { AddressInput, AmountField, ConfirmModal, SubmitButton, TokenSelectField } from "../../../../components";
-import { chainMap, ChainMapType, DEFAULT_IOTEX_CHAIN_ID, IOTEX, IotexChainId, IOTEXSCAN_URL } from "../../../../constants/index";
+import { chainMap, ChainMapType, DEFAULT_IOTEX_CHAIN_ID, ERC20ChainList, IOTEX, IotexChainId, IOTEXSCAN_URL } from "../../../../constants/index";
 import { BigNumber } from "@ethersproject/bignumber";
-import { getAmountNumber, getIOTXContract, isAddress } from "../../../../utils/index";
+import { getAmountNumber, getIOTXContract, isAddress, WARNING_ADDRESS_LIST } from "../../../../utils/index";
 import ERC20_ABI from "../../../../constants/abis/erc20.json";
 import message from "antd/lib/message";
 import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
@@ -17,6 +17,7 @@ import { WarnModal } from "../../../../components/WarnModal";
 import { CARD_XRC20_ERC20 } from "../../../../../common/store/base";
 import { isAddress as isEthAddress } from "@ethersproject/address";
 import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
+import { WarnAddressModal } from "../../../../components/WarnAddressModal/index";
 
 const IMG_IOPAY = require("../../../../static/images/icon-iotex-black.png");
 
@@ -29,6 +30,7 @@ export const XRCERC = () => {
   const [tokenBalance, setTokenBalance] = useState(BigNumber.from(0));
   const [fillState, setFillSate] = useState("");
   const [depositFee, setDepositFee] = useState(BigNumber.from(0));
+  const [warningAddressName, setWarningAddressName] = useState("");
   const [amountRange, setAmountRange] = useState({
     minAmount: BigNumber.from("0"),
     maxAmount: BigNumber.from("0"),
@@ -250,15 +252,34 @@ export const XRCERC = () => {
   const store = useLocalStore(() => ({
     showConfirmModal: false,
     approved: false,
+    showWarnAddressModal: false,
     setApprove() {
       this.approved = true;
     },
     toggleConfirmModalVisible() {
       this.showConfirmModal = !this.showConfirmModal;
     },
+    toggleWarnAddressModal() {
+      this.showWarnAddressModal = !this.showWarnAddressModal;
+    },
   }));
 
   const onConvert = () => {
+    let waringPair = null;
+    WARNING_ADDRESS_LIST[base.chainToken.key].forEach((item) => {
+      if (item.address.toUpperCase() == changedToAddress.toUpperCase()) {
+        waringPair = item;
+      }
+    });
+    if (!!waringPair) {
+      setWarningAddressName(waringPair.name);
+      store.toggleWarnAddressModal();
+    } else {
+      store.toggleConfirmModalVisible();
+    }
+  };
+
+  const onConfirmWarningAddress = () => {
     store.toggleConfirmModalVisible();
   };
 
@@ -441,6 +462,14 @@ export const XRCERC = () => {
           isERCXRC={false}
         />
         <WarnModal visible={base.mode === CARD_XRC20_ERC20 && wallet.showXRCWarnModal} isERCXRC={false} close={wallet.toggleXRCCWarnModal} />
+        <WarnAddressModal
+          visible={store.showWarnAddressModal}
+          close={store.toggleWarnAddressModal}
+          isERCXRC={false}
+          address={changedToAddress}
+          warningName={warningAddressName}
+          onConfirm={onConfirmWarningAddress}
+        />
       </Form>
     </div>
   ));

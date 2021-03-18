@@ -7,7 +7,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { ChainId } from "@uniswap/sdk";
 import { Contract as IOTXContract } from "iotex-antenna/lib/contract/contract";
 import { AntennaUtils } from "../../common/utils/antenna";
-import { BSC, DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX, IOTEXSCAN_URL } from "../constants/index";
+import { BSC, DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX, IOTEXSCAN_URL, TokenInfoPair } from "../constants/index";
 import { useWeb3React } from "@web3-react/core";
 import { publicConfig } from "../../../configs/public";
 
@@ -131,4 +131,12 @@ export const isValidAmount = (amount: string) => {
 
 export const getAmountNumber = (amount: string) => {
   return isValidAmount(amount) ? Number(amount) : 0;
+};
+
+export interface WarningAddressInfoPair {
+  readonly name: string;
+  readonly address: string;
+}
+export const WARNING_ADDRESS_LIST: { [key: string]: WarningAddressInfoPair[] } = {
+  bsc: [{ address: "0x810EE35443639348aDbbC467b33310d2AB43c168", name: "Cyclone Contract" }],
 };

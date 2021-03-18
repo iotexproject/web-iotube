@@ -40,7 +40,7 @@ export const ERC20ChainList = {
   //   coinImg: IMG_ETHER,
   //   balanceUnit: "Eth",
   //   chainIdsGroup: injectSupportedIdsEth,
-  //   standard:"ERC-20"
+  //   standard: "ERC-20",
   // },
   bsc: {
     key: "bsc",

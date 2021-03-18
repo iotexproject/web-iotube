@@ -67,11 +67,10 @@ export const ERCXRC = () => {
     return chainMap["eth"]["42"];
   }, [chainId, base.chainToken]);
   const cashierContractAddress = useMemo(() => {
-    console.log(chain);
     return chain.contract.cashier.address;
   }, [chain, base.chainToken]);
 
-  const isETHCurrency = useMemo(() => tokenInfoPair && ((tokenInfoPair.ETHEREUM && tokenInfoPair.ETHEREUM.tokenInfo.isETH) || (tokenInfoPair.BSC && tokenInfoPair.BSC.tokenInfo.isETH)), [
+  const isETHCurrency = useMemo(() => tokenInfoPair && ((tokenInfoPair.ETHEREUM && tokenInfoPair.ETHEREUM.tokenInfo.isEth) || (tokenInfoPair.BSC && tokenInfoPair.BSC.tokenInfo.isEth)), [
     chainId,
     tokenInfoPair,
     account,
@@ -119,8 +118,6 @@ export const ERCXRC = () => {
 
   const standardTokenListContract = useMemo(() => {
     const contract = chain.contract.standardTokenList;
-    console.log("select chain token");
-    console.log(chain);
     if (isAddress(contract.address) && library) {
       return getContract(contract.address, contract.abi, library, account);
     }

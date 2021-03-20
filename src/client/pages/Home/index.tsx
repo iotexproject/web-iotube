@@ -25,40 +25,42 @@ export const Home = () => {
   const [isShowERC20List, setERC20List] = useState(false);
 
   const history = useHistory();
-  const search = history.location.search;
-
-  const searchParam = !!search ? qs.parse(search, { ignoreQueryPrefix: true }) : null;
-  console.log(searchParam);
-  const pathName = useMemo(() => {
+  const pathParam = history.location.pathname.split("/");
+  const searchParam = !!pathParam[1] && pathParam[1].split("-");
+  console.log(history.location.pathname);
+  console.log(history.location.pathname.split("/"));
+  const standardPath = useMemo(() => {
     const paramPair: SearchParamPair = { from: `${base.chainToken.key}`, to: "iotx" };
     if (!!searchParam) {
-      if (searchParam.from && (searchParam.from == "iotx" || !!ERC20ChainList[searchParam.from.toString()])) {
-        paramPair.from = searchParam.from.toString();
+      if (searchParam[0] && (searchParam[0] == "iotx" || !!ERC20ChainList[searchParam[0]])) {
+        paramPair.from = searchParam[0];
       }
-      if (searchParam.to && !!ERC20ChainList[searchParam.to.toString()]) {
-        if (searchParam.from == "iotx") {
-          paramPair.to = searchParam.to.toString();
+      if (searchParam[1] && !!ERC20ChainList[searchParam[1]]) {
+        if (searchParam[0] == "iotx") {
+          paramPair.to = searchParam[1];
         }
       }
-      if (searchParam.from == "iotx" && (!searchParam.to || searchParam.to == "iotx")) {
+      if (searchParam[0] == "iotx" && (!searchParam[1] || searchParam[1] == "iotx")) {
         paramPair.to = base.chainToken.key;
       }
     }
-    return `?from=${paramPair.from}&to=${paramPair.to}`;
+    return `/${paramPair.from}-${paramPair.to}`;
   }, [searchParam]);
 
-  if (pathName != search) {
-    history.push(pathName);
+  if (standardPath != history.location.pathname) {
+    console.log(standardPath);
+    console.log(pathParam);
+    history.push(standardPath);
   }
 
-  const isERCXRC = !searchParam || (searchParam && searchParam.from != "iotx");
+  const isERCXRC = !searchParam || (searchParam && searchParam[0] != "iotx");
   const erc20ChainList = [];
   const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useActiveWeb3React();
 
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
-    if (!!searchParam && searchParam.from && searchParam.to) {
-      const currentChainKeyFromPath = isERCXRC ? searchParam.from.toString() : searchParam.to.toString();
+    if (!!searchParam && searchParam[0] && searchParam[1]) {
+      const currentChainKeyFromPath = isERCXRC ? searchParam[0] : searchParam[1];
       console.log(isERCXRC);
       console.log(currentChainKeyFromPath);
       if (currentChainKeyFromPath in Object.keys(ERC20ChainList) && base.chainToken.key !== currentChainKeyFromPath) {
@@ -68,9 +70,7 @@ export const Home = () => {
   }, [isERCXRC, chainId]);
 
   const switchTo = () => {
-    let pathParam = !!pathName ? qs.parse(pathName, { ignoreQueryPrefix: true }) : null;
-    console.log("push", `?from=${pathParam.to}&to=${pathParam.from}`);
-    history.push(`?from=${pathParam.to}&to=${pathParam.from}`);
+    // history.push(`/=${pathParam.to}&to=${pathParam.from}`);
   };
 
   Object.keys(ERC20ChainList).forEach((key) => {

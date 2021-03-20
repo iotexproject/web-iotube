@@ -61,9 +61,7 @@ export const Home = () => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
     if (!!searchParam && searchParam[0] && searchParam[1]) {
       const currentChainKeyFromPath = isERCXRC ? searchParam[0] : searchParam[1];
-      console.log(isERCXRC);
-      console.log(currentChainKeyFromPath);
-      if (currentChainKeyFromPath in Object.keys(ERC20ChainList) && base.chainToken.key !== currentChainKeyFromPath) {
+      if (Object.keys(ERC20ChainList).includes(currentChainKeyFromPath) && base.chainToken.key !== currentChainKeyFromPath) {
         base.chainToken = ERC20ChainList[currentChainKeyFromPath];
       }
     }

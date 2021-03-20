@@ -26,9 +26,8 @@ export const Home = () => {
 
   const history = useHistory();
   const pathParam = history.location.pathname.split("/");
-  const searchParam = !!pathParam[1] && pathParam[1].split("-");
   console.log(history.location.pathname);
-  console.log(history.location.pathname.split("/"));
+  const searchParam = !!pathParam[1] && pathParam[1].split("-");
   const standardPath = useMemo(() => {
     const paramPair: SearchParamPair = { from: `${base.chainToken.key}`, to: "iotx" };
     if (!!searchParam) {
@@ -48,8 +47,6 @@ export const Home = () => {
   }, [searchParam]);
 
   if (standardPath != history.location.pathname) {
-    console.log(standardPath);
-    console.log(pathParam);
     history.push(standardPath);
   }
 
@@ -70,7 +67,8 @@ export const Home = () => {
   }, [isERCXRC, chainId]);
 
   const switchTo = () => {
-    // history.push(`/=${pathParam.to}&to=${pathParam.from}`);
+    const searchParam = history.location.pathname.split("/")[1].split("-");
+    history.push(`/${searchParam[1]}-${searchParam[0]}`);
   };
 
   Object.keys(ERC20ChainList).forEach((key) => {

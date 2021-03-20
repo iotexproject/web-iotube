@@ -46,6 +46,7 @@ export const Home = () => {
             </div>
           ) : (
             <div className="rounded-t-md overflow-hidden">
+              <div>{lang.t("v4.link")}</div>
               <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} />
               <>
                 <div

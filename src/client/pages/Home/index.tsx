@@ -12,7 +12,6 @@ import { ERC20ChainList } from "../../constants/index";
 import { publicConfig } from "../../../../configs/public";
 import { ChainId } from "@uniswap/sdk";
 import { useActiveWeb3React } from "../../hooks/index";
-import qs from "qs";
 import { SearchParamPair } from "../../utils/index";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
@@ -26,7 +25,6 @@ export const Home = () => {
 
   const history = useHistory();
   const pathParam = history.location.pathname.split("/");
-  console.log(history.location.pathname);
   const searchParam = !!pathParam[1] && pathParam[1].split("-");
   const standardPath = useMemo(() => {
     const paramPair: SearchParamPair = { from: `${base.chainToken.key}`, to: "iotx" };
@@ -46,9 +44,14 @@ export const Home = () => {
     return `/${paramPair.from}-${paramPair.to}`;
   }, [searchParam]);
 
-  if (standardPath != history.location.pathname) {
-    history.push(standardPath);
-  }
+  const selectChainToken = (token) => {
+    base.tokenChange(token);
+    if (isERCXRC) {
+      history.push(`/${token.key}-iotx`);
+    } else {
+      history.push(`/iotx-${token.key}`);
+    }
+  };
 
   const isERCXRC = !searchParam || (searchParam && searchParam[0] != "iotx");
   const erc20ChainList = [];
@@ -64,7 +67,10 @@ export const Home = () => {
         base.chainToken = ERC20ChainList[currentChainKeyFromPath];
       }
     }
-  }, [isERCXRC, chainId]);
+    if (standardPath != history.location.pathname) {
+      history.push(standardPath);
+    }
+  }, [isERCXRC, chainId, base.chainToken]);
 
   const switchTo = () => {
     const searchParam = history.location.pathname.split("/")[1].split("-");
@@ -95,7 +101,7 @@ export const Home = () => {
                         onClick={() => {
                           base.targetChainToken = item;
                           if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup || !isERCXRC) {
-                            base.tokenChange(item);
+                            selectChainToken(item);
                           } else {
                             wallet.showERCWarnModal = true;
                           }

@@ -161,5 +161,6 @@
   "other.wallet.link": "https://tube.iotex.io/eth",
   "other.wallet.copy_success": "Link copied successfully",
   "other.wallet.copy_failed": "Link copied failed",
-  "erc20.address.warning": "Warning: Do not use exchange addresses or contract addresses. You may lose your tokens."
+  "erc20.address.warning": "Warning: Do not use exchange addresses or contract addresses. You may lose your tokens.",
+  "v4.link": "Looking for transfering to BSC? Try v4 preview."
 }

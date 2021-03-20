@@ -45,7 +45,7 @@ export function useTokens(network: string, fromXrc: boolean = false): { [p: stri
     if (network === ETHEREUM) {
       const initChainId = chainId in injectSupportedIdsEth ? chainId : "42";
       if (initChainId) {
-        CHAIN_TOKEN_LIST[chainId].forEach((aToken, index) => {
+        CHAIN_TOKEN_LIST[initChainId].forEach((aToken, index) => {
           if (aToken.ETHEREUM.address) {
             tokenList[aToken.ETHEREUM.symbol.toLowerCase()] = {
               ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),

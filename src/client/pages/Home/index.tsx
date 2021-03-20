@@ -13,6 +13,9 @@ import { publicConfig } from "../../../../configs/public";
 import { ChainId } from "@uniswap/sdk";
 import { useActiveWeb3React } from "../../hooks/index";
 import { SearchParamPair } from "../../utils/index";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { injectSupportedIdsEth } from "../../connectors/index";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
 const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
@@ -68,6 +71,9 @@ export const Home = () => {
     if (standardPath != history.location.pathname) {
       history.push(standardPath);
     }
+    if (isERCXRC && wallet.metaMaskConnected && !ERC20ChainList[base.chainToken.key].chainIdsGroup.includes(chainId)) {
+      wallet.showERCWarnModal = true;
+    }
   }, [isERCXRC, chainId, base.chainToken]);
 
   const switchTo = () => {
@@ -98,7 +104,7 @@ export const Home = () => {
                         className="flex flex-column items-center text-center"
                         onClick={() => {
                           base.targetChainToken = item;
-                          if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup || !isERCXRC) {
+                          if (!wallet.metaMaskConnected || item.chainIdsGroup.includes(chainId) || !isERCXRC) {
                             selectChainToken(item);
                           } else {
                             wallet.showERCWarnModal = true;

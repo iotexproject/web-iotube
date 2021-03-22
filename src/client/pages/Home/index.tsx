@@ -62,9 +62,10 @@ export const Home = () => {
 
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
-    if (!!searchParam && searchParam[0] && searchParam[1]) {
-      const currentChainKeyFromPath = isERCXRC ? searchParam[0] : searchParam[1];
-      if (Object.keys(ERC20ChainList).includes(currentChainKeyFromPath) && base.chainToken.key !== currentChainKeyFromPath) {
+    const search = standardPath && standardPath.split("/")[1];
+    if (!!search.split("-") && search.split("-")[0] && search.split("-")[1]) {
+      const currentChainKeyFromPath = isERCXRC ? search.split("-")[0] : search.split("-")[1];
+      if (Object.keys(ERC20ChainList).includes(currentChainKeyFromPath) && base.chainToken.key != currentChainKeyFromPath) {
         base.chainToken = ERC20ChainList[currentChainKeyFromPath];
       }
     }

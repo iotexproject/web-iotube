@@ -321,33 +321,33 @@ export const XRCERC = () => {
       return;
     }
 
-    let rawAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
-    if (!rawAmount) {
+    let tokenAmount = tryParseAmount(amount, xrc20TokenInfo).toString();
+    if (!tokenAmount) {
       message.error(`Could not parse amount for token ${xrc20TokenInfo.name}`);
       return;
     }
+    let coinAmount = depositFee;
 
     let tokenAddress = xrc20TokenInfo ? xrc20TokenInfo.address : "";
     if (!tokenAddress) {
       message.error("could not get token address");
       return;
     }
+
     if (isIOTXCurrency) {
       tokenAddress = "io1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqd39ym7";
-      rawAmount = depositFee.add(rawAmount).toString();
+      coinAmount = depositFee.add(tokenAmount);
     }
 
-    const args = [tokenAddress, toIoAddress, rawAmount];
+    const args = [tokenAddress, toIoAddress, tokenAmount];
     const methodName = "depositTo";
     const options = {
       from: account,
-      amount: depositFee.toString(),
+      amount: coinAmount.toString(),
       gasLimit: 1000000,
       gasPrice: toRau("1", "Qev"),
     };
-    if (isIOTXCurrency) {
-      options["amount"] = rawAmount;
-    }
+
     console.log({ args });
     const deposit = () => {
       cashierContract.methods

@@ -75,6 +75,7 @@ export const ERCXRC = () => {
     tokenInfoPair,
     account,
   ]);
+  console.log(isETHCurrency);
   const tokenBalance = useTokenBalances(tokenAddress, token, [account, token])[account];
   const userEthBalance = useETHBalances([account])[account];
   const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency, userEthBalance, tokenBalance]);

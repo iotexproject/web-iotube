@@ -5,7 +5,23 @@
       "name": "Binance Coin",
       "decimals": 18,
       "symbol": "BNB",
-      "isETH": true,
+      "isEth": true,
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png"
+    },
+    "iotx": {
+      "address": "io1jlnvfzr8lhper2xla8gknmxsqhgajq5ravu4wr",
+      "name": "Binance Coin",
+      "decimals": 18,
+      "symbol": "BNB-bsc",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png"
+    }
+  },
+  "WBNB": {
+    "bsc": {
+      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "name": "Wrapped BSC",
+      "decimals": 18,
+      "symbol": "WBNB",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png"
     },
     "iotx": {

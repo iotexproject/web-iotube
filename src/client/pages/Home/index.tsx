@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ModalVideo from "react-modal-video";
 import { useObserver } from "mobx-react-lite";
 import "./index.scss";
@@ -7,11 +7,15 @@ import { ClientOnly, CollapseView } from "../../components";
 import { ERCXRC, XRCERC, SwitchHeader, CompleteFrame } from "./components";
 import { useStore } from "../../../common/store";
 import { CARD_XRC20_ERC20, CARD_ERC20_XRC20 } from "../../../common/store/base";
-import { matchPath, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { ERC20ChainList } from "../../constants/index";
 import { publicConfig } from "../../../../configs/public";
 import { ChainId } from "@uniswap/sdk";
 import { useActiveWeb3React } from "../../hooks/index";
+import { SearchParamPair } from "../../utils/index";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { injectSupportedIdsEth } from "../../connectors/index";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
 const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
@@ -23,24 +27,59 @@ export const Home = () => {
   const [isShowERC20List, setERC20List] = useState(false);
 
   const history = useHistory();
+  const pathParam = history.location.pathname.split("/");
+  const searchParam = !!pathParam[1] && pathParam[1].split("-");
+  const standardPath = useMemo(() => {
+    const paramPair: SearchParamPair = { from: `${base.chainToken.key}`, to: "iotx" };
+    if (!!searchParam) {
+      if (searchParam[0] && (searchParam[0] == "iotx" || !!ERC20ChainList[searchParam[0]])) {
+        paramPair.from = searchParam[0];
+      }
+      if (searchParam[1] && !!ERC20ChainList[searchParam[1]]) {
+        if (searchParam[0] == "iotx") {
+          paramPair.to = searchParam[1];
+        }
+      }
+      if (searchParam[0] == "iotx" && (!searchParam[1] || searchParam[1] == "iotx")) {
+        paramPair.to = base.chainToken.key;
+      }
+    }
+    return `/${paramPair.from}-${paramPair.to}`;
+  }, [searchParam]);
 
-  const isERCXRC = !!matchPath(history.location.pathname, {
-    path: "/bsc",
-    exact: true,
-  });
+  const selectChainToken = (token) => {
+    base.tokenChange(token);
+    if (isERCXRC) {
+      history.push(`/${token.key}-iotx`);
+    } else {
+      history.push(`/iotx-${token.key}`);
+    }
+  };
+
+  const isERCXRC = !searchParam || (searchParam && searchParam[0] != "iotx");
   const erc20ChainList = [];
-
-  const ERCXRCPathName = isERCXRC ? history.location.pathname + history.location.search : "/bsc";
-  const XRCERCPathName = !isERCXRC ? history.location.pathname + history.location.search : "/iotx";
   const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useActiveWeb3React();
 
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
-    // base.chainToken()
-  }, [isERCXRC, chainId]);
+    const search = standardPath && standardPath.split("/")[1];
+    if (!!search.split("-") && search.split("-")[0] && search.split("-")[1]) {
+      const currentChainKeyFromPath = isERCXRC ? search.split("-")[0] : search.split("-")[1];
+      if (Object.keys(ERC20ChainList).includes(currentChainKeyFromPath) && base.chainToken.key != currentChainKeyFromPath) {
+        base.chainToken = ERC20ChainList[currentChainKeyFromPath];
+      }
+    }
+    if (standardPath != history.location.pathname) {
+      history.push(standardPath);
+    }
+    if (isERCXRC && wallet.metaMaskConnected && !ERC20ChainList[base.chainToken.key].chainIdsGroup.includes(chainId)) {
+      wallet.showERCWarnModal = true;
+    }
+  }, [isERCXRC, chainId, base.chainToken]);
 
   const switchTo = () => {
-    history.push(base.mode === CARD_ERC20_XRC20 ? XRCERCPathName : ERCXRCPathName);
+    const searchParam = history.location.pathname.split("/")[1].split("-");
+    history.push(`/${searchParam[1]}-${searchParam[0]}`);
   };
 
   Object.keys(ERC20ChainList).forEach((key) => {
@@ -48,7 +87,6 @@ export const Home = () => {
   });
   base.chainTokenLength = erc20ChainList.length;
 
-  console.log(erc20ChainList);
   return useObserver(() => (
     <ClientOnly>
       <div className="page__home" onClick={() => setERC20List(false)}>
@@ -68,8 +106,8 @@ export const Home = () => {
                         className="flex flex-column items-center text-center"
                         onClick={() => {
                           base.targetChainToken = item;
-                          if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup || !isERCXRC) {
-                            base.tokenChange(item);
+                          if (!wallet.metaMaskConnected || item.chainIdsGroup.includes(chainId) || !isERCXRC) {
+                            selectChainToken(item);
                           } else {
                             wallet.showERCWarnModal = true;
                           }

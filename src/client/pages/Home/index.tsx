@@ -86,6 +86,7 @@ export const Home = () => {
     erc20ChainList.push(ERC20ChainList[key]);
   });
   base.chainTokenLength = erc20ChainList.length;
+
   return useObserver(() => (
     <ClientOnly>
       <div className="page__home" onClick={() => setERC20List(false)}>

@@ -465,6 +465,7 @@ export const ERCXRC = () => {
                     setChangedToAddress(address);
                   }}
                 />
+                <div className="text-xs c-gray-10">{lang.t("erc20.address.warning")}</div>
               </div>
             )}
             <div className="my-6 text-left c-gray-30">

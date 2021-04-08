@@ -35,8 +35,9 @@
 
     @media screen and (max-width: 500px) {
       min-height: auto;
-      padding: 9rem 0 7rem 0;
-      height: max-content;
+      height: auto;
+      padding: 8rem 0;
+      // padding-top: 10vh;
 
       .page__home__exchange__container__beta-notice {
         margin-top: 30rem;

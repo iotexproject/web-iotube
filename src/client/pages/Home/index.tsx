@@ -2,52 +2,85 @@ import React, { useEffect, useState } from "react";
 import ModalVideo from "react-modal-video";
 import { useObserver } from "mobx-react-lite";
 import "./index.scss";
-import { ClientOnly, SubmitButton, CollapseView } from "../../components";
+import { ClientOnly, CollapseView } from "../../components";
 
 import { ERCXRC, XRCERC, SwitchHeader, CompleteFrame } from "./components";
 import { useStore } from "../../../common/store";
 import { CARD_XRC20_ERC20, CARD_ERC20_XRC20 } from "../../../common/store/base";
 import { matchPath, useHistory } from "react-router-dom";
+import { ERC20ChainList } from "../../constants/index";
+import { publicConfig } from "../../../../configs/public";
+import { ChainId } from "@uniswap/sdk";
+import { useActiveWeb3React } from "../../hooks/index";
 
 const IMG_INFO_BACKGROUND = require("../../static/images/info-background.png");
-const IMG_FAQ_BACKGROUND = require("../../static/images/faq-background.png");
 const IMG_IOTUBE_LOGO = require("../../static/images/logo_iotube.png");
 const IMG_YOUTUBE = require("../../static/images/info-youtube.png");
 
 export const Home = () => {
-  const { base, lang } = useStore();
+  const { base, lang, wallet } = useStore();
   const [isShowVideo, setShowVideo] = useState(false);
+  const [isShowERC20List, setERC20List] = useState(false);
 
   const history = useHistory();
 
   const isERCXRC = !!matchPath(history.location.pathname, {
-    path: "/eth",
+    path: "/bsc",
     exact: true,
   });
+  const erc20ChainList = [];
 
-  const ERCXRCPathName = isERCXRC ? history.location.pathname + history.location.search : "/eth";
+  const ERCXRCPathName = isERCXRC ? history.location.pathname + history.location.search : "/bsc";
   const XRCERCPathName = !isERCXRC ? history.location.pathname + history.location.search : "/iotx";
+  const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useActiveWeb3React();
 
   useEffect(() => {
     base.setMode(isERCXRC ? CARD_ERC20_XRC20 : CARD_XRC20_ERC20);
-  }, [isERCXRC]);
+    // base.chainToken()
+  }, [isERCXRC, chainId]);
 
   const switchTo = () => {
     history.push(base.mode === CARD_ERC20_XRC20 ? XRCERCPathName : ERCXRCPathName);
   };
 
+  Object.keys(ERC20ChainList).forEach((key) => {
+    erc20ChainList.push(ERC20ChainList[key]);
+  });
+  base.chainTokenLength = erc20ChainList.length;
+
+  console.log(erc20ChainList);
   return useObserver(() => (
     <ClientOnly>
-      <div className="page__home">
+      <div className="page__home" onClick={() => setERC20List(false)}>
         <div className="page__home__exchange__container app_frame">
           {base.showComplete ? (
             <div className="rounded app_frame_shadow">
               <CompleteFrame isERCXRC={isERCXRC} />
             </div>
           ) : (
-            <div className="rounded-t-md overflow-hidden">
-              <div>{lang.t("v4.link")}</div>
-              <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} />
+            <div className="rounded-t-md">
+              <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} isShowERC20List={isShowERC20List} toggleERC20List={setERC20List} />
+              <div className={`erc20__dropdown ${isERCXRC ? "" : "erc20__dropdown_right"} ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
+                {base.chainTokenLength > 1 &&
+                  erc20ChainList.map((item) => {
+                    return (
+                      <div
+                        className="flex flex-column items-center text-center"
+                        onClick={() => {
+                          base.targetChainToken = item;
+                          if (!wallet.metaMaskConnected || chainId in item.chainIdsGroup || !isERCXRC) {
+                            base.tokenChange(item);
+                          } else {
+                            wallet.showERCWarnModal = true;
+                          }
+                        }}
+                      >
+                        <img src={item.logo} />
+                        <div className="text-xl font-light text-center">{item.name}</div>
+                      </div>
+                    );
+                  })}
+              </div>
               <>
                 <div
                   className={`page__home__exchange__container__frame bg-primary rounded-b-md overflow-hidden ${
@@ -106,8 +139,8 @@ export const Home = () => {
             title={lang.t("faq.what_is_iotube_used_for")}
             body={
               <>
-                <p>{lang.t("faq.iotube_used_for.one")}</p>
-                <p>{lang.t("faq.iotube_used_for.two")}</p>
+                <p>{lang.t("faq.iotube_used_for.one", { chain: base.chainToken.name })}</p>
+                <p>{lang.t("faq.iotube_used_for.two", { chain: base.chainToken.name })}</p>
               </>
             }
           />
@@ -119,11 +152,11 @@ export const Home = () => {
                 <ul>
                   <li>
                     <strong>{lang.t("faq.iotube_work.components.smart_contracts")}</strong>
-                    {` ${lang.t("faq.iotube_work.components.smart_contracts.work")}`}
+                    {` ${lang.t("faq.iotube_work.components.smart_contracts.work", { chain: base.chainToken.name })}`}
                   </li>
                   <li>
                     <strong>{lang.t("faq.iotube_work.components.pool_of_witness")}</strong>
-                    {` ${lang.t("faq.iotube_work.components.pool_of_witness.work")}`}
+                    {` ${lang.t("faq.iotube_work.components.pool_of_witness.work", { chain: base.chainToken.name })}`}
                   </li>
                 </ul>
               </>

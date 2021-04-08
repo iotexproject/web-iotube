@@ -4,7 +4,7 @@ import { Select } from "antd";
 import { InfoCircleOutlined, RightOutlined } from "@ant-design/icons";
 import CurrencyLogo from "../CurrencyLogo/index";
 import { useTokens } from "../../hooks/Tokens";
-import { ETHEREUM, TokenInfoPair } from "../../constants/index";
+import { AllChainId, ETHEREUM, TokenInfoPair } from "../../constants/index";
 import { getTokenLink } from "../../utils/index";
 import { publicConfig } from "../../../../configs/public";
 import { ChainId } from "@uniswap/sdk";
@@ -13,14 +13,15 @@ import { useActiveWeb3React } from "../../hooks/index";
 interface IComponentProps {
   onChange: Function;
   network: string;
+  fromXrc?: boolean;
 }
 
 const { Option } = Select;
 
 export const TokenSelectField = (props: IComponentProps) => {
-  const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useActiveWeb3React();
-  const { network = ETHEREUM, onChange } = props;
-  const tokenList = useTokens(network);
+  const { chainId = publicConfig.IS_PROD ? (props.network == "BSC" ? AllChainId.BSC : ChainId.MAINNET) : ChainId.KOVAN } = useActiveWeb3React();
+  const { network = ETHEREUM, onChange, fromXrc = false } = props;
+  const tokenList = useTokens(network, fromXrc);
   return (
     <Select
       key={`token-select-${chainId}`}

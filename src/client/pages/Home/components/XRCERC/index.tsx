@@ -333,6 +333,7 @@ export const XRCERC = () => {
       message.error("could not get token address");
       return;
     }
+
     if (isIOTXCurrency) {
       tokenAddress = "io1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqd39ym7";
       coinAmount = depositFee.add(tokenAmount);
@@ -345,6 +346,7 @@ export const XRCERC = () => {
       gasLimit: 1000000,
       gasPrice: toRau("1", "Qev"),
     };
+
     console.log({ args });
     const deposit = () => {
       cashierContract.methods

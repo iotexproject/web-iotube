@@ -37,7 +37,7 @@ function Updaters() {
 
 const App = () => {
   //@ts-ignore
-  const { lang } = useStore();
+  const { lang, base } = useStore();
   useEffect(() => {
     lang.initLang();
   }, []);
@@ -48,10 +48,9 @@ const App = () => {
           <Updaters />
           <MainLayout>
             <Switch>
-              <Route exact={true} path="/eth" component={Home} />
-              <Route exact={true} path="/iotx" component={Home} />
               <Route exact={true} path="/tutorial" component={Tutorial} />
-              {utils.env.isIoPayMobile() ? <Redirect to="/iotx" /> : <Redirect to="/eth" />}
+              <Route path="/*" component={Home} />
+              {utils.env.isIoPayMobile() ? <Redirect to={`/iotx-${base.chainToken.key}`} /> : <Redirect to={`/${base.chainToken.key}-iotx`} />}
             </Switch>
           </MainLayout>
         </Provider>

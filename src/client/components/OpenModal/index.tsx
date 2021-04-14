@@ -18,7 +18,7 @@ interface IComponentProps {
 }
 
 const wallets = [
-  { name: "imToken", src: IM_TOKEN, url: "imtokenv2://navigate?screen=DappView&url=https://tube.iotex.io/eth" },
+  // { name: "imToken", src: IM_TOKEN, url: "imtokenv2://navigate?screen=DappView&url=https://tube.iotex.io/eth" },
   { name: "Metamask", src: IMG_MATAMASK, url: "https://metamask.app.link/dapp/tube.iotex.io/eth" },
   { name: "Trust Wallet", src: TRUST_WALLET, url: "https://link.trustwallet.com/open_url?coin_id=60&url=https://tube.iotex.io/eth" },
   { name: "Token Pocket", src: TOKEN_POCKET, url: null },
@@ -26,7 +26,7 @@ const wallets = [
 ];
 
 export const OpenModal = (props: IComponentProps) => {
-  const { lang } = useStore();
+  const { lang, base } = useStore();
   const [copyModalVisible, setCopyModalVisible] = useState(false);
 
   const toOpenAppUrl = (item) => {
@@ -44,7 +44,7 @@ export const OpenModal = (props: IComponentProps) => {
   return (
     <>
       <Modal visible={props.visible} onCancel={props.close} footer={null} style={{ top: 300 }} className="modal__open modal__match_center__page">
-        <div className="text-base mb-4 c-white">{lang.t("open_tube_in_desc")}</div>
+        <div className="text-base mb-4 c-white">{lang.t("open_tube_in_desc", { chainStandard: base.chainToken.standard })}</div>
         <div className="modal__open__list text-sm font-light">
           <ul>
             {wallets.map((item) => {

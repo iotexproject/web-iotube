@@ -14,7 +14,7 @@ const IMG_TUTORIAL_SELECT_AMOUNT = require("../../static/images/tutorial-select-
 const IMG_TUTORIAL_SELECT_ERC20 = require("../../static/images/tutorial-select-erc20.png");
 
 export const Tutorial = () => {
-  const { lang } = useStore();
+  const { lang, base } = useStore();
 
   return useObserver(() => (
     <ClientOnly>
@@ -27,35 +27,37 @@ export const Tutorial = () => {
                 <a className="font-bold c-white-10">{lang.t("tutorial.ioTube")}</a>
                 {` ${lang.t("tutorial.summary")}`}
                 <br /> <br />
-                {`${lang.t("tutorial.convert_ERC20")} `}
+                {`${lang.t("tutorial.convert_ERC20", { chainStandard: base.chainToken.standard })} `}
                 <a className="c-green-20" href="https://tube.iotex.io">
                   https://tube.iotex.io
                 </a>
               </p>
             </div>
             <div className="mb-24">
-              <h3 className="text-3xl c-white-10 leading-tight mb-3 font-bold">{lang.t("tutorial.send_from_ethereum_to_iotex")}</h3>
-              <p className="c-white-10 leading-loose">{lang.t("tutorial.purpose_of_operation")}</p>
+              <h3 className="text-3xl c-white-10 leading-tight mb-3 font-bold">
+                {lang.t("tutorial.send_from_chain_to_iotex", { network: base.chainToken.network, chainStandard: base.chainToken.standard })}
+              </h3>
+              <p className="c-white-10 leading-loose">{lang.t("tutorial.purpose_of_operation", { network: base.chainToken.network, chainStandard: base.chainToken.standard })}</p>
             </div>
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.one.title")}</h4>
-              <p className="c-white-10 leading-loose md:ml-16">{lang.t("tutorial.one.body")}</p>
+              <p className="c-white-10 leading-loose md:ml-16">{lang.t("tutorial.one.body", { network: base.chainToken.network, chainStandard: base.chainToken.standard })}</p>
               <img className="md:pl-16 mt-6" src={IMG_TUTORIAL_METAMASK} alt="tutorial metamask" />
             </div>
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.two.title")}</h4>
               <ul className="c-white-10 leading-loose md:ml-16">
                 <li>{lang.t("tutorial.two.body.one")}</li>
-                <li>{lang.t("tutorial.two.body.two")}</li>
+                <li>{lang.t("tutorial.two.body.two", { network: base.chainToken.network })}</li>
                 <li>{lang.t("tutorial.two.body.three")}</li>
                 <li>{lang.t("tutorial.two.body.four")}</li>
               </ul>
               <img className="md:pl-16 mt-6" src={IMG_TUTORIAL_CONNECT_DAPP} alt="tutorial metamask" />
             </div>
             <div className="mb-24">
-              <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.three.title")}</h4>
+              <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.three.title", { chainStandard: base.chainToken.standard })}</h4>
               <p className="c-white-10 leading-loose md:ml-16">
-                {`${lang.t("tutorial.three.body")} `}
+                {`${lang.t("tutorial.three.body", { chainStandard: base.chainToken.standard, network: base.chainToken.network })} `}
                 <a className="c-green-20" href="#">
                   {lang.t("tutorial.three.body.submit")}
                 </a>
@@ -65,7 +67,7 @@ export const Tutorial = () => {
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.four.title")}</h4>
               <ul className="c-white-10 leading-loose md:ml-16">
-                <li>{lang.t("tutorial.four.body.one")}</li>
+                <li>{lang.t("tutorial.four.body.one", { chainStandard: base.chainToken.standard })}</li>
                 <li>
                   {lang.t("tutorial.four.body.click")}
                   <a className="font-bold c-white-10">{` "${lang.t("approve")}" `}</a>
@@ -85,14 +87,14 @@ export const Tutorial = () => {
                 </li>
               </ul>
               <img className="md:pl-16 mt-6" src={IMG_TUTORIAL_CLICK_CONVERT} alt="tutorial metamask" />
-              <p className="c-white-10 leading-loose">{lang.t("tutorial.four.body.final")}</p>
+              <p className="c-white-10 leading-loose">{lang.t("tutorial.four.body.final", { chainStandard: base.chainToken.standard, chain: base.chainToken.network })}</p>
               <p className="c-white-10 leading-loose">{lang.t("tutorial.four.body.congratulation")}</p>
             </div>
             <div className="mb-24">
               <h4 className="text-2xl c-white-10 mb-3 font-bold">{lang.t("tutorial.five.title")}</h4>
               <p className="c-white-10 leading-loose md:ml-16">
                 {`${lang.t("tutorial.five.body.start")} `}
-                <a className="font-bold c-white-10">{lang.t("tutorial.five.body.unlock_xrc20")}</a>
+                <a className="font-bold c-white-10">{lang.t("tutorial.five.body.unlock_xrc20", { chain: base.chainToken.network })}</a>
                 {` ${lang.t("tutorial.five.body.can_use")} `}
                 <a className="c-green-20" href="#">
                   {lang.t("tutorial.five.body.ioPay")}
@@ -102,8 +104,8 @@ export const Tutorial = () => {
               <img className="md:pl-16 mt-6" src={IMG_TUTORIAL_CHECK_DESTINATION} alt="tutorial metamask" />
             </div>
             <div className="mb-24">
-              <h3 className="text-3xl c-white-10 leading-tight mb-3 font-bold">{lang.t("tutorial.convert_XRC20.title")}</h3>
-              <p className="c-white-10 leading-loose">{lang.t("tutorial.convert_XRC20.operation")}</p>
+              <h3 className="text-3xl c-white-10 leading-tight mb-3 font-bold">{lang.t("tutorial.convert_XRC20.title", { chain: base.chainToken.network })}</h3>
+              <p className="c-white-10 leading-loose">{lang.t("tutorial.convert_XRC20.operation", { chain: base.chainToken.network })}</p>
               <ul className="c-white-10 leading-loose md:ml-16">
                 <li>
                   {`${lang.t("tutorial.convert_XRC20.one")} `}

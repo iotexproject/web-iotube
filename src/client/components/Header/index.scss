@@ -4,9 +4,13 @@
   left: 0;
   right: 0;
   z-index: 99;
+
   .component__header__content {
     width: 90%;
     max-width: 1300px;
+
+    md: {
+    }
 
     .component__header__content__app {
       display: flex;

@@ -40,11 +40,13 @@ export const CompleteFrame = (props: IComponentProps) => {
       <div className="c-gray-30 font-thin mt-3 text-sm">
         {props.isERCXRC
           ? lang.t("complete.tx_broadcast_network", {
+              network: base.chainToken.network,
               amount: base.amount,
               token: base.tokenInfoPair?.IOTEX.symbol,
             })
           : lang.t("complete.tx_broadcast_network.xrc20", {
               tokenName: base.tokenName,
+              network: base.chainToken.network,
             })}
       </div>
       <div className="c-gray-30 font-normal text-base break-all">
@@ -53,7 +55,7 @@ export const CompleteFrame = (props: IComponentProps) => {
         <img src={IMG_COPY} onClick={onCopyAddress} className="page__home__component__complete_frame__btn--copy cursor-pointer" />
       </div>
       <div className="c-white text-base font-thin mt-10 flex items-center">
-        {lang.t(props.isERCXRC ? "complete.your_tx_eth" : "complete.your_tx_iotx")}
+        {props.isERCXRC ? lang.t("complete.your_tx_chain", { chain: base.chainToken.name }) : lang.t("complete.your_tx_iotx")}
         &nbsp;
       </div>
       <div className="text-base font-thin">
@@ -70,14 +72,13 @@ export const CompleteFrame = (props: IComponentProps) => {
           <span>~{props.isERCXRC ? `4 ${lang.t("min")}` : `1 ${lang.t("min")}*`}</span>
         </div>
         <div className="flex justify-between items-center mb-2">
-          <span>{lang.t(props.isERCXRC ? "eth_confirmations" : "iotex_confirmations")}</span>
-          <span>~{props.isERCXRC ? `3 ${lang.t("min")}` : `5 ${lang.t("sec")}`}</span>
+          <span>{lang.t("network_confirmations", { network: props.isERCXRC ? base.chainToken.network : "IoTeX" })}</span> :<span>~{props.isERCXRC ? `3 ${lang.t("min")}` : `5 ${lang.t("sec")}`}</span>
         </div>
         <div className="flex justify-between items-center mb-2">
           <span>{lang.t("witness_confirmation")}</span>
           <span>~{props.isERCXRC ? `7 ${lang.t("sec")}` : `1 ${lang.t("min")}*`}</span>
         </div>
-        {!props.isERCXRC && <div>{lang.t("may_delay_comment")}</div>}
+        {!props.isERCXRC && <div>{lang.t("may_delay_comment", { network: base.chainToken.network })}</div>}
       </div>
       <Button
         className={`page__home__component__complete_frame__btn--complete bg-green-10 w-full ${props.isERCXRC ? "c-primary" : "c-secondary"}`}

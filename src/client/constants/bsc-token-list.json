@@ -1,0 +1,67 @@
+{
+  "BNB": {
+    "bsc": {
+      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "name": "Binance Coin",
+      "decimals": 18,
+      "symbol": "BNB",
+      "isEth": true,
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png"
+    },
+    "iotx": {
+      "address": "io1jlnvfzr8lhper2xla8gknmxsqhgajq5ravu4wr",
+      "name": "Binance Coin",
+      "decimals": 18,
+      "symbol": "BNB-bsc",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/7192.png"
+    }
+  },
+  "WBNB": {
+    "bsc": {
+      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "name": "Wrapped BSC",
+      "decimals": 18,
+      "symbol": "WBNB",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png"
+    },
+    "iotx": {
+      "address": "io1jlnvfzr8lhper2xla8gknmxsqhgajq5ravu4wr",
+      "name": "Binance Coin",
+      "decimals": 18,
+      "symbol": "BNB-bsc",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png"
+    }
+  },
+  "BUSD": {
+    "bsc": {
+      "address": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "name": "BUSD",
+      "decimals": 18,
+      "symbol": "BUSD",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png"
+    },
+    "iotx": {
+      "address": "io1sj4uk2pjhesxxsd9qy52avwmgw4qzazfrypm04",
+      "name": "ioBUSD",
+      "decimals": 18,
+      "symbol": "BUSD-bsc",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png"
+    }
+  },
+  "CYC": {
+    "bsc": {
+      "address": "0x810ee35443639348adbbc467b33310d2ab43c168",
+      "name": "Cyclone Protocol",
+      "decimals": 18,
+      "symbol": "CYC",
+      "logoURI": "https://iotexscan.io/image/token/io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh.png"
+    },
+    "iotx": {
+      "address": "io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh",
+      "name": "Cyclone Protocol",
+      "decimals": 18,
+      "symbol": "CYC",
+      "logoURI": "https://iotexscan.io/image/token/io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh.png"
+    }
+  }
+}

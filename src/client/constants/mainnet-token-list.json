@@ -5,6 +5,7 @@
       "name": "ETH",
       "decimals": 18,
       "symbol": "ETH",
+      "isEth": true,
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
     },
     "iotx": {

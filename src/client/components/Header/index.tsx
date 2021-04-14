@@ -11,7 +11,7 @@ import { SUPPORTED_WALLETS, ETH_NETWORK_NAMES } from "../../constants";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { injected } from "../../connectors";
 import { fromRau } from "iotex-antenna/lib/account/utils";
-import { IMG_ETHER, IMG_IOTX, IMG_LOGO } from "../../constants/index";
+import { CHAIN_TOKEN_LIST, IMG_ETHER, IMG_IOTX, IMG_LOGO } from "../../constants/index";
 import React from "react";
 import "./index.scss";
 import { CopyOutlined, EllipsisOutlined, InfoCircleOutlined } from "@ant-design/icons";
@@ -56,7 +56,7 @@ export const Header = () => {
 
   const onConnectWallet = () => {
     if (base.mode === CARD_ERC20_XRC20) {
-      tryActivation(injected).then();
+      tryActivation(base.chainToken.injected).then();
     } else {
       // @ts-ignore
       wallet.init();
@@ -92,7 +92,7 @@ export const Header = () => {
             .split(" ")
             .map((value, index) => (index === 1 ? value : Number(value).toFixed(2)))
             .join(" ");
-    const balanceUnit = base.mode === CARD_ERC20_XRC20 ? "ETH" : wallet.token;
+    const balanceUnit = base.mode === CARD_ERC20_XRC20 ? base.chainToken.balanceUnit : wallet.token;
 
     return walletConnected ? (
       <>
@@ -110,7 +110,7 @@ export const Header = () => {
         &nbsp;
         <CopyOutlined className="text-lg cursor-pointer" onClick={onCopyAddress(walletAddress)} />
         &nbsp;
-        <Avatar style={{ flex: "none" }} src={base.mode === CARD_ERC20_XRC20 ? IMG_ETHER : IMG_IOTX} size="small" />
+        <Avatar src={base.mode === CARD_ERC20_XRC20 ? base.chainToken.coinImg : IMG_IOTX} size="small" />
       </>
     ) : (
       <Button className="c-white" type="text" onClick={onConnectWallet}>
@@ -127,11 +127,9 @@ export const Header = () => {
             <Link to="/">
               <img alt="logo" src={IMG_LOGO} className="inline" />
             </Link>
-            <div className="text-l c-green-20"> V3</div>
+
+            <div className="text-l c-green-20"> V4</div>
           </div>
-          <a className="inline-block md:hidden rounded bg-primary c-green px-2 mr-0" style={{ height: "max-content" }} href="https://bsc-tube.iotex.io">
-            {"V4 preview  "}
-          </a>
         </div>
 
         {isTutorialPage && (
@@ -143,9 +141,6 @@ export const Header = () => {
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>
-              <a className="hidden md:inline-block rounded bg-primary c-green px-2 mr-4" style={{ height: "max-content" }} href="https://bsc-tube.iotex.io">
-                {"V4 preview  "}
-              </a>
               <Link className="c-white" to="/tutorial">
                 {lang.t("header.tutorial")}
               </Link>

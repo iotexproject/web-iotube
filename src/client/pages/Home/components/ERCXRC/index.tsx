@@ -394,7 +394,7 @@ export const ERCXRC = () => {
       <Form className="">
         {utils.env.isIoPayMobile() ? (
           <div>
-            <div className="block md:hidden mt-6 text-base text-left mb-48 c-white">To transfer your assets from BSC to loTeX. You need to open Tube in an BSC wallet.</div>
+            <div className="block md:hidden mt-6 text-base text-left mb-48 c-white">To transfer your assets from BSC to IoTeX. You need to open Tube in an BSC wallet.</div>
             <div className="block md:hidden">
               <SubmitButton
                 title={lang.t("open_tube_in")}

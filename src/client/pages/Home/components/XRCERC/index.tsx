@@ -266,11 +266,14 @@ export const XRCERC = () => {
 
   const onConvert = () => {
     let waringPair = null;
-    WARNING_ADDRESS_LIST[base.chainToken.key].forEach((item) => {
-      if (item.address.toUpperCase() == changedToAddress.toUpperCase()) {
-        waringPair = item;
-      }
-    });
+    const list = WARNING_ADDRESS_LIST[base.chainToken.key];
+    if (list) {
+      list.forEach((item) => {
+        if (item.address.toUpperCase() == changedToAddress.toUpperCase()) {
+          waringPair = item;
+        }
+      });
+    }
     if (!!waringPair) {
       setWarningAddressName(waringPair.name);
       store.toggleWarnAddressModal();

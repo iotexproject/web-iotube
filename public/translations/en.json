@@ -162,5 +162,6 @@
   "other.wallet.copy_success": "Link copied successfully",
   "other.wallet.copy_failed": "Link copied failed",
   "erc20.address.warning": "Warning: Do not use exchange addresses or contract addresses. You may lose your tokens.",
-  "warning.address.convert": "Are you sure that you want to transfer to ${address}. This address is known as ${name}. You may lose your tokens if you continue."
+  "warning.address.convert": "Are you sure that you want to transfer to ${address}. This address is known as ${name}. You may lose your tokens if you continue.",
+  "iopay.erc20.content": "To transfer your assets from ${chain} to IoTeX. You need to open Tube in an ${chain} wallet."
 }

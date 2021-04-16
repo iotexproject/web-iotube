@@ -49,8 +49,8 @@ const App = () => {
           <MainLayout>
             <Switch>
               <Route exact={true} path="/tutorial" component={Tutorial} />
-              {utils.env.isIoPayMobile() ? <Redirect to={`/iotx`} /> : <Redirect to={`/${base.chainToken.key}-iotx`} />}
               <Route path="/*" component={Home} />
+              {utils.env.isIoPayMobile() ? <Redirect to={`/iotx`} /> : <Redirect to={`/${base.chainToken.key}-iotx`} />}
             </Switch>
           </MainLayout>
         </Provider>

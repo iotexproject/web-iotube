@@ -14,6 +14,7 @@ import ApplicationUpdater from "./state/application/updater";
 import MulticallUpdater from "./state/multicall/updater";
 import { Web3ProviderNetwork } from "../common/utils/create-web3";
 import { utils } from "../common/utils/index";
+import { ERC20ChainList } from "./constants/index";
 
 if ("ethereum" in window) {
   // @ts-ignore
@@ -41,6 +42,17 @@ const App = () => {
   useEffect(() => {
     lang.initLang();
   }, []);
+
+  const renderHomeRoute = () => {
+    const routePath = [];
+    Object.values(ERC20ChainList).forEach(chain => {
+      routePath.push(`/iotx-${chain.key}`);
+      routePath.push(`/${chain.key}-iotx`)
+    });
+
+    return <Route path={routePath} component={Home} />
+  };
+
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
@@ -49,7 +61,7 @@ const App = () => {
           <MainLayout>
             <Switch>
               <Route exact={true} path="/tutorial" component={Tutorial} />
-              <Route path={[`/iotx-${base.chainToken.key}`, `/${base.chainToken.key}-iotx`]} component={Home} />
+              {renderHomeRoute()}
               {utils.env.isIoPayMobile() ? <Redirect to={`/iotx-${base.chainToken.key}`} /> : <Redirect to={`/${base.chainToken.key}-iotx`} />}
             </Switch>
           </MainLayout>

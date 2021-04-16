@@ -394,7 +394,7 @@ export const ERCXRC = () => {
       <Form className="">
         {utils.env.isIoPayMobile() ? (
           <div>
-            <div className="block md:hidden mt-6 text-base text-left mb-48 c-white">{lang.t("iopay.erc20.content", { chain: base.chainToken.name })}</div>
+            <div className="block md:hidden mt-6 text-base text-left mb-48 c-white">{lang.t("iopay.erc20.content", { chain: base.chainToken.name, chainWallet: base.chainToken.name })}</div>
             <div className="block md:hidden">
               <SubmitButton
                 title={lang.t("open_tube_in")}

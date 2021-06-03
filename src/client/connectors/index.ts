@@ -23,6 +23,7 @@ export const network = new NetworkConnector({
 
 export const injectSupportedIdsEth = [1, 3, 4, 5, 42];
 export const injectSupportedIdsBsc = [56];
+export const injectSupportedIdsMatic = [137];
 
 export const injected = new InjectedConnector({
   supportedChainIds: injectSupportedIdsEth,
@@ -30,6 +31,10 @@ export const injected = new InjectedConnector({
 
 export const injectedBsc = new InjectedConnector({
   supportedChainIds: injectSupportedIdsBsc,
+});
+
+export const injectedMatic = new InjectedConnector({
+  supportedChainIds: injectSupportedIdsMatic,
 });
 
 // mainnet only

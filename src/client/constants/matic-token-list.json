@@ -1,18 +1,18 @@
 {
   "IOTX": {
     "matic": {
-      "address": "",
-      "name": "IoTeX",
+      "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      "name": "Wrapped Matic",
       "decimals": 18,
-      "symbol": "IOTX-E",
-      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+      "symbol": "WMATIC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png"
     },
     "iotx": {
-      "address": "",
-      "name": "IoTeX",
+      "address": "io13envp44hps9j85ulfvs6r6k99wagaky60pzl2c",
+      "name": "Wrapped Matic",
       "decimals": 18,
-      "symbol": "IOTX",
-      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+      "symbol": "WMATIC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png"
     }
   }
 }

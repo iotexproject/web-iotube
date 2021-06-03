@@ -1,6 +1,6 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ChainId } from "@uniswap/sdk";
-import { fortmatic, injected, injectedBsc, injectedMatic, portis, walletconnect, walletlink } from "../connectors";
+import { fortmatic, injected, injectedBsc, injectedMatic, injectSupportedIdsMatic, portis, walletconnect, walletlink } from "../connectors";
 import { TokenInfo } from "@uniswap/token-lists";
 import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
@@ -65,7 +65,7 @@ export const ERC20ChainList = {
     standard: "BEP-20",
     coinImg: IMG_MATIC,
     injected: injectedMatic,
-    chainIdsGroup: injectSupportedIdsBsc,
+    chainIdsGroup: injectSupportedIdsMatic,
   },
 };
 

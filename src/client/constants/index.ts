@@ -6,6 +6,7 @@ import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
 import BSC_TOKEN_LIST from "./bsc-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
+import MATIC_TOKEN_LIST from "./matic-token-list.json";
 import { publicConfig } from "../../../configs/public";
 
 export const IMG_LOGO = require("../static/images/logo_iotube.svg");
@@ -232,7 +233,7 @@ export const chainMap = {
     },
   },
   matic: {
-    [AllChainId.POLYGON]: {
+    [AllChainId.MATIC]: {
       contract: {
         cashier: {
           address: "0xf72CFb704d49aC7BB7FFa420AE5f084C671A29be",
@@ -278,6 +279,12 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: AllChainId.BSC } as TokenInfo) : null,
     };
   }),
+  [AllChainId.MATIC]: Object.values(MATIC_TOKEN_LIST).map((item) => {
+    return {
+      MATIC: { ...item.matic, chainId: AllChainId.MATIC } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: AllChainId.MATIC } as TokenInfo) : null,
+    };
+  }),
 };
 
 export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
@@ -299,10 +306,10 @@ export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo) : null,
     };
   }),
-  [IotexChainId.MAINNET_MATIC]: Object.values({}).map((item) => {
+  [IotexChainId.MAINNET_MATIC]: Object.values(MATIC_TOKEN_LIST).map((item) => {
     return {
-      MATIC: {} as TokenInfo,
-      IOTEX: {} as TokenInfo,
+      MATIC: { ...item.matic, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo) : null,
     };
   }),
 };

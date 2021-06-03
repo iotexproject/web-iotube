@@ -1,1 +1,18 @@
-{}
+{
+  "IOTX": {
+    "matic": {
+      "address": "",
+      "name": "IoTeX",
+      "decimals": 18,
+      "symbol": "IOTX-E",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    },
+    "iotx": {
+      "address": "",
+      "name": "IoTeX",
+      "decimals": 18,
+      "symbol": "IOTX",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2777.png"
+    }
+  }
+}

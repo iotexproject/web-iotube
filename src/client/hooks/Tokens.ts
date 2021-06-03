@@ -1,7 +1,7 @@
 import { ChainId, Currency, Token } from "@uniswap/sdk";
 import { useMemo } from "react";
 import { useActiveWeb3React } from "./index";
-import { CHAIN_TOKEN_LIST, DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX_TOKEN_LIST, IOTEX, TokenInfoPair, IOTX_ETH_PRICE, BSC, AllChainId, IotexChainId } from "../constants/index";
+import { CHAIN_TOKEN_LIST, DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX_TOKEN_LIST, IOTEX, TokenInfoPair, IOTX_ETH_PRICE, BSC, AllChainId, IotexChainId, MATIC } from "../constants/index";
 import { TokenInfo } from "@uniswap/token-lists";
 import { parseUnits } from "@ethersproject/units";
 import { fromRau } from "iotex-antenna/lib/account/utils";
@@ -79,6 +79,15 @@ export function useTokens(network: string, fromXrc: boolean = false): { [p: stri
         if (aToken.BSC.address) {
           tokenList[aToken.BSC.symbol.toLowerCase()] = {
             BSC: new WrappedTokenInfo(aToken.BSC),
+            IOTEX: aToken.IOTEX,
+          };
+        }
+      });
+    } else if (network === MATIC) {
+      CHAIN_TOKEN_LIST[AllChainId.MATIC].forEach((aToken, index) => {
+        if (aToken.MATIC.address) {
+          tokenList[aToken.MATIC.symbol.toLowerCase()] = {
+            BSC: new WrappedTokenInfo(aToken.MATIC),
             IOTEX: aToken.IOTEX,
           };
         }

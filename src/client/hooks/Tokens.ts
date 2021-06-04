@@ -38,7 +38,7 @@ export type TokenAddressMap = Readonly<
   }
 >;
 
-export function useTokens(network: string, fromXrc: boolean = false): { [p: string]: TokenInfoPair } {
+export function useTokens(network: string, toNetwork?: string): { [p: string]: TokenInfoPair } {
   const { chainId = publicConfig.IS_PROD ? ChainId.MAINNET : ChainId.KOVAN } = useActiveWeb3React();
   return useMemo(() => {
     const tokenList = {};
@@ -55,7 +55,7 @@ export function useTokens(network: string, fromXrc: boolean = false): { [p: stri
         });
       }
     } else if (network === IOTEX) {
-      if (fromXrc) {
+      if (toNetwork === BSC) {
         (IOTEX_TOKEN_LIST[IotexChainId.MAINNET_BSC] || []).forEach((aToken) => {
           if (aToken.IOTEX.address) {
             tokenList[aToken.IOTEX.symbol.toLowerCase()] = {
@@ -64,11 +64,21 @@ export function useTokens(network: string, fromXrc: boolean = false): { [p: stri
             };
           }
         });
-      } else {
+      } else if (toNetwork === ETHEREUM) {
         (IOTEX_TOKEN_LIST[DEFAULT_IOTEX_CHAIN_ID] || []).forEach((aToken) => {
           if (aToken.IOTEX.address) {
             tokenList[aToken.IOTEX.symbol.toLowerCase()] = {
               ETHEREUM: new WrappedTokenInfo(aToken.ETHEREUM),
+              IOTEX: aToken.IOTEX,
+            };
+          }
+        });
+      } else if (toNetwork === MATIC) {
+        console.log("----->", IOTEX_TOKEN_LIST[IotexChainId.MAINNET_MATIC]);
+        (IOTEX_TOKEN_LIST[IotexChainId.MAINNET_MATIC] || []).forEach((aToken) => {
+          if (aToken.IOTEX.address) {
+            tokenList[aToken.IOTEX.symbol.toLowerCase()] = {
+              MATIC: new WrappedTokenInfo(aToken.MATIC),
               IOTEX: aToken.IOTEX,
             };
           }
@@ -87,14 +97,14 @@ export function useTokens(network: string, fromXrc: boolean = false): { [p: stri
       CHAIN_TOKEN_LIST[AllChainId.MATIC].forEach((aToken, index) => {
         if (aToken.MATIC.address) {
           tokenList[aToken.MATIC.symbol.toLowerCase()] = {
-            BSC: new WrappedTokenInfo(aToken.MATIC),
+            MATIC: new WrappedTokenInfo(aToken.MATIC),
             IOTEX: aToken.IOTEX,
           };
         }
       });
     }
     return tokenList;
-  }, [chainId, network, fromXrc]);
+  }, [chainId, network, toNetwork]);
 }
 
 export function tryParseAmount(value?: string, currency?: Currency): string {

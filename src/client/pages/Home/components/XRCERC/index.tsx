@@ -378,7 +378,7 @@ export const XRCERC = () => {
         <div className="my-6">
           <TokenSelectField
             network={IOTEX}
-            toNetwork={base.chainToken.key.toUpperCase()}
+            toNetwork={base.chainToken.network.toUpperCase()}
             onChange={(tokenPair) => {
               setTokenInfoPair(tokenPair);
               setFillSate("TOKEN");

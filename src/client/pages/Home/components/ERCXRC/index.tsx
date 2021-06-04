@@ -68,12 +68,14 @@ export const ERCXRC = () => {
     return chain.contract.cashier.address;
   }, [chain, base.chainToken]);
 
-  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo && tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo.isEth, [
-    chainId,
-    tokenInfoPair,
-    account,
-    base.chainToken,
-  ]);
+  const isETHCurrency = useMemo(
+    () =>
+      tokenInfoPair &&
+      tokenInfoPair[base.chainToken.key.toUpperCase()] &&
+      tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo &&
+      tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo.isEth,
+    [chainId, tokenInfoPair, account, base.chainToken]
+  );
 
   const tokenBalance = useTokenBalances(tokenAddress, token, [account, token])[account];
   const userEthBalance = useETHBalances([account])[account];

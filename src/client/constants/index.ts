@@ -397,6 +397,7 @@ export const ETH_NETWORK_NAMES = {
   [AllChainId.GÖRLI]: "GÖRLI",
   [AllChainId.KOVAN]: "KOVAN",
   [AllChainId.BSC]: "BSC",
+  [AllChainId.MATIC]: "MATIC",
 };
 
 export const NetworkContextName = "NETWORK";

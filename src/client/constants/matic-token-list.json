@@ -26,9 +26,9 @@
     },
     "iotx": {
       "address": "io13envp44hps9j85ulfvs6r6k99wagaky60pzl2c",
-      "name": "Wrapped Matic",
+      "name": "Matic",
       "decimals": 18,
-      "symbol": "WMATIC",
+      "symbol": "MATIC",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png"
     }
   }

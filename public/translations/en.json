@@ -51,7 +51,7 @@
   "ok": "OK",
   "cancel": "Cancel",
   "warning": "Warning",
-  "warning.chainId.comment": "Your network does not match, please open in a supported browser (Firefox/Chrome/Brave) with metamask installed and select a ${currentNetwork} Network",
+  "warning.chainId.comment": "Your network does not match, please open in a supported browser (Firefox/Chrome/Brave) with metamask installed and select ${currentNetwork} Network",
   "warning.iotx.comment.mobile": "To convert from XRC20 to ${chainStandard}, please open inside ioPay Android/iOS for mobile users.",
   "warning.iotx.comment.desktop1": "For desktop users, please open",
   "warning.iotx.comment.desktop2": "ioPay desktop",

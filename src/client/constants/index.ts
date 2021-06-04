@@ -58,7 +58,7 @@ export const ERC20ChainList = {
   },
   matic: {
     key: "matic",
-    name: MATIC,
+    name: "Polygon",
     logo: IMG_MATIC,
     network: MATIC,
     balanceUnit: "MATIC",

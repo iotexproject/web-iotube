@@ -59,10 +59,8 @@ export const ERCXRC = () => {
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
   const chain = useMemo<ChainMapType["eth"]["42"]>(() => {
-    if (base.chainToken.key == "bsc") {
-      return chainMap[base.chainToken.key][AllChainId.BSC];
-    } else if (chainId in injectSupportedIdsEth) {
-      return chainMap["eth"][chainId];
+    if (base.chainToken.chainIdsGroup.includes(chainId)) {
+      return chainMap[base.chainToken.key][chainId];
     }
     return chainMap["eth"]["42"];
   }, [chainId, base.chainToken]);
@@ -70,12 +68,13 @@ export const ERCXRC = () => {
     return chain.contract.cashier.address;
   }, [chain, base.chainToken]);
 
-  const isETHCurrency = useMemo(() => tokenInfoPair && ((tokenInfoPair.ETHEREUM && tokenInfoPair.ETHEREUM.tokenInfo.isEth) || (tokenInfoPair.BSC && tokenInfoPair.BSC.tokenInfo.isEth)), [
+  const isETHCurrency = useMemo(() => tokenInfoPair && tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo && tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo.isEth, [
     chainId,
     tokenInfoPair,
     account,
+    base.chainToken,
   ]);
-  console.log(isETHCurrency);
+
   const tokenBalance = useTokenBalances(tokenAddress, token, [account, token])[account];
   const userEthBalance = useETHBalances([account])[account];
   const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency, userEthBalance, tokenBalance]);

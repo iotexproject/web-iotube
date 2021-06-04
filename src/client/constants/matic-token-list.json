@@ -1,4 +1,21 @@
 {
+  "MATIC": {
+    "matic": {
+      "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      "name": "Matic",
+      "decimals": 18,
+      "isEth": true,
+      "symbol": "MATIC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png"
+    },
+    "iotx": {
+      "address": "io13envp44hps9j85ulfvs6r6k99wagaky60pzl2c",
+      "name": "Matic",
+      "decimals": 18,
+      "symbol": "MATIC",
+      "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png"
+    }
+  },
   "WMATIC": {
     "matic": {
       "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",

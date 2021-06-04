@@ -55,7 +55,7 @@ export const ERCXRC = () => {
     // return account;
   }, [account, changedToAddress]);
   const toIoAddress = useMemo(() => (toEthAddress ? fromBytes(Buffer.from(String(toEthAddress).replace(/^0x/, ""), "hex")).string() : ""), [toEthAddress]);
-  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC : null), [tokenInfoPair]);
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC || tokenInfoPair.MATIC : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
   const chain = useMemo<ChainMapType["eth"]["42"]>(() => {

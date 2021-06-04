@@ -36,7 +36,7 @@ export const XRCERC = () => {
     maxAmount: BigNumber.from("0"),
   });
   const account = wallet.walletAddress;
-  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC : null), [tokenInfoPair]);
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC || tokenInfoPair.MATIC : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const isIOTXCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.IOTEX.symbol === "IOTX", [tokenInfoPair, account]);
   const tokenAddress = useMemo(() => (xrc20TokenInfo ? xrc20TokenInfo.address : ""), [xrc20TokenInfo]);
@@ -52,8 +52,8 @@ export const XRCERC = () => {
   }, [account, changedToAddress]);
   // const toEthAddress = useMemo(() => (toIoAddress ? fromString(toIoAddress).stringEth() : ""), [toIoAddress]);
   const chain = useMemo<ChainMapType["iotex"]["1"]>(() => {
-    if (base.chainToken.key == "bsc") {
-      return chainMap.iotex[IotexChainId.MAINNET_BSC];
+    if (base.chainToken.iotexNetwork) {
+      return chainMap.iotex[base.chainToken.iotexNetwork];
     }
     return chainMap.iotex[DEFAULT_IOTEX_CHAIN_ID];
   }, [DEFAULT_IOTEX_CHAIN_ID, base.chainToken]);

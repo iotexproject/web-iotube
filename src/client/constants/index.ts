@@ -26,6 +26,13 @@ export const IOTEX = "IOTEX";
 export const BSC = "BSC";
 export const MATIC = "MATIC";
 
+export enum IotexChainId {
+  MAINNET = 1,
+  TESTNET = 2,
+  MAINNET_BSC = 3,
+  MAINNET_MATIC = 4,
+}
+
 export const DEFAULT_IOTEX_CHAIN_ID = publicConfig.DEFAULT_IOTEX_CHAIN_ID;
 export const IOTX_ETH_PRICE = typeof publicConfig.IOTX_ETH_PRICE === "undefined" ? 0 : publicConfig.IOTX_ETH_PRICE;
 
@@ -55,6 +62,7 @@ export const ERC20ChainList = {
     coinImg: IMG_BSC,
     injected: injectedBsc,
     chainIdsGroup: injectSupportedIdsBsc,
+    iotexNetwork: IotexChainId.MAINNET_BSC,
   },
   matic: {
     key: "matic",
@@ -66,15 +74,9 @@ export const ERC20ChainList = {
     coinImg: IMG_MATIC,
     injected: injectedMatic,
     chainIdsGroup: injectSupportedIdsMatic,
+    iotexNetwork: IotexChainId.MAINNET_MATIC,
   },
 };
-
-export enum IotexChainId {
-  MAINNET = 1,
-  TESTNET = 2,
-  MAINNET_BSC = 3,
-  MAINNET_MATIC = 4,
-}
 
 export type TokenInfoPair = {
   readonly ETHEREUM?: TokenInfo;

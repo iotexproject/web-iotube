@@ -35,14 +35,14 @@
   "WETH-matic": {
     "matic": {
       "address": "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-      "name": "Matic Wrapped Ether",
+      "name": "Wrapped Ether",
       "decimals": 18,
       "symbol": "WETH-matic",
       "logoURI": "/images/matic/WETH-matic.png"
     },
     "iotx": {
       "address": "io1v5m9d7zrs852xkdzdresqf3phwc5cchc5crylc",
-      "name": "Matic Wrapped Ether",
+      "name": "Wrapped Ether",
       "decimals": 18,
       "symbol": "WETH-matic",
       "logoURI": "/images/matic/WETH-matic.png"
@@ -51,14 +51,14 @@
   "WBTC-matic": {
     "matic": {
       "address": "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
-      "name": "Matic Wrapped BTC",
+      "name": "Wrapped BTC",
       "decimals": 8,
       "symbol": "WBTC-matic",
       "logoURI": "/images/matic/WBTC-matic.png"
     },
     "iotx": {
       "address": "io10u9dv0ys93nmr7smzyptpkhlhzylt4wtqzrvld",
-      "name": "Matic Wrapped BTC",
+      "name": "Wrapped BTC",
       "decimals": 8,
       "symbol": "WBTC-matic",
       "logoURI": "/images/matic/WBTC-matic.png"
@@ -67,14 +67,14 @@
   "DAI-matic": {
     "matic": {
       "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
-      "name": "Matic DAI stablecoin",
+      "name": "DAI stablecoin",
       "decimals": 18,
       "symbol": "DAI-matic",
       "logoURI": "/images/matic/DAI-matic.png"
     },
     "iotx": {
       "address": "io1v25anp7t7nz954gdam2m27eqp4arr93jly4maa",
-      "name": "Matic DAI stablecoin",
+      "name": "DAI stablecoin",
       "decimals": 18,
       "symbol": "DAI-matic",
       "logoURI": "/images/matic/DAI-matic.png"
@@ -83,14 +83,14 @@
   "USDT-matic": {
     "matic": {
       "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-      "name": "Matic Tether USD",
+      "name": "Tether USD",
       "decimals": 6,
       "symbol": "USDT-matic",
       "logoURI": "/images/matic/USDT-matic.png"
     },
     "iotx": {
       "address": "io18ndhcj88pwz5a5h68yhzz6r4q8vykwhugq45ns",
-      "name": "Matic Tether USD",
+      "name": "Tether USD",
       "decimals": 6,
       "symbol": "USDT-matic",
       "logoURI": "/images/matic/USDT-matic.png"
@@ -99,14 +99,14 @@
   "USDC-matic": {
     "matic": {
       "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-      "name": "Matic USD Coin",
+      "name": "USD Coin",
       "decimals": 6,
       "symbol": "USDC-matic",
       "logoURI": "/images/matic/USDC-matic.png"
     },
     "iotx": {
       "address": "io1cpx682vazuf4s4amjd7jlwejr5akc65plgmdru",
-      "name": "Matic USD Coin",
+      "name": "USD Coin",
       "decimals": 6,
       "symbol": "USDC-matic",
       "logoURI": "/images/matic/USDC-matic.png"
@@ -115,14 +115,14 @@
   "Sushi-matic": {
     "matic": {
       "address": "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a",
-      "name": "Matic SushiToken",
+      "name": "SushiToken",
       "decimals": 18,
       "symbol": "Sushi-matic",
       "logoURI": "/images/matic/Sushi-matic.png"
     },
     "iotx": {
       "address": "io1990thrrc9cvxhjmsmx5pysznqs734h6uhxfxkq",
-      "name": "Matic SushiToken",
+      "name": "SushiToken",
       "decimals": 18,
       "symbol": "Sushi-matic",
       "logoURI": "/images/matic/Sushi-matic.png"
@@ -131,14 +131,14 @@
   "QUICK-matic": {
     "matic": {
       "address": "0x831753DD7087CaC61aB5644b308642cc1c33Dc13",
-      "name": "Matic Quickswap",
+      "name": "Quickswap",
       "decimals": 18,
       "symbol": "QUICK-matic",
       "logoURI": "/images/matic/QUICK-matic.png"
     },
     "iotx": {
       "address": "io1u346nz58mj5cjuj7ng3cn96upwam37v9axtju2",
-      "name": "Matic Quickswap",
+      "name": "Quickswap",
       "decimals": 18,
       "symbol": "QUICK-matic",
       "logoURI": "/images/matic/QUICK-matic.png"
@@ -147,14 +147,14 @@
   "AAVE-matic": {
     "matic": {
       "address": "0xD6DF932A45C0f255f85145f286eA0b292B21C90B",
-      "name": "Matic Aave Token",
+      "name": "Aave Token",
       "decimals": 18,
       "symbol": "QUICK-matic",
       "logoURI": "/images/matic/AAVE-matic.png"
     },
     "iotx": {
       "address": "io14tw8gyn3p8v5fcmvh4c0w8797ryjrlrvnsr6zf",
-      "name": "Matic Aave Token",
+      "name": "Aave Token",
       "decimals": 18,
       "symbol": "QUICK-matic",
       "logoURI": "/images/matic/AAVE-matic.png"

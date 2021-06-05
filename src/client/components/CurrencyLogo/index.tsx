@@ -7,8 +7,7 @@ import uriToHttp from "../../utils/index";
 import { Avatar } from "antd";
 import { WrappedTokenInfo } from "../../hooks/Tokens";
 
-const getTokenLogoURL = (address) =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+const getTokenLogoURL = (address) => `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
 const BAD_URIS: { [tokenAddress: string]: true } = {};
 
 const Emoji = styled.span<{ size?: string }>`
@@ -32,6 +31,10 @@ export default function CurrencyLogo({ currency, size = "1.5rem", ...rest }: { c
 
       if (currency.logoURI && !BAD_URIS[currency.logoURI]) {
         uri = uriToHttp(currency.logoURI).filter((s) => !BAD_URIS[s])[0];
+      }
+
+      if (currency.logoURI && currency.logoURI.startsWith("/images")) {
+        uri = currency.logoURI;
       }
     }
 

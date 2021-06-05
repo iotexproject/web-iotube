@@ -70,7 +70,7 @@ export const ERC20ChainList = {
     logo: IMG_MATIC,
     network: MATIC,
     balanceUnit: "MATIC",
-    standard: "BEP-20",
+    standard: "ERC-20",
     coinImg: IMG_MATIC,
     injected: injectedMatic,
     chainIdsGroup: injectSupportedIdsMatic,

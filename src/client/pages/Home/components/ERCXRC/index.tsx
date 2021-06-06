@@ -329,64 +329,65 @@ export const ERCXRC = () => {
     const args = [tokenAddress, toEthAddress, rawAmount];
     console.log({ args });
     const methodName = "depositTo";
-    const options = { from: account, gasLimit: 130000 };
+    const options = { from: account };
     if (isETHCurrency) {
       options["value"] = rawAmount;
     }
-    const depositTo = () => {
-      cashierContract[methodName](...args, options)
-        .then((response: any) => {
-          window.console.log(`${methodName} action hash`, response.hash, response);
-          setHash(response.hash);
+    console.log({ options });
+    // const depositTo = () => {
+    cashierContract[methodName](...args, options)
+      .then((response: any) => {
+        window.console.log(`${methodName} action hash`, response.hash, response);
+        setHash(response.hash);
 
-          store.toggleConfirmModalVisible();
+        store.toggleConfirmModalVisible();
 
-          base.toggleComplete(response.hash, getEtherscanLink(chainId, response.hash, "transaction"), toIoAddress, token.name, tokenInfoPair, amount);
-          message.success(" Ethereum transaction broadcasted successfully.");
-          return response.hash;
-        })
-        .catch((error: any) => {
-          let content = "";
-          if (error?.code === TRANSACTION_REJECTED) {
-            content = "Ethereum Transaction rejected.";
-            window.console.log(content);
-          } else {
-            content = `${methodName} failed. please check log for detail`;
-            window.console.error(`${methodName} failed`, error, methodName, args, options);
-          }
-          message.error(content);
-        });
-    };
-    cashierContract.estimateGas[methodName](...args, {})
-      .then((gasEstimate) => {
-        window.console.log("Gas estimation succeeded.", gasEstimate);
-        // gasEstimate.mul(1.1).toNumber() will cause error.
-        options.gasLimit = gasEstimate.mul(11).div(10).toNumber();
-        depositTo();
-        return {
-          gasEstimate,
-        };
+        base.toggleComplete(response.hash, getEtherscanLink(chainId, response.hash, "transaction"), toIoAddress, token.name, tokenInfoPair, amount);
+        message.success(" Ethereum transaction broadcasted successfully.");
+        return response.hash;
       })
-      .catch((gasError) => {
-        window.console.log("Gas estimation failed. Trying eth_call to extract error.", gasError);
-        return cashierContract.callStatic[methodName](...args, options)
-          .then((result) => {
-            window.console.log("Be possible unexpected successful call after failed estimate gas. Let's try", gasError, result);
-            depositTo();
-          })
-          .catch((callError) => {
-            window.console.log("Call threw error", callError);
-
-            let errorMessage: string;
-            if ((callError.reason && callError.reason?.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0) || callError.reason?.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0) {
-              errorMessage = "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
-            } else {
-              errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
-            }
-            depositTo();
-            message.error(errorMessage);
-          });
+      .catch((error: any) => {
+        let content = "";
+        if (error?.code === TRANSACTION_REJECTED) {
+          content = "Ethereum Transaction rejected.";
+          window.console.log(content);
+        } else {
+          content = `${methodName} failed. please check log for detail`;
+          window.console.error(`${methodName} failed`, error, methodName, args, options);
+        }
+        message.error(content);
       });
+    // };
+    // cashierContract.estimateGas[methodName](...args, {})
+    //   .then((gasEstimate) => {
+    //     window.console.log("Gas estimation succeeded.", gasEstimate);
+    //     // gasEstimate.mul(1.1).toNumber() will cause error.
+    //     options.gasLimit = gasEstimate.mul(11).div(10).toNumber();
+    //     depositTo();
+    //     return {
+    //       gasEstimate,
+    //     };
+    //   })
+    //   .catch((gasError) => {
+    //     window.console.log("Gas estimation failed. Trying eth_call to extract error.", gasError);
+    //     return cashierContract.callStatic[methodName](...args, options)
+    //       .then((result) => {
+    //         window.console.log("Be possible unexpected successful call after failed estimate gas. Let's try", gasError, result);
+    //         depositTo();
+    //       })
+    //       .catch((callError) => {
+    //         window.console.log("Call threw error", callError);
+    //
+    //         let errorMessage: string;
+    //         if ((callError.reason && callError.reason?.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0) || callError.reason?.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0) {
+    //           errorMessage = "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
+    //         } else {
+    //           errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
+    //         }
+    //         depositTo();
+    //         message.error(errorMessage);
+    //       });
+    //   });
   }, [inputError, amount, token, cashierContract, isETHCurrency, toIoAddress]);
 
   const prefillAddress = !!location.search ? qs.parse(location.search, { ignoreQueryPrefix: true }).to?.toString() : null;

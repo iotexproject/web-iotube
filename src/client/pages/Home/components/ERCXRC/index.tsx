@@ -71,9 +71,9 @@ export const ERCXRC = () => {
   const isETHCurrency = useMemo(
     () =>
       tokenInfoPair &&
-      tokenInfoPair[base.chainToken.key.toUpperCase()] &&
-      tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo &&
-      tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo.isEth,
+      tokenInfoPair[base.chainToken.network.toUpperCase()] &&
+      tokenInfoPair[base.chainToken.network.toUpperCase()].tokenInfo &&
+      tokenInfoPair[base.chainToken.network.toUpperCase()].tokenInfo.isEth,
     [chainId, tokenInfoPair, account, base.chainToken]
   );
 

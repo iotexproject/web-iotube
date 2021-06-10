@@ -64,8 +64,8 @@ export const ERC20ChainList = {
     chainIdsGroup: injectSupportedIdsBsc,
     iotexNetwork: IotexChainId.MAINNET_BSC,
   },
-  matic: {
-    key: "matic",
+  polygon: {
+    key: "polygon",
     name: "Polygon",
     logo: IMG_MATIC,
     network: MATIC,
@@ -234,7 +234,7 @@ export const chainMap = {
       },
     },
   },
-  matic: {
+  polygon: {
     [AllChainId.MATIC]: {
       contract: {
         cashier: {

@@ -15,7 +15,7 @@ const ETHERSCAN_URL: { [key: number]: string } = {
   1: "https://etherscan.io/",
   42: "https://kovan.etherscan.io/",
   56: "https://bscscan.com/",
-  137: "https://polygon-explorer-mainnet.chainstacklabs.com",
+  137: "https://polygonscan.com/",
 };
 
 export function isAddress(value: any): string | false {

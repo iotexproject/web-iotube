@@ -13,15 +13,15 @@ import { useActiveWeb3React } from "../../hooks/index";
 interface IComponentProps {
   onChange: Function;
   network: string;
-  fromXrc?: boolean;
+  toNetwork?: string;
 }
 
 const { Option } = Select;
 
 export const TokenSelectField = (props: IComponentProps) => {
   const { chainId = publicConfig.IS_PROD ? (props.network == "BSC" ? AllChainId.BSC : ChainId.MAINNET) : ChainId.KOVAN } = useActiveWeb3React();
-  const { network = ETHEREUM, onChange, fromXrc = false } = props;
-  const tokenList = useTokens(network, fromXrc);
+  const { network = ETHEREUM, onChange, toNetwork } = props;
+  const tokenList = useTokens(network, toNetwork);
   return (
     <Select
       key={`token-select-${chainId}`}

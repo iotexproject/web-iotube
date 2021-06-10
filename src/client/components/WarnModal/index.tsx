@@ -20,7 +20,7 @@ export const WarnModal = (props: IComponentProps) => {
     <Modal title={lang.t("warning")} visible={props.visible} onCancel={props.close} footer={null} className={`modal__warn ${props.isERCXRC ? "modal__warn--ercxrc" : "modal__warn--xrcerc"}`}>
       <div className="text-sm c-white font-light mb-6">
         {props.isERCXRC ? (
-          <div className="text-base mb-2">{lang.t("warning.chainId.comment", { currentNetwork: wallet.metaMaskConnected ? base.targetChainToken.network : base.chainToken.network })}</div>
+          <div className="text-base mb-2">{lang.t("warning.chainId.comment", { currentNetwork: wallet.metaMaskConnected ? base.targetChainToken?.network : base.chainToken.network })}</div>
         ) : (
           <>
             <div className="text-base mb-2">{lang.t("warning.iotx.comment.mobile", { chainStandard: base.chainToken.standard })}</div>

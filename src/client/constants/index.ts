@@ -1,11 +1,12 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { ChainId } from "@uniswap/sdk";
-import { fortmatic, injected, injectedBsc, portis, walletconnect, walletlink } from "../connectors";
+import { fortmatic, injected, injectedBsc, injectedMatic, injectSupportedIdsMatic, portis, walletconnect, walletlink } from "../connectors";
 import { TokenInfo } from "@uniswap/token-lists";
 import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
 import BSC_TOKEN_LIST from "./bsc-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
+import MATIC_TOKEN_LIST from "./matic-token-list.json";
 import { publicConfig } from "../../../configs/public";
 
 export const IMG_LOGO = require("../static/images/logo_iotube.svg");
@@ -14,6 +15,7 @@ export const IMG_ETHER = require("../static/images/icon-eth.png");
 export const IMG_BSC = require("../static/images/logo-bsc.png");
 export const IMG_HECO = require("../static/images/logo-heco.png");
 export const IMG_ETH = require("../static/images/logo-ethereum.png");
+export const IMG_MATIC = require("../static/images/matic-logo.png");
 
 import cashierABI from "./abis/erc20_xrc20.json";
 import tokenListABI from "./abis/token_list.json";
@@ -22,6 +24,14 @@ import { injectSupportedIdsBsc, injectSupportedIdsEth } from "../connectors/inde
 export const ETHEREUM = "ETHEREUM";
 export const IOTEX = "IOTEX";
 export const BSC = "BSC";
+export const MATIC = "MATIC";
+
+export enum IotexChainId {
+  MAINNET = 1,
+  TESTNET = 2,
+  MAINNET_BSC = 3,
+  MAINNET_MATIC = 4,
+}
 
 export const DEFAULT_IOTEX_CHAIN_ID = publicConfig.DEFAULT_IOTEX_CHAIN_ID;
 export const IOTX_ETH_PRICE = typeof publicConfig.IOTX_ETH_PRICE === "undefined" ? 0 : publicConfig.IOTX_ETH_PRICE;
@@ -52,23 +62,32 @@ export const ERC20ChainList = {
     coinImg: IMG_BSC,
     injected: injectedBsc,
     chainIdsGroup: injectSupportedIdsBsc,
+    iotexNetwork: IotexChainId.MAINNET_BSC,
+  },
+  matic: {
+    key: "matic",
+    name: "Polygon",
+    logo: IMG_MATIC,
+    network: MATIC,
+    balanceUnit: "MATIC",
+    standard: "ERC-20",
+    coinImg: IMG_MATIC,
+    injected: injectedMatic,
+    chainIdsGroup: injectSupportedIdsMatic,
+    iotexNetwork: IotexChainId.MAINNET_MATIC,
   },
 };
-
-export enum IotexChainId {
-  MAINNET = 1,
-  TESTNET = 2,
-  MAINNET_BSC = 3,
-}
 
 export type TokenInfoPair = {
   readonly ETHEREUM?: TokenInfo;
   readonly IOTEX: TokenInfo;
   readonly BSC?: TokenInfo;
+  readonly MATIC?: TokenInfo;
 };
 
 export enum MoreChainId {
   BSC = 56,
+  MATIC = 137,
 }
 
 export const AllChainId = { ...MoreChainId, ...ChainId };
@@ -180,6 +199,22 @@ export const chainMap = {
         },
       },
     },
+    [IotexChainId.MAINNET_MATIC]: {
+      contract: {
+        cashier: {
+          address: "io12s9f9hv4zsr7umy5hxt6g0k0xr4x6pxdp5w998",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "io16at6mlcwcsrqutz2zhuhwam87h988r9fcdauk8",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "io197rk3nff9622pkncvuvhfwyms73esdtwph4rlq",
+          abi: tokenListABI,
+        },
+      },
+    },
   },
   bsc: {
     [AllChainId.BSC]: {
@@ -194,6 +229,24 @@ export const chainMap = {
         },
         standardTokenList: {
           address: "0x0d793F4D4287265B9bdA86b7a4083193E8743b34",
+          abi: tokenListABI,
+        },
+      },
+    },
+  },
+  matic: {
+    [AllChainId.MATIC]: {
+      contract: {
+        cashier: {
+          address: "0xf72CFb704d49aC7BB7FFa420AE5f084C671A29be",
+          abi: cashierABI,
+        },
+        mintableTokenList: {
+          address: "0xC8DC8dCDFd94f9Cb953f379a7aD8Da5fdC303F3E",
+          abi: tokenListABI,
+        },
+        standardTokenList: {
+          address: "0xDe9395d2f4940aA501f9a27B98592589D14Bb0f7",
           abi: tokenListABI,
         },
       },
@@ -228,6 +281,12 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: AllChainId.BSC } as TokenInfo) : null,
     };
   }),
+  [AllChainId.MATIC]: Object.values(MATIC_TOKEN_LIST).map((item) => {
+    return {
+      MATIC: { ...item.matic, chainId: AllChainId.MATIC } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: AllChainId.MATIC } as TokenInfo) : null,
+    };
+  }),
 };
 
 export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
@@ -247,6 +306,12 @@ export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
     return {
       BSC: { ...item.bsc, chainId: IotexChainId.TESTNET } as TokenInfo,
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo) : null,
+    };
+  }),
+  [IotexChainId.MAINNET_MATIC]: Object.values(MATIC_TOKEN_LIST).map((item) => {
+    return {
+      MATIC: { ...item.matic, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo) : null,
     };
   }),
 };
@@ -334,6 +399,7 @@ export const ETH_NETWORK_NAMES = {
   [AllChainId.GÖRLI]: "GÖRLI",
   [AllChainId.KOVAN]: "KOVAN",
   [AllChainId.BSC]: "BSC",
+  [AllChainId.MATIC]: "MATIC",
 };
 
 export const NetworkContextName = "NETWORK";

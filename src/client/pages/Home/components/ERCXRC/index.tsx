@@ -55,14 +55,12 @@ export const ERCXRC = () => {
     // return account;
   }, [account, changedToAddress]);
   const toIoAddress = useMemo(() => (toEthAddress ? fromBytes(Buffer.from(String(toEthAddress).replace(/^0x/, ""), "hex")).string() : ""), [toEthAddress]);
-  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC : null), [tokenInfoPair]);
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC || tokenInfoPair.MATIC : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const tokenAddress = useMemo(() => (token ? token.address : ""), [token]);
   const chain = useMemo<ChainMapType["eth"]["42"]>(() => {
-    if (base.chainToken.key == "bsc") {
-      return chainMap[base.chainToken.key][AllChainId.BSC];
-    } else if (chainId in injectSupportedIdsEth) {
-      return chainMap["eth"][chainId];
+    if (base.chainToken.chainIdsGroup.includes(chainId)) {
+      return chainMap[base.chainToken.key][chainId];
     }
     return chainMap["eth"]["42"];
   }, [chainId, base.chainToken]);
@@ -70,12 +68,15 @@ export const ERCXRC = () => {
     return chain.contract.cashier.address;
   }, [chain, base.chainToken]);
 
-  const isETHCurrency = useMemo(() => tokenInfoPair && ((tokenInfoPair.ETHEREUM && tokenInfoPair.ETHEREUM.tokenInfo.isEth) || (tokenInfoPair.BSC && tokenInfoPair.BSC.tokenInfo.isEth)), [
-    chainId,
-    tokenInfoPair,
-    account,
-  ]);
-  console.log(isETHCurrency);
+  const isETHCurrency = useMemo(
+    () =>
+      tokenInfoPair &&
+      tokenInfoPair[base.chainToken.key.toUpperCase()] &&
+      tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo &&
+      tokenInfoPair[base.chainToken.key.toUpperCase()].tokenInfo.isEth,
+    [chainId, tokenInfoPair, account, base.chainToken]
+  );
+
   const tokenBalance = useTokenBalances(tokenAddress, token, [account, token])[account];
   const userEthBalance = useETHBalances([account])[account];
   const balance = useMemo(() => (isETHCurrency ? userEthBalance : tokenBalance), [isETHCurrency, userEthBalance, tokenBalance]);
@@ -328,64 +329,65 @@ export const ERCXRC = () => {
     const args = [tokenAddress, toEthAddress, rawAmount];
     console.log({ args });
     const methodName = "depositTo";
-    const options = { from: account, gasLimit: 130000 };
+    const options = { from: account };
     if (isETHCurrency) {
       options["value"] = rawAmount;
     }
-    const depositTo = () => {
-      cashierContract[methodName](...args, options)
-        .then((response: any) => {
-          window.console.log(`${methodName} action hash`, response.hash, response);
-          setHash(response.hash);
+    console.log({ options });
+    // const depositTo = () => {
+    cashierContract[methodName](...args, options)
+      .then((response: any) => {
+        window.console.log(`${methodName} action hash`, response.hash, response);
+        setHash(response.hash);
 
-          store.toggleConfirmModalVisible();
+        store.toggleConfirmModalVisible();
 
-          base.toggleComplete(response.hash, getEtherscanLink(chainId, response.hash, "transaction"), toIoAddress, token.name, tokenInfoPair, amount);
-          message.success(" Ethereum transaction broadcasted successfully.");
-          return response.hash;
-        })
-        .catch((error: any) => {
-          let content = "";
-          if (error?.code === TRANSACTION_REJECTED) {
-            content = "Ethereum Transaction rejected.";
-            window.console.log(content);
-          } else {
-            content = `${methodName} failed. please check log for detail`;
-            window.console.error(`${methodName} failed`, error, methodName, args, options);
-          }
-          message.error(content);
-        });
-    };
-    cashierContract.estimateGas[methodName](...args, {})
-      .then((gasEstimate) => {
-        window.console.log("Gas estimation succeeded.", gasEstimate);
-        // gasEstimate.mul(1.1).toNumber() will cause error.
-        options.gasLimit = gasEstimate.mul(11).div(10).toNumber();
-        depositTo();
-        return {
-          gasEstimate,
-        };
+        base.toggleComplete(response.hash, getEtherscanLink(chainId, response.hash, "transaction"), toIoAddress, token.name, tokenInfoPair, amount);
+        message.success(" Ethereum transaction broadcasted successfully.");
+        return response.hash;
       })
-      .catch((gasError) => {
-        window.console.log("Gas estimation failed. Trying eth_call to extract error.", gasError);
-        return cashierContract.callStatic[methodName](...args, options)
-          .then((result) => {
-            window.console.log("Be possible unexpected successful call after failed estimate gas. Let's try", gasError, result);
-            depositTo();
-          })
-          .catch((callError) => {
-            window.console.log("Call threw error", callError);
-
-            let errorMessage: string;
-            if ((callError.reason && callError.reason?.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0) || callError.reason?.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0) {
-              errorMessage = "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
-            } else {
-              errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
-            }
-            depositTo();
-            message.error(errorMessage);
-          });
+      .catch((error: any) => {
+        let content = "";
+        if (error?.code === TRANSACTION_REJECTED) {
+          content = "Ethereum Transaction rejected.";
+          window.console.log(content);
+        } else {
+          content = `${methodName} failed. please check log for detail`;
+          window.console.error(`${methodName} failed`, error, methodName, args, options);
+        }
+        message.error(content);
       });
+    // };
+    // cashierContract.estimateGas[methodName](...args, {})
+    //   .then((gasEstimate) => {
+    //     window.console.log("Gas estimation succeeded.", gasEstimate);
+    //     // gasEstimate.mul(1.1).toNumber() will cause error.
+    //     options.gasLimit = gasEstimate.mul(11).div(10).toNumber();
+    //     depositTo();
+    //     return {
+    //       gasEstimate,
+    //     };
+    //   })
+    //   .catch((gasError) => {
+    //     window.console.log("Gas estimation failed. Trying eth_call to extract error.", gasError);
+    //     return cashierContract.callStatic[methodName](...args, options)
+    //       .then((result) => {
+    //         window.console.log("Be possible unexpected successful call after failed estimate gas. Let's try", gasError, result);
+    //         depositTo();
+    //       })
+    //       .catch((callError) => {
+    //         window.console.log("Call threw error", callError);
+    //
+    //         let errorMessage: string;
+    //         if ((callError.reason && callError.reason?.indexOf("INSUFFICIENT_OUTPUT_AMOUNT") >= 0) || callError.reason?.indexOf("EXCESSIVE_INPUT_AMOUNT") >= 0) {
+    //           errorMessage = "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.";
+    //         } else {
+    //           errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens.`;
+    //         }
+    //         depositTo();
+    //         message.error(errorMessage);
+    //       });
+    //   });
   }, [inputError, amount, token, cashierContract, isETHCurrency, toIoAddress]);
 
   const prefillAddress = !!location.search ? qs.parse(location.search, { ignoreQueryPrefix: true }).to?.toString() : null;

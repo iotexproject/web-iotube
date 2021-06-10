@@ -16,7 +16,7 @@ export class BaseStore {
   @observable tokenName = "";
   @observable tokenInfoPair = null;
   @observable amount = "";
-  @observable chainToken = ERC20ChainList.bsc;
+  @observable chainToken = ERC20ChainList.polygon;
   @observable targetChainToken = null;
   @observable chainTokenLength = 1;
 

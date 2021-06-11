@@ -74,7 +74,7 @@ export function useTokens(network: string, toNetwork?: string): { [p: string]: T
           }
         });
       } else if (toNetwork === POLYGON) {
-        (IOTEX_TOKEN_LIST[IotexChainId.MAINNET_MATIC] || []).forEach((aToken) => {
+        (IOTEX_TOKEN_LIST[IotexChainId.MAINNET_POLYGON] || []).forEach((aToken) => {
           if (aToken.IOTEX.address) {
             tokenList[aToken.IOTEX.symbol.toLowerCase()] = {
               POLYGON: new WrappedTokenInfo(aToken.POLYGON),

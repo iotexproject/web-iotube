@@ -30,7 +30,7 @@ export enum IotexChainId {
   MAINNET = 1,
   TESTNET = 2,
   MAINNET_BSC = 3,
-  MAINNET_MATIC = 4,
+  MAINNET_POLYGON = 4,
 }
 
 export const DEFAULT_IOTEX_CHAIN_ID = publicConfig.DEFAULT_IOTEX_CHAIN_ID;
@@ -74,7 +74,7 @@ export const ERC20ChainList = {
     coinImg: IMG_MATIC,
     injected: injectedMatic,
     chainIdsGroup: injectSupportedIdsMatic,
-    iotexNetwork: IotexChainId.MAINNET_MATIC,
+    iotexNetwork: IotexChainId.MAINNET_POLYGON,
   },
 };
 
@@ -199,7 +199,7 @@ export const chainMap = {
         },
       },
     },
-    [IotexChainId.MAINNET_MATIC]: {
+    [IotexChainId.MAINNET_POLYGON]: {
       contract: {
         cashier: {
           address: "io12s9f9hv4zsr7umy5hxt6g0k0xr4x6pxdp5w998",
@@ -308,10 +308,10 @@ export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.TESTNET } as TokenInfo) : null,
     };
   }),
-  [IotexChainId.MAINNET_MATIC]: Object.values(MATIC_TOKEN_LIST).map((item) => {
+  [IotexChainId.MAINNET_POLYGON]: Object.values(MATIC_TOKEN_LIST).map((item) => {
     return {
-      POLYGON: { ...item.polygon, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo,
-      IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo) : null,
+      POLYGON: { ...item.polygon, chainId: IotexChainId.MAINNET_POLYGON } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.MAINNET_POLYGON } as TokenInfo) : null,
     };
   }),
 };

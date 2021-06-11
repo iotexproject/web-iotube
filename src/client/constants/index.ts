@@ -6,7 +6,7 @@ import ROPSTEN_TOKEN_LIST from "./ropsten-token-list.json";
 import KOVAN_TOKEN_LIST from "./kovan-token-list.json";
 import BSC_TOKEN_LIST from "./bsc-token-list.json";
 import MAINNET_TOKEN_LIST from "./mainnet-token-list.json";
-import MATIC_TOKEN_LIST from "./matic-token-list.json";
+import MATIC_TOKEN_LIST from "./polygon-token-list.json";
 import { publicConfig } from "../../../configs/public";
 
 export const IMG_LOGO = require("../static/images/logo_iotube.svg");
@@ -24,7 +24,7 @@ import { injectSupportedIdsBsc, injectSupportedIdsEth } from "../connectors/inde
 export const ETHEREUM = "ETHEREUM";
 export const IOTEX = "IOTEX";
 export const BSC = "BSC";
-export const MATIC = "MATIC";
+export const POLYGON = "POLYGON";
 
 export enum IotexChainId {
   MAINNET = 1,
@@ -68,7 +68,7 @@ export const ERC20ChainList = {
     key: "polygon",
     name: "Polygon",
     logo: IMG_MATIC,
-    network: MATIC,
+    network: POLYGON,
     balanceUnit: "MATIC",
     standard: "ERC-20",
     coinImg: IMG_MATIC,
@@ -82,12 +82,12 @@ export type TokenInfoPair = {
   readonly ETHEREUM?: TokenInfo;
   readonly IOTEX: TokenInfo;
   readonly BSC?: TokenInfo;
-  readonly MATIC?: TokenInfo;
+  readonly POLYGON?: TokenInfo;
 };
 
 export enum MoreChainId {
   BSC = 56,
-  MATIC = 137,
+  POLYGON = 137,
 }
 
 export const AllChainId = { ...MoreChainId, ...ChainId };
@@ -235,7 +235,7 @@ export const chainMap = {
     },
   },
   polygon: {
-    [AllChainId.MATIC]: {
+    [AllChainId.POLYGON]: {
       contract: {
         cashier: {
           address: "0xf72CFb704d49aC7BB7FFa420AE5f084C671A29be",
@@ -281,10 +281,10 @@ export const CHAIN_TOKEN_LIST: ChainTokenPairList = {
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: AllChainId.BSC } as TokenInfo) : null,
     };
   }),
-  [AllChainId.MATIC]: Object.values(MATIC_TOKEN_LIST).map((item) => {
+  [AllChainId.POLYGON]: Object.values(MATIC_TOKEN_LIST).map((item) => {
     return {
-      MATIC: { ...item.matic, chainId: AllChainId.MATIC } as TokenInfo,
-      IOTEX: item.iotx ? ({ ...item.iotx, chainId: AllChainId.MATIC } as TokenInfo) : null,
+      POLYGON: { ...item.polygon, chainId: AllChainId.POLYGON } as TokenInfo,
+      IOTEX: item.iotx ? ({ ...item.iotx, chainId: AllChainId.POLYGON } as TokenInfo) : null,
     };
   }),
 };
@@ -310,7 +310,7 @@ export const IOTEX_TOKEN_LIST: IotexTokenPairList = {
   }),
   [IotexChainId.MAINNET_MATIC]: Object.values(MATIC_TOKEN_LIST).map((item) => {
     return {
-      MATIC: { ...item.matic, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo,
+      POLYGON: { ...item.polygon, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo,
       IOTEX: item.iotx ? ({ ...item.iotx, chainId: IotexChainId.MAINNET_MATIC } as TokenInfo) : null,
     };
   }),
@@ -399,7 +399,7 @@ export const ETH_NETWORK_NAMES = {
   [AllChainId.GÖRLI]: "GÖRLI",
   [AllChainId.KOVAN]: "KOVAN",
   [AllChainId.BSC]: "BSC",
-  [AllChainId.MATIC]: "MATIC",
+  [AllChainId.POLYGON]: "POLYGON",
 };
 
 export const NetworkContextName = "NETWORK";

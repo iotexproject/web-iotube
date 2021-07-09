@@ -159,5 +159,21 @@
       "symbol": "AAVE-matic",
       "logoURI": "/images/matic/AAVE-matic.png"
     }
+  },
+  "CYC": {
+    "polygon": {
+      "address": "0xcFb54a6D2dA14ABeCD231174FC5735B4436965D8",
+      "name": "Cyclone Protocol",
+      "decimals": 18,
+      "symbol": "CYC",
+      "logoURI": "https://iotexscan.io/image/token/io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh.png"
+    },
+    "iotx": {
+      "address": "io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh",
+      "name": "Cyclone Protocol",
+      "decimals": 18,
+      "symbol": "CYC",
+      "logoURI": "https://iotexscan.io/image/token/io1f4acssp65t6s90egjkzpvrdsrjjyysnvxgqjrh.png"
+    }
   }
 }

@@ -161,7 +161,7 @@
     }
   },
   "CYC": {
-    "polygon": {
+    "matic": {
       "address": "0xcFb54a6D2dA14ABeCD231174FC5735B4436965D8",
       "name": "Cyclone Protocol",
       "decimals": 18,

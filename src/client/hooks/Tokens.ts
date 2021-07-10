@@ -1,7 +1,7 @@
 import { ChainId, Currency, Token } from "@uniswap/sdk";
 import { useMemo } from "react";
 import { useActiveWeb3React } from "./index";
-import { CHAIN_TOKEN_LIST, DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX_TOKEN_LIST, IOTEX, TokenInfoPair, IOTX_ETH_PRICE, BSC, AllChainId, IotexChainId, MATIC } from "../constants/index";
+import { CHAIN_TOKEN_LIST, DEFAULT_IOTEX_CHAIN_ID, ETHEREUM, IOTEX_TOKEN_LIST, IOTEX, TokenInfoPair, IOTX_ETH_PRICE, BSC, AllChainId, IotexChainId, POLYGON } from "../constants/index";
 import { TokenInfo } from "@uniswap/token-lists";
 import { parseUnits } from "@ethersproject/units";
 import { fromRau } from "iotex-antenna/lib/account/utils";
@@ -73,12 +73,11 @@ export function useTokens(network: string, toNetwork?: string): { [p: string]: T
             };
           }
         });
-      } else if (toNetwork === MATIC) {
-        console.log("----->", IOTEX_TOKEN_LIST[IotexChainId.MAINNET_MATIC]);
-        (IOTEX_TOKEN_LIST[IotexChainId.MAINNET_MATIC] || []).forEach((aToken) => {
+      } else if (toNetwork === POLYGON) {
+        (IOTEX_TOKEN_LIST[IotexChainId.MAINNET_POLYGON] || []).forEach((aToken) => {
           if (aToken.IOTEX.address) {
             tokenList[aToken.IOTEX.symbol.toLowerCase()] = {
-              MATIC: new WrappedTokenInfo(aToken.MATIC),
+              POLYGON: new WrappedTokenInfo(aToken.POLYGON),
               IOTEX: aToken.IOTEX,
             };
           }
@@ -93,11 +92,11 @@ export function useTokens(network: string, toNetwork?: string): { [p: string]: T
           };
         }
       });
-    } else if (network === MATIC) {
-      CHAIN_TOKEN_LIST[AllChainId.MATIC].forEach((aToken, index) => {
-        if (aToken.MATIC.address) {
-          tokenList[aToken.MATIC.symbol.toLowerCase()] = {
-            MATIC: new WrappedTokenInfo(aToken.MATIC),
+    } else if (network === POLYGON) {
+      CHAIN_TOKEN_LIST[AllChainId.POLYGON].forEach((aToken, index) => {
+        if (aToken.POLYGON.address) {
+          tokenList[aToken.POLYGON.symbol.toLowerCase()] = {
+            POLYGON: new WrappedTokenInfo(aToken.POLYGON),
             IOTEX: aToken.IOTEX,
           };
         }

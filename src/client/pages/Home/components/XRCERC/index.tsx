@@ -36,7 +36,7 @@ export const XRCERC = () => {
     maxAmount: BigNumber.from("0"),
   });
   const account = wallet.walletAddress;
-  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC || tokenInfoPair.MATIC : null), [tokenInfoPair]);
+  const token = useMemo(() => (tokenInfoPair ? tokenInfoPair.ETHEREUM || tokenInfoPair.BSC || tokenInfoPair.POLYGON : null), [tokenInfoPair]);
   const xrc20TokenInfo = useMemo(() => (tokenInfoPair ? tokenInfoPair.IOTEX : null), [tokenInfoPair]);
   const isIOTXCurrency = useMemo(() => tokenInfoPair && tokenInfoPair.IOTEX.symbol === "IOTX", [tokenInfoPair, account]);
   const tokenAddress = useMemo(() => (xrc20TokenInfo ? xrc20TokenInfo.address : ""), [xrc20TokenInfo]);

@@ -143,5 +143,14 @@
       "symbol": "ioPAXG",
       "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/4705.png"
     }
+  },
+  " MIST " : {
+    " eth " : {
+      " dirección " : " 0x88ACDd2a6425c3FaAE4Bc9650Fd7E27e0Bebb7aB " ,
+      " name " : " Alchemist " ,
+      " decimales " : 18 ,
+      " símbolo " : " MIST " ,
+      " logoURI " : " https://s2.coinmarketcap.com/static/img/coins/64x64/9131.png "
+    }
   }
 }

@@ -141,9 +141,9 @@ export const Header = () => {
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>
-              <Link className="c-green-20" to="https://web-iotube-web3.onrender.com">
+              <a className="c-green-20" target="__blank" href="https://web-iotube-web3.onrender.com">
                 Tube v5 Beta
-              </Link>
+              </a>
               &nbsp;&nbsp;
               <Link className="c-white" to="/tutorial">
                 {lang.t("header.tutorial")}

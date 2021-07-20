@@ -142,7 +142,7 @@ export const Header = () => {
           <span className="flex items-center c-white font-thin">
             <BrowserView>
               <a className="c-green-20" target="__blank" href="https://web-iotube-web3.onrender.com">
-                Tube v5 Beta
+                Tube V5 Beta
               </a>
               &nbsp;&nbsp;
               <Link className="c-white" to="/tutorial">

@@ -97,6 +97,11 @@ export const Home = () => {
             </div>
           ) : (
             <div className="rounded-t-md">
+              <div className="mb-4">
+                <a href="https://web-iotube-web3.onrender.com/" target="__blank" className="c-green-20">
+                  <u>{"Tube V5 Beta is here! Please try it now >>>"}</u>
+                </a>
+              </div>
               <SwitchHeader onSwitch={switchTo} isERCXRC={isERCXRC} isShowERC20List={isShowERC20List} toggleERC20List={setERC20List} />
               <div className={`erc20__dropdown ${isERCXRC ? "" : "erc20__dropdown_right"} ${!isShowERC20List ? "" : "erc20__dropdown_open"}`}>
                 {base.chainTokenLength > 1 &&

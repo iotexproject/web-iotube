@@ -141,7 +141,7 @@ export const Header = () => {
         {!isTutorialPage && (
           <span className="flex items-center c-white font-thin">
             <BrowserView>
-              <a className="c-green-20" href="https://tube-v5.iotex.io">
+              <a className="c-green-20" href="https://tube.iotex.io/">
                 Tube V5 Beta
               </a>
               &nbsp;&nbsp;

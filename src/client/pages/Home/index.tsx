@@ -98,7 +98,7 @@ export const Home = () => {
           ) : (
             <div className="rounded-t-md">
               <div className="mb-4">
-                <a href="https://tube-v5.iotex.io/" className="c-green-20">
+                <a href="https://tube.iotex.io/" className="c-green-20">
                   <u>{"Tube V5 Beta is here! Please try it now >>>"}</u>
                 </a>
               </div>

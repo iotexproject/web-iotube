@@ -1,4 +1,4 @@
-# ioTube Web App
+# ioTube Web App for V4 and below. for V5 and above, please check out https://github.com/iotexproject/web-iotube-web3
 
 ioTube is a two-way "tube", aka bridge, allowing assets transferring between blockchains, like Eth, IoTeX.
 
